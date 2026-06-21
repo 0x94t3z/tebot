@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "samsat-bandung-timur-bot",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-21",
+  "kv_namespaces": [
+    {
+      "binding": "MESSAGE_STORE",
+      "id": "c2c10375ca6c4192877dace1e33c7a2a"
+    },
+    {
+      "binding": "RESEARCH_STORE",
+      "id": "efcd2bd583344368bb31156b22f12c75"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

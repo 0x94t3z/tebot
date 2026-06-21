@@ -1,0 +1,702 @@
+[
+  {
+    "id": 1,
+    "category": "Layanan",
+    "question": "Jam operasional samsat",
+    "answer": "Senin-Jumat 08.00-15.00",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 2,
+    "category": "Layanan",
+    "question": "Samsat buka jam berapa",
+    "answer": "Pukul 08.00 WIB",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 3,
+    "category": "Layanan",
+    "question": "Samsat tutup jam berapa",
+    "answer": "Pukul 15.00 WIB",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 4,
+    "category": "Layanan",
+    "question": "Apakah buka hari Sabtu",
+    "answer": "Ya, sampai 11.00 WIB",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 5,
+    "category": "Layanan",
+    "question": "Apakah buka hari Minggu",
+    "answer": "Tidak",
+    "source": "Website"
+  },
+  {
+    "id": 6,
+    "category": "Layanan",
+    "question": "Lokasi Samsat Bandung Timur",
+    "answer": "Jl. Soekarno-Hatta No.528",
+    "source": "Website"
+  },
+  {
+    "id": 7,
+    "category": "Layanan",
+    "question": "Fungsi Samsat",
+    "answer": "Pelayanan pajak kendaraan",
+    "source": "Referensi"
+  },
+  {
+    "id": 8,
+    "category": "Layanan",
+    "question": "Apa itu Samsat",
+    "answer": "Sistem administrasi kendaraan",
+    "source": "Referensi"
+  },
+  {
+    "id": 9,
+    "category": "Layanan",
+    "question": "Tujuan Samsat",
+    "answer": "Mempermudah pelayanan publik",
+    "source": "Referensi"
+  },
+  {
+    "id": 10,
+    "category": "Layanan",
+    "question": "Apakah Samsat melayani cek fisik",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 11,
+    "category": "Pajak",
+    "question": "Apa itu pajak kendaraan",
+    "answer": "Kewajiban tahunan",
+    "source": "Referensi"
+  },
+  {
+    "id": 12,
+    "category": "Pajak",
+    "question": "Jatuh tempo pajak",
+    "answer": "Setiap 1 tahun",
+    "source": "Referensi"
+  },
+  {
+    "id": 13,
+    "category": "Pajak",
+    "question": "Denda telat pajak",
+    "answer": "Ada denda",
+    "source": "Referensi"
+  },
+  {
+    "id": 14,
+    "category": "Pajak",
+    "question": "Cara bayar pajak",
+    "answer": "Offline/online",
+    "source": "Referensi"
+  },
+  {
+    "id": 15,
+    "category": "Pajak",
+    "question": "Syarat bayar pajak",
+    "answer": "STNK dan KTP",
+    "source": "Referensi"
+  },
+  {
+    "id": 16,
+    "category": "Pajak",
+    "question": "Bayar pajak online",
+    "answer": "Bisa via SIGNAL",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 17,
+    "category": "Pajak",
+    "question": "Pajak 5 tahunan",
+    "answer": "Ganti STNK",
+    "source": "Website"
+  },
+  {
+    "id": 18,
+    "category": "Pajak",
+    "question": "Perlu cek fisik pajak",
+    "answer": "Ya untuk 5 tahunan",
+    "source": "Referensi"
+  },
+  {
+    "id": 19,
+    "category": "Pajak",
+    "question": "Bayar pajak dimana",
+    "answer": "Samsat",
+    "source": "Referensi"
+  },
+  {
+    "id": 20,
+    "category": "Pajak",
+    "question": "Pajak wajib",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 21,
+    "category": "Dokumen",
+    "question": "Apa itu STNK",
+    "answer": "Surat kendaraan",
+    "source": "Referensi"
+  },
+  {
+    "id": 22,
+    "category": "Dokumen",
+    "question": "Apa itu BPKB",
+    "answer": "Bukti kepemilikan",
+    "source": "Referensi"
+  },
+  {
+    "id": 23,
+    "category": "Dokumen",
+    "question": "Fungsi STNK",
+    "answer": "Legalitas kendaraan",
+    "source": "Referensi"
+  },
+  {
+    "id": 24,
+    "category": "Dokumen",
+    "question": "Fungsi BPKB",
+    "answer": "Kepemilikan",
+    "source": "Referensi"
+  },
+  {
+    "id": 25,
+    "category": "Dokumen",
+    "question": "STNK berlaku berapa lama",
+    "answer": "5 tahun",
+    "source": "Referensi"
+  },
+  {
+    "id": 26,
+    "category": "Dokumen",
+    "question": "STNK hilang",
+    "answer": "Harus lapor polisi",
+    "source": "Referensi"
+  },
+  {
+    "id": 27,
+    "category": "Dokumen",
+    "question": "BPKB hilang",
+    "answer": "Urus di Polda",
+    "source": "Referensi"
+  },
+  {
+    "id": 28,
+    "category": "Dokumen",
+    "question": "Perpanjang STNK",
+    "answer": "Setiap tahun",
+    "source": "Referensi"
+  },
+  {
+    "id": 29,
+    "category": "Dokumen",
+    "question": "Ganti STNK",
+    "answer": "5 tahunan",
+    "source": "Referensi"
+  },
+  {
+    "id": 30,
+    "category": "Dokumen",
+    "question": "Identitas wajib",
+    "answer": "KTP",
+    "source": "Referensi"
+  },
+  {
+    "id": 31,
+    "category": "Balik Nama",
+    "question": "Apa itu balik nama",
+    "answer": "Ganti kepemilikan",
+    "source": "Referensi"
+  },
+  {
+    "id": 32,
+    "category": "Balik Nama",
+    "question": "Syarat balik nama",
+    "answer": "STNK, BPKB, KTP",
+    "source": "Referensi"
+  },
+  {
+    "id": 33,
+    "category": "Balik Nama",
+    "question": "Lama balik nama",
+    "answer": "Beberapa hari",
+    "source": "Referensi"
+  },
+  {
+    "id": 34,
+    "category": "Balik Nama",
+    "question": "Biaya balik nama",
+    "answer": "Tergantung kendaraan",
+    "source": "Referensi"
+  },
+  {
+    "id": 35,
+    "category": "Balik Nama",
+    "question": "Proses balik nama",
+    "answer": "Cek fisik & daftar",
+    "source": "Referensi"
+  },
+  {
+    "id": 36,
+    "category": "Balik Nama",
+    "question": "Perlu cek fisik",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 37,
+    "category": "Balik Nama",
+    "question": "Balik nama wajib",
+    "answer": "Disarankan",
+    "source": "Referensi"
+  },
+  {
+    "id": 38,
+    "category": "Balik Nama",
+    "question": "Bisa diwakilkan",
+    "answer": "Bisa",
+    "source": "Referensi"
+  },
+  {
+    "id": 39,
+    "category": "Balik Nama",
+    "question": "Syarat tambahan",
+    "answer": "Kwitansi jual beli",
+    "source": "Referensi"
+  },
+  {
+    "id": 40,
+    "category": "Balik Nama",
+    "question": "Tempat balik nama",
+    "answer": "Samsat",
+    "source": "Referensi"
+  },
+  {
+    "id": 41,
+    "category": "Mutasi",
+    "question": "Apa itu mutasi",
+    "answer": "Pindah data kendaraan",
+    "source": "Referensi"
+  },
+  {
+    "id": 42,
+    "category": "Mutasi",
+    "question": "Syarat mutasi",
+    "answer": "STNK, BPKB, KTP",
+    "source": "Referensi"
+  },
+  {
+    "id": 43,
+    "category": "Mutasi",
+    "question": "Proses mutasi",
+    "answer": "Keluar & masuk",
+    "source": "Referensi"
+  },
+  {
+    "id": 44,
+    "category": "Mutasi",
+    "question": "Lama mutasi",
+    "answer": "Beberapa hari",
+    "source": "Referensi"
+  },
+  {
+    "id": 45,
+    "category": "Mutasi",
+    "question": "Mutasi wajib",
+    "answer": "Tidak",
+    "source": "Referensi"
+  },
+  {
+    "id": 46,
+    "category": "Mutasi",
+    "question": "Tujuan mutasi",
+    "answer": "Pindah wilayah",
+    "source": "Referensi"
+  },
+  {
+    "id": 47,
+    "category": "Mutasi",
+    "question": "Perlu cek fisik",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 48,
+    "category": "Mutasi",
+    "question": "Mutasi antar provinsi",
+    "answer": "Bisa",
+    "source": "Referensi"
+  },
+  {
+    "id": 49,
+    "category": "Mutasi",
+    "question": "Biaya mutasi",
+    "answer": "Tergantung",
+    "source": "Referensi"
+  },
+  {
+    "id": 50,
+    "category": "Mutasi",
+    "question": "Tempat mutasi",
+    "answer": "Samsat",
+    "source": "Referensi"
+  },
+  {
+    "id": 51,
+    "category": "Layanan Tambahan",
+    "question": "Apa itu samsat keliling",
+    "answer": "Layanan mobile",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 52,
+    "category": "Layanan Tambahan",
+    "question": "Fungsi samsat keliling",
+    "answer": "Bayar pajak",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 53,
+    "category": "Layanan Tambahan",
+    "question": "Jadwal samsat keliling",
+    "answer": "Sesuai jadwal",
+    "source": "Website"
+  },
+  {
+    "id": 54,
+    "category": "Layanan Tambahan",
+    "question": "Apa itu drive thru",
+    "answer": "Tanpa turun kendaraan",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 55,
+    "category": "Layanan Tambahan",
+    "question": "Fungsi drive thru",
+    "answer": "Mempercepat layanan",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 56,
+    "category": "Layanan Tambahan",
+    "question": "Apa itu e-Samsat",
+    "answer": "Layanan online",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 57,
+    "category": "Layanan Tambahan",
+    "question": "Fungsi e-Samsat",
+    "answer": "Bayar pajak online",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 58,
+    "category": "Layanan Tambahan",
+    "question": "Apa itu SIGNAL",
+    "answer": "Aplikasi resmi pajak",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 59,
+    "category": "Layanan Tambahan",
+    "question": "Fungsi SIGNAL",
+    "answer": "Bayar pajak online",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 60,
+    "category": "Layanan Tambahan",
+    "question": "Apa itu SAMBARA",
+    "answer": "Aplikasi Jawa Barat",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 61,
+    "category": "Layanan Tambahan",
+    "question": "Fungsi SAMBARA",
+    "answer": "Cek pajak kendaraan",
+    "source": "Website Bapenda"
+  },
+  {
+    "id": 62,
+    "category": "Layanan Tambahan",
+    "question": "Apakah SIGNAL gratis",
+    "answer": "Ya",
+    "source": "Website"
+  },
+  {
+    "id": 63,
+    "category": "Layanan Tambahan",
+    "question": "Apakah e-samsat aman",
+    "answer": "Ya",
+    "source": "Website"
+  },
+  {
+    "id": 64,
+    "category": "Layanan Tambahan",
+    "question": "Apakah bisa bayar lewat HP",
+    "answer": "Bisa",
+    "source": "Website"
+  },
+  {
+    "id": 65,
+    "category": "Layanan Tambahan",
+    "question": "Apakah layanan online wajib",
+    "answer": "Tidak",
+    "source": "Referensi"
+  },
+  {
+    "id": 66,
+    "category": "Sistem",
+    "question": "Apa itu chatbot",
+    "answer": "Sistem otomatis",
+    "source": "Penelitian"
+  },
+  {
+    "id": 67,
+    "category": "Sistem",
+    "question": "Fungsi chatbot",
+    "answer": "Memberikan informasi",
+    "source": "Penelitian"
+  },
+  {
+    "id": 68,
+    "category": "Sistem",
+    "question": "Cara kerja chatbot",
+    "answer": "Pencocokan pola",
+    "source": "Penelitian"
+  },
+  {
+    "id": 69,
+    "category": "Sistem",
+    "question": "Apa itu pattern matching",
+    "answer": "Metode pencocokan",
+    "source": "Teori"
+  },
+  {
+    "id": 70,
+    "category": "Sistem",
+    "question": "Apa itu regex",
+    "answer": "Pola teks",
+    "source": "Teori"
+  },
+  {
+    "id": 71,
+    "category": "Sistem",
+    "question": "Chatbot pakai AI",
+    "answer": "Tidak",
+    "source": "Penelitian"
+  },
+  {
+    "id": 72,
+    "category": "Sistem",
+    "question": "Kelebihan chatbot",
+    "answer": "Cepat",
+    "source": "Penelitian"
+  },
+  {
+    "id": 73,
+    "category": "Sistem",
+    "question": "Kekurangan chatbot",
+    "answer": "Terbatas pola",
+    "source": "Penelitian"
+  },
+  {
+    "id": 74,
+    "category": "Sistem",
+    "question": "Chatbot bisa salah",
+    "answer": "Bisa",
+    "source": "Penelitian"
+  },
+  {
+    "id": 75,
+    "category": "Sistem",
+    "question": "Chatbot belajar",
+    "answer": "Tidak",
+    "source": "Penelitian"
+  },
+  {
+    "id": 76,
+    "category": "Perkembangan",
+    "question": "Samsat 2024",
+    "answer": "Dominan offline",
+    "source": "Referensi"
+  },
+  {
+    "id": 77,
+    "category": "Perkembangan",
+    "question": "Samsat 2025",
+    "answer": "Ada pemutihan",
+    "source": "Referensi"
+  },
+  {
+    "id": 78,
+    "category": "Perkembangan",
+    "question": "Samsat 2026",
+    "answer": "Digital meningkat",
+    "source": "Referensi"
+  },
+  {
+    "id": 79,
+    "category": "Perkembangan",
+    "question": "Perubahan layanan",
+    "answer": "Lebih digital",
+    "source": "Referensi"
+  },
+  {
+    "id": 80,
+    "category": "Perkembangan",
+    "question": "Kebijakan pajak",
+    "answer": "Keringanan denda",
+    "source": "Referensi"
+  },
+  {
+    "id": 81,
+    "category": "Umum",
+    "question": "Harus ke Samsat",
+    "answer": "Tidak selalu",
+    "source": "Referensi"
+  },
+  {
+    "id": 82,
+    "category": "Umum",
+    "question": "Bisa diwakilkan",
+    "answer": "Bisa",
+    "source": "Referensi"
+  },
+  {
+    "id": 83,
+    "category": "Umum",
+    "question": "Layanan cepat",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 84,
+    "category": "Umum",
+    "question": "Layanan online",
+    "answer": "Ada",
+    "source": "Referensi"
+  },
+  {
+    "id": 85,
+    "category": "Umum",
+    "question": "Pajak penting",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 86,
+    "category": "Umum",
+    "question": "Fungsi pajak",
+    "answer": "Pendapatan daerah",
+    "source": "Referensi"
+  },
+  {
+    "id": 87,
+    "category": "Umum",
+    "question": "Kendaraan wajib pajak",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 88,
+    "category": "Umum",
+    "question": "Pajak motor",
+    "answer": "Wajib",
+    "source": "Referensi"
+  },
+  {
+    "id": 89,
+    "category": "Umum",
+    "question": "Pajak mobil",
+    "answer": "Wajib",
+    "source": "Referensi"
+  },
+  {
+    "id": 90,
+    "category": "Umum",
+    "question": "Layanan publik",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 91,
+    "category": "Umum",
+    "question": "Sistem samsat modern",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 92,
+    "category": "Umum",
+    "question": "Pelayanan cepat",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 93,
+    "category": "Umum",
+    "question": "Antrian samsat",
+    "answer": "Bisa terjadi",
+    "source": "Referensi"
+  },
+  {
+    "id": 94,
+    "category": "Umum",
+    "question": "Alternatif layanan",
+    "answer": "Online",
+    "source": "Referensi"
+  },
+  {
+    "id": 95,
+    "category": "Umum",
+    "question": "Kemudahan akses",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 96,
+    "category": "Umum",
+    "question": "Informasi samsat",
+    "answer": "Penting",
+    "source": "Referensi"
+  },
+  {
+    "id": 97,
+    "category": "Umum",
+    "question": "Teknologi samsat",
+    "answer": "Berkembang",
+    "source": "Referensi"
+  },
+  {
+    "id": 98,
+    "category": "Umum",
+    "question": "Digitalisasi samsat",
+    "answer": "Ya",
+    "source": "Referensi"
+  },
+  {
+    "id": 99,
+    "category": "Umum",
+    "question": "Sistem online samsat",
+    "answer": "Tersedia",
+    "source": "Referensi"
+  },
+  {
+    "id": 100,
+    "category": "Umum",
+    "question": "Tujuan layanan samsat",
+    "answer": "Mempermudah masyarakat",
+    "source": "Referensi"
+  }
+]
