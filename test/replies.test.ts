@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { faqEntries } from "../src/faq-data";
+import { faqCategories, faqEntries } from "../src/faq-data";
 import {
   buildDirectFaqMessage,
   buildFaqMessage,
@@ -36,10 +36,12 @@ describe("tampilan kategori FAQ", () => {
   });
 
   it("menampilkan icon pada menu kategori utama", () => {
-    expect(JSON.stringify(mainMenu)).toContain("🏢 Layanan");
-    expect(JSON.stringify(mainMenu)).toContain("💰 Pajak");
-    expect(JSON.stringify(mainMenu)).toContain("🔎 Cek Fisik");
-    expect(JSON.stringify(mainMenu)).toContain("🚐 Samsat Keliling");
+    const menuText = JSON.stringify(mainMenu);
+
+    for (const category of faqCategories) {
+      expect(menuText).toContain(`cat:${category}`);
+    }
+    expect(menuText).toContain("🏢 Layanan");
   });
 
   it("menampilkan tombol rating 1 sampai 5", () => {

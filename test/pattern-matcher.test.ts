@@ -1,24 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { faqEntries } from "../src/faq-data";
+import faqEntriesJson from "../src/data/faq-samsat-bandung-timur.json";
+import { faqCategories, faqEntries } from "../src/faq-data";
 import { getCategory, getEntriesByCategory, matchFaq } from "../src/pattern-matcher";
 
 describe("FAQ dataset", () => {
-  it("memiliki 233 baris FAQ yang diimpor", () => {
-    expect(faqEntries).toHaveLength(233);
+  it("mengimpor semua baris FAQ dari file JSON", () => {
+    expect(faqEntries).toHaveLength(faqEntriesJson.length);
   });
 
-  it.each([
-    ["Layanan", 35],
-    ["Pajak", 40],
-    ["Dokumen", 30],
-    ["Balik Nama", 25],
-    ["Mutasi", 25],
-    ["Cek Fisik", 20],
-    ["SIGNAL", 20],
-    ["Samsat Keliling", 15],
-    ["Fasilitas", 13],
-    ["Pengaduan", 10]
-  ] as const)("memetakan kategori %s ke %s baris", (category, count) => {
+  it("membuat daftar kategori otomatis dari dataset", () => {
+    const categoriesFromDataset = [...new Set(faqEntriesJson.map((entry) => entry.category))];
+
+    expect(faqCategories).toEqual(categoriesFromDataset);
+  });
+
+  it.each(faqCategories)("memetakan kategori %s sesuai isi dataset", (category) => {
+    const count = faqEntriesJson.filter((entry) => entry.category === category).length;
+
     expect(getEntriesByCategory(category)).toHaveLength(count);
   });
 });

@@ -38,18 +38,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Button navigation refreshes the existing menu message instead of sending a new chat message
 - Free-text question matching with pattern matching
 - Text-only input; media such as photos, videos, stickers, voice notes, and files are rejected with a short instruction message
-- 233 FAQ entries from the SAMSAT Bandung Timur dataset
-- 10 FAQ categories:
-  - Layanan
-  - Pajak
-  - Dokumen
-  - Balik Nama
-  - Mutasi
-  - Cek Fisik
-  - SIGNAL
-  - Samsat Keliling
-  - Fasilitas
-  - Pengaduan
+- FAQ entries and categories are loaded automatically from the JSON dataset
 - Webhook secret validation with `X-Telegram-Bot-Api-Secret-Token`
 - Local dry-run mode for testing webhook behavior without sending real Telegram messages
 - Automatic research profile recording after `/start`
@@ -147,13 +136,35 @@ Contains the pattern matching algorithm: normalization, stop-word removal, synon
 src/data/faq-samsat-bandung-timur.json
 ```
 
-The FAQ dataset. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic.
+The FAQ dataset. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic. When this file changes, the imported FAQ count, category list, and category menu are updated automatically.
 
 ```text
 src/faq-data.ts
 ```
 
-Loads the JSON dataset and validates that every FAQ category is valid.
+Loads the JSON dataset, validates the required FAQ fields, and derives categories automatically from the dataset.
+
+### Updating the Dataset
+
+To change the FAQ dataset:
+
+1. Edit or replace `src/data/faq-samsat-bandung-timur.json`.
+2. Make sure every row has `id`, `category`, `question`, `answer`, and `source`.
+3. Run:
+
+   ```sh
+   npm run typecheck
+   npm test
+   ```
+
+The bot automatically updates:
+
+- total FAQ count shown in `/start`
+- category list
+- main menu category buttons
+- category pagination
+
+Only `customPatterns` in `src/pattern-matcher.ts` may need manual tuning if new questions need extra keyword variations.
 
 ```text
 src/replies.ts
@@ -604,18 +615,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Navigasi tombol memperbarui pesan menu yang sama, bukan mengirim chat baru
 - Pencarian pertanyaan bebas dengan pattern matching
 - Input hanya teks; media seperti foto, video, sticker, voice note, dan file ditolak dengan pesan instruksi singkat
-- 233 data FAQ dari dataset SAMSAT Bandung Timur
-- 10 kategori FAQ:
-  - Layanan
-  - Pajak
-  - Dokumen
-  - Balik Nama
-  - Mutasi
-  - Cek Fisik
-  - SIGNAL
-  - Samsat Keliling
-  - Fasilitas
-  - Pengaduan
+- Data FAQ dan kategori dimuat otomatis dari dataset JSON
 - Validasi webhook secret dengan `X-Telegram-Bot-Api-Secret-Token`
 - Mode dry-run lokal untuk testing webhook tanpa mengirim pesan Telegram sungguhan
 - Pencatatan profil riset otomatis setelah `/start`
@@ -713,13 +713,35 @@ Berisi algoritma pattern matching: normalisasi teks, penghapusan stop word, perl
 src/data/faq-samsat-bandung-timur.json
 ```
 
-Dataset FAQ. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
+Dataset FAQ. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan. Jika file ini berubah, jumlah FAQ, daftar kategori, dan menu kategori ikut diperbarui otomatis.
 
 ```text
 src/faq-data.ts
 ```
 
-Memuat dataset JSON dan memvalidasi bahwa setiap kategori FAQ valid.
+Memuat dataset JSON, memvalidasi field FAQ yang wajib ada, dan membuat daftar kategori otomatis dari dataset.
+
+### Mengubah Dataset
+
+Untuk mengubah dataset FAQ:
+
+1. Edit atau ganti `src/data/faq-samsat-bandung-timur.json`.
+2. Pastikan setiap baris memiliki `id`, `category`, `question`, `answer`, dan `source`.
+3. Jalankan:
+
+   ```sh
+   npm run typecheck
+   npm test
+   ```
+
+Bot otomatis memperbarui:
+
+- jumlah FAQ yang tampil di `/start`
+- daftar kategori
+- tombol kategori pada menu utama
+- pagination kategori
+
+Hanya `customPatterns` di `src/pattern-matcher.ts` yang mungkin perlu disesuaikan manual jika pertanyaan baru membutuhkan variasi kata kunci tambahan.
 
 ```text
 src/replies.ts

@@ -1,20 +1,6 @@
 import faqEntriesJson from "./data/faq-samsat-bandung-timur.json";
 
-// Daftar kategori resmi yang dipakai oleh dataset FAQ.
-export const faqCategories = [
-  "Layanan",
-  "Pajak",
-  "Dokumen",
-  "Balik Nama",
-  "Mutasi",
-  "Cek Fisik",
-  "SIGNAL",
-  "Samsat Keliling",
-  "Fasilitas",
-  "Pengaduan"
-] as const;
-
-export type FaqCategory = (typeof faqCategories)[number];
+export type FaqCategory = string;
 
 // Struktur satu baris data FAQ.
 export interface FaqEntry {
@@ -25,13 +11,26 @@ export interface FaqEntry {
   source: string;
 }
 
-const categorySet = new Set<string>(faqCategories);
+// Memuat dataset JSON dan memastikan struktur data valid.
+export const faqEntries: FaqEntry[] = faqEntriesJson.map((entry, index) => {
+  assertFaqEntry(entry, index);
+  return entry;
+});
 
-// Memuat dataset JSON dan memastikan setiap kategori valid.
-export const faqEntries: FaqEntry[] = faqEntriesJson.map((entry) => {
-  if (!categorySet.has(entry.category)) {
-    throw new Error(`Invalid FAQ category: ${entry.category}`);
+// Daftar kategori dibuat otomatis dari dataset agar menu ikut berubah saat data diganti.
+export const faqCategories = [...new Set(faqEntries.map((entry) => entry.category))];
+
+// Validasi satu baris FAQ agar error dataset mudah ditemukan.
+function assertFaqEntry(entry: unknown, index: number): asserts entry is FaqEntry {
+  const row = entry as Partial<FaqEntry>;
+
+  if (typeof row.id !== "number" || !Number.isInteger(row.id) || row.id <= 0) {
+    throw new Error(`Invalid FAQ id at row ${index + 1}`);
   }
 
-  return entry as FaqEntry;
-});
+  for (const field of ["category", "question", "answer", "source"] as const) {
+    if (typeof row[field] !== "string" || row[field]?.trim() === "") {
+      throw new Error(`Invalid FAQ ${field} at row ${index + 1}`);
+    }
+  }
+}

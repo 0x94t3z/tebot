@@ -3,7 +3,7 @@ import { getEntriesByCategory, type PatternMatchResult } from "./pattern-matcher
 
 const questionsPerPage = 7;
 
-const categoryIcons: Record<FaqCategory, string> = {
+const categoryIcons: Record<string, string> = {
   Layanan: "🏢",
   Pajak: "💰",
   Dokumen: "📄",
@@ -18,28 +18,13 @@ const categoryIcons: Record<FaqCategory, string> = {
 
 // Menu utama yang ditampilkan sebagai inline keyboard Telegram.
 export const mainMenu = {
-  inline_keyboard: [
-    [
-      { text: categoryLabel("Layanan"), callback_data: "cat:Layanan" },
-      { text: categoryLabel("Pajak"), callback_data: "cat:Pajak" }
-    ],
-    [
-      { text: categoryLabel("Dokumen"), callback_data: "cat:Dokumen" },
-      { text: categoryLabel("Balik Nama"), callback_data: "cat:Balik Nama" }
-    ],
-    [
-      { text: categoryLabel("Mutasi"), callback_data: "cat:Mutasi" },
-      { text: categoryLabel("Cek Fisik"), callback_data: "cat:Cek Fisik" }
-    ],
-    [
-      { text: categoryLabel("SIGNAL"), callback_data: "cat:SIGNAL" },
-      { text: categoryLabel("Samsat Keliling"), callback_data: "cat:Samsat Keliling" }
-    ],
-    [
-      { text: categoryLabel("Fasilitas"), callback_data: "cat:Fasilitas" },
-      { text: categoryLabel("Pengaduan"), callback_data: "cat:Pengaduan" }
-    ]
-  ]
+  inline_keyboard: chunkButtons(
+    faqCategories.map((category) => ({
+      text: categoryLabel(category),
+      callback_data: `cat:${category}`
+    })),
+    2
+  )
 };
 
 // Tombol rating setelah user menerima jawaban FAQ.
@@ -180,7 +165,18 @@ function withCommandHint(message: string) {
 
 // Membuat label kategori dengan icon agar menu Telegram lebih mudah dipindai.
 function categoryLabel(category: FaqCategory) {
-  return `${categoryIcons[category]} ${category}`;
+  return `${categoryIcons[category] ?? "🗂️"} ${category}`;
+}
+
+// Membagi tombol kategori menjadi baris agar menu otomatis mengikuti dataset.
+function chunkButtons<T>(buttons: T[], size: number) {
+  const rows: T[][] = [];
+
+  for (let index = 0; index < buttons.length; index += size) {
+    rows.push(buttons.slice(index, index + size));
+  }
+
+  return rows;
 }
 
 // Mengambil data FAQ sesuai halaman kategori.
