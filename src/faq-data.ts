@@ -7,9 +7,14 @@ export const faqCategories = [
   "Dokumen",
   "Balik Nama",
   "Mutasi",
+  "Cek Fisik",
+  "SIGNAL",
+  "Samsat Keliling",
+  "Fasilitas",
   "Layanan Tambahan",
   "Sistem",
   "Perkembangan",
+  "Pengaduan",
   "Umum"
 ] as const;
 

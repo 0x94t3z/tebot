@@ -1,6 +1,8 @@
-# SAMSAT Bandung Timur Telegram Bot
+# Implementasi Metode Pattern Matching pada Chatbot FAQ: Studi Kasus SAMSAT Bandung Timur
 
-Telegram FAQ chatbot for **SAMSAT Bandung Timur**, built with **Cloudflare Workers** and Telegram webhooks.
+Proyek ini merupakan implementasi chatbot FAQ untuk **SAMSAT Bandung Timur** yang menjadi studi kasus dalam skripsi. Fokus utamanya adalah penerapan **metode pattern matching** untuk mencocokkan pertanyaan pengguna dengan dataset FAQ dan mengembalikan jawaban yang paling relevan.
+
+Teknologi pendukung yang digunakan adalah **Cloudflare Workers** dan **Telegram webhook**.
 
 Languages:
 
@@ -13,7 +15,7 @@ Languages:
 
 ### Overview
 
-This project is a Telegram chatbot that answers frequently asked questions about SAMSAT Bandung Timur. The chatbot uses a **rule-based pattern matching method**, not generative AI. It compares the user's question with an FAQ dataset and returns the most relevant answer.
+This project is a Telegram chatbot for frequently asked questions about SAMSAT Bandung Timur. The research focus is the **pattern matching method**, not generative AI. The bot compares the user's question with an FAQ dataset and returns the most relevant answer.
 
 The bot runs on Cloudflare Workers, so it does not need to run on your Mac after deployment. Telegram sends user messages to the deployed Worker URL through a webhook.
 
@@ -31,29 +33,12 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 
 ### Features
 
-- Telegram bot command support: `/start`, `/help`, and `/clear`
-- Inline category menu
-- FAQ buttons per category, limited to 7 questions per page
-- Next/previous navigation for categories with more than 7 questions
-- Button navigation refreshes the existing menu message instead of sending a new chat message
-- Free-text question matching with pattern matching
-- Text-only input; media such as photos, videos, stickers, voice notes, and files are rejected with a short instruction message
-- 100 FAQ entries from the SAMSAT Bandung Timur dataset
-- 9 FAQ categories:
-  - Layanan
-  - Pajak
-  - Dokumen
-  - Balik Nama
-  - Mutasi
-  - Layanan Tambahan
-  - Sistem
-  - Perkembangan
-  - Umum
-- Webhook secret validation with `X-Telegram-Bot-Api-Secret-Token`
-- Local dry-run mode for testing webhook behavior without sending real Telegram messages
-- Automatic research profile recording after `/start`
-- Rating buttons after FAQ answers
-- Protected CSV export for Telegram user profile and rating data
+- Telegram command support: `/start`, `/help`, and `/clear`
+- Inline category menu and FAQ buttons per category
+- Free-text FAQ matching using pattern matching
+- Text-only input handling
+- FAQ dataset for SAMSAT Bandung Timur
+- Answer rating buttons after FAQ responses
 
 ### Clear Command
 
@@ -224,7 +209,7 @@ If the Worker URL changes, the webhook must be set again.
 
 ### Pattern Matching Method
 
-The chatbot is intentionally rule-based.
+The chatbot is intentionally rule-based and used as the main implementation object in the thesis.
 
 For academic writing, the core method should be described as **Pattern Matching**, not Regex. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, synonym expansion, custom patterns, and scoring.
 
@@ -233,7 +218,7 @@ Regex appears only as a small preprocessing tool inside the `normalize()` functi
 Safe wording for the thesis:
 
 ```text
-The chatbot applies a rule-based pattern matching method. User input is normalized, tokenized, expanded with simple synonym rules, and compared against FAQ patterns. Regex is only used during text preprocessing, while the answer selection is performed using pattern matching and scoring.
+The chatbot applies a rule-based pattern matching method. User input is normalized, tokenized, expanded with simple synonym rules, and compared against FAQ patterns. Regex is only used during text preprocessing, while answer selection is performed using pattern matching and scoring.
 ```
 
 Matching flow:

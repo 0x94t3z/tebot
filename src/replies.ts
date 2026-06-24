@@ -1,4 +1,4 @@
-import { faqCategories, type FaqCategory, type FaqEntry } from "./faq-data";
+import { type FaqCategory, type FaqEntry } from "./faq-data";
 import { getEntriesByCategory, type PatternMatchResult } from "./pattern-matcher";
 
 const questionsPerPage = 7;
@@ -9,10 +9,15 @@ const categoryIcons: Record<FaqCategory, string> = {
   Dokumen: "📄",
   "Balik Nama": "🔁",
   Mutasi: "🚚",
-  "Layanan Tambahan": "🛰️",
-  Sistem: "⚙️",
-  Perkembangan: "📈",
-  Umum: "ℹ️"
+  "Cek Fisik": "🔎",
+  SIGNAL: "📲",
+  "Samsat Keliling": "🚌",
+  Fasilitas: "🏛️",
+  Pengaduan: "📣",
+  "Layanan Tambahan": "",
+  Sistem: "",
+  Perkembangan: "",
+  Umum: ""
 };
 
 // Menu utama yang ditampilkan sebagai inline keyboard Telegram.
@@ -20,21 +25,22 @@ export const mainMenu = {
   inline_keyboard: [
     [
       { text: categoryLabel("Layanan"), callback_data: "cat:Layanan" },
-      { text: categoryLabel("Pajak"), callback_data: "cat:Pajak" }
+      { text: categoryLabel("Pajak"), callback_data: "cat:Pajak" },
+      { text: categoryLabel("Dokumen"), callback_data: "cat:Dokumen" }
     ],
     [
-      { text: categoryLabel("Dokumen"), callback_data: "cat:Dokumen" },
-      { text: categoryLabel("Balik Nama"), callback_data: "cat:Balik Nama" }
-    ],
-    [
+      { text: categoryLabel("Balik Nama"), callback_data: "cat:Balik Nama" },
       { text: categoryLabel("Mutasi"), callback_data: "cat:Mutasi" },
-      { text: categoryLabel("Layanan Tambahan"), callback_data: "cat:Layanan Tambahan" }
+      { text: categoryLabel("Cek Fisik"), callback_data: "cat:Cek Fisik" }
     ],
     [
-      { text: categoryLabel("Sistem"), callback_data: "cat:Sistem" },
-      { text: categoryLabel("Perkembangan"), callback_data: "cat:Perkembangan" }
+      { text: categoryLabel("SIGNAL"), callback_data: "cat:SIGNAL" },
+      { text: categoryLabel("Samsat Keliling"), callback_data: "cat:Samsat Keliling" },
+      { text: categoryLabel("Fasilitas"), callback_data: "cat:Fasilitas" }
     ],
-    [{ text: categoryLabel("Umum"), callback_data: "cat:Umum" }]
+    [
+      { text: categoryLabel("Pengaduan"), callback_data: "cat:Pengaduan" },
+    ]
   ]
 };
 
@@ -54,18 +60,16 @@ export function buildRatingKeyboard(faqId: number) {
 // Membuat pesan pembuka saat user mengirim /start atau /help.
 export function buildStartMessage() {
   return withCommandHint([
-    "Chatbot FAQ SAMSAT Bandung Timur",
+    "Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.",
+    "Silakan pilih kategori atau ketik pertanyaan Anda.",
     "",
-    "Ketik pertanyaan seperti:",
+    "Contoh:",
     "- jam operasional samsat",
     "- syarat bayar pajak",
     "- stnk hilang",
-    "- apa itu pattern matching",
+    "- apa itu SIGNAL",
     "",
-    "Ketik /clear untuk membersihkan pesan yang dapat dihapus oleh bot.",
-    "Profil Telegram dasar dicatat untuk kebutuhan riset saat Anda menggunakan /start.",
-    "",
-    `Dataset aktif: 100 FAQ dalam ${faqCategories.length} kategori.`
+    "Ketik /clear untuk membersihkan chat."
   ].join("\n"));
 }
 
@@ -133,7 +137,8 @@ export function buildDirectFaqMessage(entry: FaqEntry) {
 // Pesan fallback jika pertanyaan user tidak cocok dengan data FAQ.
 export function buildUnknownMessage() {
   return withCommandHint([
-    "Maaf, pertanyaan belum cocok dengan pola FAQ yang tersedia.",
+    "Maaf, saya hanya dapat menjawab pertanyaan seputar layanan SAMSAT Bandung Timur.",
+    "Pesan Anda tidak terkait dengan topik yang didukung atau belum cocok dengan FAQ yang tersedia.",
     "",
     "Coba gunakan kata kunci yang lebih dekat dengan data FAQ, misalnya:",
     "- pajak",
@@ -141,7 +146,7 @@ export function buildUnknownMessage() {
     "- balik nama",
     "- mutasi",
     "- samsat keliling",
-    "- chatbot",
+    "- cek fisik",
     "",
     "Atau pilih kategori di bawah."
   ].join("\n"));
