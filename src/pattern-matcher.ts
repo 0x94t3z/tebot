@@ -6,15 +6,10 @@ export interface PatternMatchResult {
   matchedTerms: string[];
 }
 
-interface ScoredPatternMatchResult extends PatternMatchResult {
-  directOverlapCount: number;
-  phraseMatched: boolean;
-}
-
 // Metode utama: pattern matching dengan perhitungan skor.
 // Regex hanya digunakan di dalam normalize() untuk preprocessing tanda baca/spasi,
 // bukan sebagai algoritma utama pencocokan FAQ.
-const minimumScore = 30;
+const minimumScore = 25;
 
 // Kata umum yang diabaikan agar pencocokan fokus pada kata bermakna.
 const stopWords = new Set([
@@ -38,9 +33,16 @@ const stopWords = new Set([
   "kalau",
   "begitu",
   "saja",
-  "dari",
+  "dia",
   "ini",
-  "dia"
+  "tolong",
+  "dong",
+  "min",
+  "admin",
+  "kak",
+  "mas",
+  "pak",
+  "bu"
 ]);
 
 // Kelompok kata yang dianggap memiliki makna mirip saat pencocokan.
@@ -54,64 +56,302 @@ const synonymGroups = [
   ["fungsi", "manfaat", "kegunaan"],
   ["cepat", "kilat"],
   ["mutasi", "pindah"],
+  ["kendaraan", "mobil", "motor"],
   ["biaya", "tarif"],
   ["dokumen", "syarat", "persyaratan"],
-  ["pemilik", "kepemilikan", "nama"]
+  ["pemilik", "kepemilikan", "nama"],
+  ["pengaduan", "keluhan", "komplain"],
+  ["daftar", "mendaftar", "pendaftaran"]
 ];
 
 // Pola tambahan untuk FAQ tertentu agar variasi pertanyaan user tetap cocok.
 const customPatterns: Record<number, string[]> = {
-  1: ["jam layanan samsat", "jadwal layanan samsat"],
-  4: ["jam operasional samsat", "jadwal samsat bandung timur"],
+  4: ["jam layanan samsat", "jadwal layanan samsat"],
   5: ["samsat buka", "buka jam"],
-  6: ["samsat tutup", "tutup jam"],
+  6: ["samsat tutup", "tutup jam", "jam tutup", "kalau tutup", "operasional tutup"],
   7: ["samsat buka hari sabtu", "sabtu buka", "buka hari sabtu", "layanan sabtu"],
   8: ["samsat buka hari minggu", "minggu buka", "buka hari minggu", "layanan minggu"],
-  9: ["lokasi samsat bandung timur", "dimana samsat bandung timur"],
-  10: ["alamat samsat bandung timur", "samsat soekarno hatta"],
-  26: ["antrean samsat", "antrian samsat", "antrean pelayanan"],
+  9: ["lokasi samsat bandung timur", "samsat soekarno hatta"],
+  10: ["alamat samsat bandung timur"],
+  15: ["cek fisik samsat", "melayani cek fisik"],
+  32: ["jatuh tempo", "masa berlaku pajak"],
   36: ["denda pajak", "telat bayar pajak"],
-  40: ["pajak lima tahunan", "pajak 5 tahun"],
-  49: ["cek denda pajak", "mengetahui denda pajak"],
-  62: ["bayar pajak online", "pajak online signal"],
+  45: ["bayar pajak online", "pajak online"],
   64: ["syarat bayar pajak", "dokumen bayar pajak", "syarat pajak tahunan"],
-  65: ["syarat pajak lima tahunan", "dokumen pajak lima tahunan"],
+  65: ["pajak lima tahunan", "pajak 5 tahun", "syarat pajak lima tahunan"],
   76: ["stnk hilang", "kehilangan stnk"],
   77: ["bpkb hilang", "kehilangan bpkb"],
-  105: ["syarat balik nama", "dokumen balik nama"],
-  113: ["proses balik nama", "alur balik nama", "lama balik nama"],
-  126: ["mutasi kendaraan", "mau mutasi", "apa itu mutasi"],
-  130: ["syarat mutasi", "dokumen mutasi"],
-  136: ["proses mutasi", "alur mutasi", "alur mutasi kendaraan", "lama mutasi"],
-  151: ["cek fisik kendaraan", "apa itu cek fisik"],
-  158: ["biaya cek fisik", "cek fisik bayar"],
-  170: ["lokasi cek fisik", "dimana cek fisik"],
+  105: ["syarat balik nama", "dokumen balik nama", "balik nama"],
+  130: [
+    "mutasi",
+    "syarat mutasi",
+    "dokumen mutasi",
+    "mau mutasi",
+    "ingin mutasi",
+    "cara mutasi",
+    "proses mutasi",
+    "alur mutasi"
+  ],
   171: ["signal", "aplikasi signal"],
   191: ["samsat keliling", "layanan keliling"],
   196: ["jadwal samsat keliling", "jam samsat keliling"],
-  197: ["lokasi samsat keliling", "samsat keliling hari ini"],
-  217: ["area antrean", "tempat antrean"],
-  218: ["fasilitas samsat", "fasilitas tersedia"],
-  219: ["pengaduan samsat", "komplain layanan"],
+  206: ["parkir samsat", "tempat parkir samsat", "samsat punya tempat parkir"],
+  219: [
+    "pengaduan",
+    "komplain",
+    "pengaduan samsat",
+    "keluhan samsat",
+    "komplain samsat",
+    "komplain layanan samsat",
+    "cara komplain layanan samsat"
+  ],
   229: ["drive thru", "samsat drive thru"]
 };
+
+// Kata intent umum tidak cukup untuk membuktikan bahwa pertanyaan membahas
+// Samsat. Ini mencegah kalimat seperti "syarat mencintai dia" cocok hanya
+// karena kata "syarat" bersinonim dengan kategori Dokumen.
+const genericIntentTokens = new Set([
+  "alamat",
+  "lokasi",
+  "tempat",
+  "dimana",
+  "jam",
+  "jadwal",
+  "operasional",
+  "buka",
+  "tutup",
+  "fungsi",
+  "manfaat",
+  "kegunaan",
+  "wajib",
+  "harus",
+  "perlu",
+  "biaya",
+  "tarif",
+  "kendaraan",
+  "mobil",
+  "motor",
+  "dokumen",
+  "syarat",
+  "persyaratan",
+  "cara",
+  "proses",
+  "alur",
+  "online",
+  "digital",
+  "hilang",
+  "kehilangan"
+]);
+
+// Bentuk kata percakapan yang sering memakai akhiran kepunyaan. Daftar
+// eksplisit dipakai agar kata biasa seperti "hanya" tidak salah dipotong.
+const tokenAliases: Record<string, string> = {
+  alamatnya: "alamat",
+  biayanya: "biaya",
+  caranya: "cara",
+  dokumennya: "dokumen",
+  fungsinya: "fungsi",
+  kendaraannya: "kendaraan",
+  lokasinya: "lokasi",
+  manfaatnya: "manfaat",
+  mobilnya: "mobil",
+  motornya: "motor",
+  mutasinya: "mutasi",
+  pajaknya: "pajak",
+  persyaratannya: "persyaratan",
+  prosesnya: "proses",
+  syaratnya: "syarat"
+};
+
+// Istilah yang cukup spesifik untuk menunjukkan bahwa input membahas Samsat
+// atau administrasi kendaraan. Kata umum seperti mobil/kendaraan sengaja tidak
+// dimasukkan karena sering muncul dalam percakapan di luar layanan Samsat.
+const domainAnchorTokens = new Set([
+  "samsat",
+  "pajak",
+  "pkb",
+  "swdkllj",
+  "stnk",
+  "bpkb",
+  "tnkb",
+  "mutasi",
+  "sambara"
+]);
+
+const domainAnchorPhrases = [
+  "buka jam",
+  "tutup jam",
+  "balik nama",
+  "cek fisik",
+  "nomor rangka",
+  "nomor mesin",
+  "nomor polisi",
+  "pelat nomor",
+  "plat nomor",
+  "jatuh tempo",
+  "drive thru",
+  "aplikasi signal"
+];
+
+const vehicleBrandTokens = [
+  "toyota", "honda", "suzuki", "daihatsu", "mitsubishi", "nissan", "mazda",
+  "isuzu", "wuling", "hyundai", "kia", "bmw", "mercedes", "yamaha",
+  "kawasaki", "vespa"
+];
+
+const dayOfWeekTokens = [
+  "senin",
+  "selasa",
+  "rabu",
+  "kamis",
+  "jumat",
+  "sabtu",
+  "minggu"
+];
+
+const faqVocabulary = new Set([
+  ...synonymGroups.flat(),
+  ...vehicleBrandTokens,
+  ...dayOfWeekTokens,
+  ...faqEntries.flatMap((entry) =>
+    tokenize(`${entry.question} ${entry.category} ${(customPatterns[entry.id] ?? []).join(" ")}`)
+  )
+]);
+
+const outOfScopeBandungAreas = ["barat", "utara", "selatan", "tengah"];
+const operationalHoursFaqIds = new Set([4, 5, 6, 7, 8]);
+const operationalHoursTokens = new Set([
+  "jam",
+  "buka",
+  "tutup",
+  "operasional",
+  ...dayOfWeekTokens
+]);
+const operationalHoursContextTokens = new Set(["jam", "buka", "tutup", "operasional"]);
+
+// Kosakata yang masih masuk akal ketika user membahas cek fisik kendaraan.
+// Kata di luar daftar ini menandakan bahwa frasa "cek fisik" dipakai dalam
+// konteks lain, misalnya olahraga atau pemeriksaan kesehatan manusia.
+const vehicleInspectionTokens = new Set([
+  "cek", "fisik", "kendaraan", "mobil", "motor", "wajib", "harus", "perlu",
+  "balik", "nama", "mutasi", "pindah", "pajak", "stnk", "bpkb", "nomor",
+  "rangka", "mesin", "biaya", "tarif", "dimana", "lokasi", "tempat", "alamat",
+  "samsat", "hasil", "masa", "berlaku", "baru", "modifikasi", "dimodifikasi",
+  "proses", "alur", "cara", "syarat", "persyaratan", "dokumen", "bawa",
+  "membawa", "waktu", "lama", "gratis"
+]);
 
 // Fungsi utama untuk mencari FAQ yang paling cocok dengan pertanyaan user.
 export function matchFaq(input: string): PatternMatchResult | null {
   const normalizedInput = normalize(input);
-  const directQueryTokens = tokenize(normalizedInput);
-  const queryTokens = expandTokens(directQueryTokens);
+  const baseQueryTokens = tokenize(normalizedInput);
+  const queryTokens = expandTokens(baseQueryTokens);
 
-  if (directQueryTokens.length === 0) {
+  if (
+    queryTokens.length === 0 ||
+    !hasDomainContext(normalizedInput, queryTokens) ||
+    hasConflictingContext(normalizedInput, queryTokens, baseQueryTokens)
+  ) {
     return null;
   }
 
   const ranked = faqEntries
-    .map((entry) => scoreEntry(entry, normalizedInput, directQueryTokens, queryTokens))
+    .map((entry) => scoreEntry(entry, normalizedInput, queryTokens))
     .sort((a, b) => b.score - a.score);
 
   const best = ranked[0];
-  return best && isReliableMatch(best) ? best : null;
+  if (!best || best.score < minimumScore || !hasSubjectOverlap(best.entry, queryTokens)) {
+    return null;
+  }
+
+  return best;
+}
+
+// Menolak wilayah Bandung selain Timur dan pemakaian istilah Samsat dalam
+// konteks yang jelas berbeda dari administrasi kendaraan.
+function hasConflictingContext(
+  normalizedInput: string,
+  queryTokens: string[],
+  baseQueryTokens: string[]
+) {
+  if (isExactFaqPattern(normalizedInput)) {
+    return false;
+  }
+
+  const knownTokenCount = baseQueryTokens.filter((token) => faqVocabulary.has(token)).length;
+  const unknownTokenCount = baseQueryTokens.length - knownTokenCount;
+
+  // Satu istilah domain tidak boleh memaksa kecocokan ketika konteks lainnya
+  // berasal dari topik berbeda (contoh: "mutasi genetik" atau "pajak cinta").
+  if (unknownTokenCount > 0 && knownTokenCount < unknownTokenCount + 3) {
+    return true;
+  }
+
+  const asksOtherBandungArea =
+    normalizedInput.includes("bandung") &&
+    !normalizedInput.includes("bandung timur") &&
+    outOfScopeBandungAreas.some((area) => normalizedInput.includes(`bandung ${area}`));
+
+  if (asksOtherBandungArea) {
+    return true;
+  }
+
+  if (normalizedInput.includes("cek fisik")) {
+    return queryTokens.some((token) => !vehicleInspectionTokens.has(token));
+  }
+
+  return false;
+}
+
+// Pertanyaan harus membawa konteks domain yang jelas. Pengecualian diberikan
+// untuk pertanyaan/pola FAQ yang diketik persis, karena konteksnya sudah tidak
+// ambigu di dalam bot Samsat.
+function hasDomainContext(normalizedInput: string, queryTokens: string[]) {
+  if (queryTokens.some((token) => domainAnchorTokens.has(token))) {
+    return true;
+  }
+
+  if (domainAnchorPhrases.some((phrase) => normalizedInput.includes(phrase))) {
+    return true;
+  }
+
+  if (queryTokens.some((token) => faqVocabulary.has(token))) {
+    return true;
+  }
+
+  if (queryTokens.some((token) => operationalHoursContextTokens.has(token))) {
+    return true;
+  }
+
+  if (
+    queryTokens.some((token) => dayOfWeekTokens.includes(token)) &&
+    (normalizedInput.includes("kalau") || normalizedInput.includes("hari"))
+  ) {
+    return true;
+  }
+
+  return isExactFaqPattern(normalizedInput);
+}
+
+function isExactFaqPattern(normalizedInput: string) {
+  return faqEntries.some((entry) => {
+    const patterns = [entry.question, ...(customPatterns[entry.id] ?? [])];
+    return patterns.some((pattern) => normalize(pattern) === normalizedInput);
+  });
+}
+
+// Sedikitnya satu kata subjek harus sama dengan FAQ tujuan. Kecocokan yang
+// hanya berasal dari kata intent umum dianggap di luar konteks.
+function hasSubjectOverlap(entry: FaqEntry, queryTokens: string[]) {
+  const entryTokens = new Set(expandTokens(tokenize(`${entry.question} ${entry.category}`)));
+  if (
+    operationalHoursFaqIds.has(entry.id) &&
+    queryTokens.some((token) => operationalHoursTokens.has(token))
+  ) {
+    return true;
+  }
+  return queryTokens.some((token) => !genericIntentTokens.has(token) && entryTokens.has(token));
 }
 
 // Mengambil satu FAQ berdasarkan ID, biasanya dipakai saat tombol FAQ diklik.
@@ -145,37 +385,29 @@ export function normalize(value: string) {
 function scoreEntry(
   entry: FaqEntry,
   normalizedInput: string,
-  directQueryTokens: string[],
   queryTokens: string[]
-): ScoredPatternMatchResult {
+): PatternMatchResult {
   const patterns = [entry.question, entry.category, ...(customPatterns[entry.id] ?? [])];
   const normalizedPatterns = patterns.map(normalize).filter(Boolean);
-  const directEntryTokens = tokenize([entry.question, entry.category].join(" "));
-  const entryTokens = expandTokens(directEntryTokens);
+  const entryTokens = expandTokens(tokenize([entry.question, entry.category].join(" ")));
 
   let score = 0;
-  let phraseMatched = false;
   const matchedTerms = new Set<string>();
 
   // Skor tinggi diberikan jika input cocok persis atau cocok sebagian dengan pola.
   for (const pattern of normalizedPatterns) {
     if (pattern === normalizedInput) {
       score += 100;
-      phraseMatched = true;
       matchedTerms.add(pattern);
     } else if (pattern.includes(normalizedInput) || normalizedInput.includes(pattern)) {
       score += 45;
-      phraseMatched = true;
       matchedTerms.add(pattern);
     }
   }
 
   const querySet = new Set(queryTokens);
   const entrySet = new Set(entryTokens);
-  const directQuerySet = new Set(directQueryTokens);
-  const directEntrySet = new Set(directEntryTokens);
   const overlap = [...querySet].filter((token) => entrySet.has(token));
-  const directOverlap = [...directQuerySet].filter((token) => directEntrySet.has(token));
 
   for (const token of overlap) {
     matchedTerms.add(token);
@@ -189,25 +421,15 @@ function scoreEntry(
   return {
     entry,
     score: Math.round(score),
-    matchedTerms: [...matchedTerms].slice(0, 6),
-    directOverlapCount: directOverlap.length,
-    phraseMatched
+    matchedTerms: [...matchedTerms].slice(0, 6)
   };
-}
-
-// Memastikan skor tinggi bukan hanya hasil perluasan sinonim dari satu kata ambigu.
-function isReliableMatch(result: ScoredPatternMatchResult) {
-  if (result.score < minimumScore) {
-    return false;
-  }
-
-  return result.phraseMatched || result.directOverlapCount > 0;
 }
 
 // Memecah teks menjadi kata penting dan membuang stop word.
 function tokenize(value: string) {
   return normalize(value)
     .split(" ")
+    .map((token) => tokenAliases[token] ?? token)
     .filter((token) => token.length > 1 && !stopWords.has(token));
 }
 

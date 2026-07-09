@@ -1,6 +1,8 @@
-# SAMSAT Bandung Timur Telegram Bot
+# Implementasi Metode Pattern Matching pada Chatbot FAQ: Studi Kasus SAMSAT Bandung Timur
 
-Telegram FAQ chatbot for **SAMSAT Bandung Timur**, built with **Cloudflare Workers** and Telegram webhooks.
+Proyek ini merupakan implementasi chatbot FAQ untuk **SAMSAT Bandung Timur** yang menjadi studi kasus dalam skripsi. Fokus utamanya adalah penerapan **metode pattern matching** untuk mencocokkan pertanyaan pengguna dengan dataset FAQ dan mengembalikan jawaban yang paling relevan.
+
+Teknologi pendukung yang digunakan adalah **Cloudflare Workers** dan **Telegram webhook**.
 
 Languages:
 
@@ -13,7 +15,7 @@ Languages:
 
 ### Overview
 
-This project is a Telegram chatbot that answers frequently asked questions about SAMSAT Bandung Timur. The chatbot uses a **rule-based pattern matching method**, not generative AI. It compares the user's question with an FAQ dataset and returns the most relevant answer.
+This project is a Telegram chatbot for frequently asked questions about SAMSAT Bandung Timur. The research focus is the **pattern matching method**, not generative AI. The bot compares the user's question with an FAQ dataset and returns the most relevant answer.
 
 The bot runs on Cloudflare Workers, so it does not need to run on your Mac after deployment. Telegram sends user messages to the deployed Worker URL through a webhook.
 
@@ -31,19 +33,12 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 
 ### Features
 
-- Telegram bot command support: `/start`, `/help`, and `/clear`
-- Inline category menu
-- FAQ buttons per category, limited to 7 questions per page
-- Next/previous navigation for categories with more than 7 questions
-- Button navigation refreshes the existing menu message instead of sending a new chat message
-- Free-text question matching with pattern matching
-- Text-only input; media such as photos, videos, stickers, voice notes, and files are rejected with a short instruction message
-- FAQ entries and categories are loaded automatically from the JSON dataset
-- Webhook secret validation with `X-Telegram-Bot-Api-Secret-Token`
-- Local dry-run mode for testing webhook behavior without sending real Telegram messages
-- Automatic research profile recording after `/start`
-- Rating buttons after FAQ answers
-- Protected CSV export for Telegram user profile and rating data
+- Telegram command support: `/start`, `/help`, and `/clear`
+- Inline category menu and FAQ buttons per category
+- Free-text FAQ matching using pattern matching
+- Text-only input handling
+- FAQ dataset for SAMSAT Bandung Timur
+- Answer rating buttons after FAQ responses
 
 ### Clear Command
 
@@ -136,35 +131,13 @@ Contains the pattern matching algorithm: normalization, stop-word removal, synon
 src/data/faq-samsat-bandung-timur.json
 ```
 
-The FAQ dataset. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic. When this file changes, the imported FAQ count, category list, and category menu are updated automatically.
+The FAQ dataset. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic.
 
 ```text
 src/faq-data.ts
 ```
 
-Loads the JSON dataset, validates the required FAQ fields, and derives categories automatically from the dataset.
-
-### Updating the Dataset
-
-To change the FAQ dataset:
-
-1. Edit or replace `src/data/faq-samsat-bandung-timur.json`.
-2. Make sure every row has `id`, `category`, `question`, `answer`, and `source`.
-3. Run:
-
-   ```sh
-   npm run typecheck
-   npm test
-   ```
-
-The bot automatically updates:
-
-- total FAQ count shown in `/start`
-- category list
-- main menu category buttons
-- category pagination
-
-Only `customPatterns` in `src/pattern-matcher.ts` may need manual tuning if new questions need extra keyword variations.
+Loads the JSON dataset and validates that every FAQ category is valid.
 
 ```text
 src/replies.ts
@@ -236,7 +209,7 @@ If the Worker URL changes, the webhook must be set again.
 
 ### Pattern Matching Method
 
-The chatbot is intentionally rule-based.
+The chatbot is intentionally rule-based and used as the main implementation object in the thesis.
 
 For academic writing, the core method should be described as **Pattern Matching**, not Regex. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, synonym expansion, custom patterns, and scoring.
 
@@ -245,7 +218,7 @@ Regex appears only as a small preprocessing tool inside the `normalize()` functi
 Safe wording for the thesis:
 
 ```text
-The chatbot applies a rule-based pattern matching method. User input is normalized, tokenized, expanded with simple synonym rules, and compared against FAQ patterns. Regex is only used during text preprocessing, while the answer selection is performed using pattern matching and scoring.
+The chatbot applies a rule-based pattern matching method. User input is normalized, tokenized, expanded with simple synonym rules, and compared against FAQ patterns. Regex is only used during text preprocessing, while answer selection is performed using pattern matching and scoring.
 ```
 
 Matching flow:
@@ -265,18 +238,18 @@ User input:
 syarat bayar pajak kendaraan
 ```
 
-The matcher normalizes and tokenizes the input, then compares it with all 233 FAQ entries. The FAQ question `Apa syarat membayar pajak tahunan` gets a high score because it shares important terms such as `syarat`, `bayar`, and `pajak`.
+The matcher normalizes and tokenizes the input, then compares it with all 100 FAQ entries. The FAQ question `Syarat bayar pajak` gets a high score because it shares the important terms `syarat`, `bayar`, and `pajak`.
 
 Bot response:
 
 ```text
-Pertanyaan: Apa syarat membayar pajak tahunan
+Kategori: Pajak
+Pertanyaan: Syarat bayar pajak
 
-Secara umum pembayaran pajak tahunan memerlukan STNK asli dan identitas pemilik kendaraan yang masih berlaku sesuai ketentuan pelayanan.
+Jawaban: STNK dan KTP
 
-Sumber: https://bapenda.jabarprov.go.id
-
-Silakan beri rating untuk jawaban ini:
+Sumber: Referensi
+Metode: pattern matching (skor ...)
 ```
 
 ### Setup on a New Device or New Account
@@ -615,7 +588,17 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Navigasi tombol memperbarui pesan menu yang sama, bukan mengirim chat baru
 - Pencarian pertanyaan bebas dengan pattern matching
 - Input hanya teks; media seperti foto, video, sticker, voice note, dan file ditolak dengan pesan instruksi singkat
-- Data FAQ dan kategori dimuat otomatis dari dataset JSON
+- 100 data FAQ dari dataset SAMSAT Bandung Timur
+- 9 kategori FAQ:
+  - Layanan
+  - Pajak
+  - Dokumen
+  - Balik Nama
+  - Mutasi
+  - Layanan Tambahan
+  - Sistem
+  - Perkembangan
+  - Umum
 - Validasi webhook secret dengan `X-Telegram-Bot-Api-Secret-Token`
 - Mode dry-run lokal untuk testing webhook tanpa mengirim pesan Telegram sungguhan
 - Pencatatan profil riset otomatis setelah `/start`
@@ -713,35 +696,13 @@ Berisi algoritma pattern matching: normalisasi teks, penghapusan stop word, perl
 src/data/faq-samsat-bandung-timur.json
 ```
 
-Dataset FAQ. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan. Jika file ini berubah, jumlah FAQ, daftar kategori, dan menu kategori ikut diperbarui otomatis.
+Dataset FAQ. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
 
 ```text
 src/faq-data.ts
 ```
 
-Memuat dataset JSON, memvalidasi field FAQ yang wajib ada, dan membuat daftar kategori otomatis dari dataset.
-
-### Mengubah Dataset
-
-Untuk mengubah dataset FAQ:
-
-1. Edit atau ganti `src/data/faq-samsat-bandung-timur.json`.
-2. Pastikan setiap baris memiliki `id`, `category`, `question`, `answer`, dan `source`.
-3. Jalankan:
-
-   ```sh
-   npm run typecheck
-   npm test
-   ```
-
-Bot otomatis memperbarui:
-
-- jumlah FAQ yang tampil di `/start`
-- daftar kategori
-- tombol kategori pada menu utama
-- pagination kategori
-
-Hanya `customPatterns` di `src/pattern-matcher.ts` yang mungkin perlu disesuaikan manual jika pertanyaan baru membutuhkan variasi kata kunci tambahan.
+Memuat dataset JSON dan memvalidasi bahwa setiap kategori FAQ valid.
 
 ```text
 src/replies.ts
@@ -842,18 +803,18 @@ Input user:
 syarat bayar pajak kendaraan
 ```
 
-Matcher menormalisasi dan memecah input menjadi token, lalu membandingkannya dengan 233 FAQ. Pertanyaan FAQ `Apa syarat membayar pajak tahunan` mendapat skor tinggi karena memiliki kata penting seperti `syarat`, `bayar`, dan `pajak`.
+Matcher menormalisasi dan memecah input menjadi token, lalu membandingkannya dengan 100 FAQ. Pertanyaan FAQ `Syarat bayar pajak` mendapat skor tinggi karena memiliki kata penting yang sama: `syarat`, `bayar`, dan `pajak`.
 
 Balasan bot:
 
 ```text
-Pertanyaan: Apa syarat membayar pajak tahunan
+Kategori: Pajak
+Pertanyaan: Syarat bayar pajak
 
-Secara umum pembayaran pajak tahunan memerlukan STNK asli dan identitas pemilik kendaraan yang masih berlaku sesuai ketentuan pelayanan.
+Jawaban: STNK dan KTP
 
-Sumber: https://bapenda.jabarprov.go.id
-
-Silakan beri rating untuk jawaban ini:
+Sumber: Referensi
+Metode: pattern matching (skor ...)
 ```
 
 ### Setup di Device Baru atau Account Baru

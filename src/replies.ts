@@ -1,30 +1,47 @@
-import { faqCategories, faqEntries, type FaqCategory, type FaqEntry } from "./faq-data";
+import { type FaqCategory, type FaqEntry } from "./faq-data";
 import { getEntriesByCategory, type PatternMatchResult } from "./pattern-matcher";
 
 const questionsPerPage = 7;
 
-const categoryIcons: Record<string, string> = {
+const categoryIcons: Record<FaqCategory, string> = {
   Layanan: "🏢",
   Pajak: "💰",
   Dokumen: "📄",
   "Balik Nama": "🔁",
   Mutasi: "🚚",
   "Cek Fisik": "🔎",
-  SIGNAL: "📱",
-  "Samsat Keliling": "🚐",
-  Fasilitas: "🪑",
-  Pengaduan: "📣"
+  SIGNAL: "📲",
+  "Samsat Keliling": "🚌",
+  Fasilitas: "🏛️",
+  Pengaduan: "📣",
+  "Layanan Tambahan": "",
+  Sistem: "",
+  Perkembangan: "",
+  Umum: ""
 };
 
 // Menu utama yang ditampilkan sebagai inline keyboard Telegram.
 export const mainMenu = {
-  inline_keyboard: chunkButtons(
-    faqCategories.map((category) => ({
-      text: categoryLabel(category),
-      callback_data: `cat:${category}`
-    })),
-    2
-  )
+  inline_keyboard: [
+    [
+      { text: categoryLabel("Layanan"), callback_data: "cat:Layanan" },
+      { text: categoryLabel("Pajak"), callback_data: "cat:Pajak" },
+      { text: categoryLabel("Dokumen"), callback_data: "cat:Dokumen" }
+    ],
+    [
+      { text: categoryLabel("Balik Nama"), callback_data: "cat:Balik Nama" },
+      { text: categoryLabel("Mutasi"), callback_data: "cat:Mutasi" },
+      { text: categoryLabel("Cek Fisik"), callback_data: "cat:Cek Fisik" }
+    ],
+    [
+      { text: categoryLabel("SIGNAL"), callback_data: "cat:SIGNAL" },
+      { text: categoryLabel("Samsat Keliling"), callback_data: "cat:Samsat Keliling" },
+      { text: categoryLabel("Fasilitas"), callback_data: "cat:Fasilitas" }
+    ],
+    [
+      { text: categoryLabel("Pengaduan"), callback_data: "cat:Pengaduan" },
+    ]
+  ]
 };
 
 // Tombol rating setelah user menerima jawaban FAQ.
@@ -43,18 +60,16 @@ export function buildRatingKeyboard(faqId: number) {
 // Membuat pesan pembuka saat user mengirim /start atau /help.
 export function buildStartMessage() {
   return withCommandHint([
-    "Chatbot FAQ SAMSAT Bandung Timur",
+    "Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.",
+    "Silakan pilih kategori atau ketik pertanyaan Anda.",
     "",
-    "Ketik pertanyaan seperti:",
+    "Contoh:",
     "- jam operasional samsat",
     "- syarat bayar pajak",
     "- stnk hilang",
-    "- cek fisik kendaraan",
+    "- apa itu SIGNAL",
     "",
-    "Ketik /clear untuk membersihkan pesan yang dapat dihapus oleh bot.",
-    "Profil Telegram dasar dicatat untuk kebutuhan riset saat Anda menggunakan /start.",
-    "",
-    `Dataset aktif: ${faqEntries.length} FAQ dalam ${faqCategories.length} kategori.`
+    "Ketik /clear untuk membersihkan chat."
   ].join("\n"));
 }
 
@@ -122,7 +137,8 @@ export function buildDirectFaqMessage(entry: FaqEntry) {
 // Pesan fallback jika pertanyaan user tidak cocok dengan data FAQ.
 export function buildUnknownMessage() {
   return withCommandHint([
-    "Maaf, pertanyaan belum cocok dengan pola FAQ yang tersedia.",
+    "Maaf, saya hanya dapat menjawab pertanyaan seputar layanan SAMSAT Bandung Timur.",
+    "Pesan Anda tidak terkait dengan topik yang didukung atau belum cocok dengan FAQ yang tersedia.",
     "",
     "Coba gunakan kata kunci yang lebih dekat dengan data FAQ, misalnya:",
     "- pajak",
@@ -130,7 +146,7 @@ export function buildUnknownMessage() {
     "- balik nama",
     "- mutasi",
     "- samsat keliling",
-    "- chatbot",
+    "- cek fisik",
     "",
     "Atau pilih kategori di bawah."
   ].join("\n"));
@@ -165,18 +181,7 @@ function withCommandHint(message: string) {
 
 // Membuat label kategori dengan icon agar menu Telegram lebih mudah dipindai.
 function categoryLabel(category: FaqCategory) {
-  return `${categoryIcons[category] ?? "🗂️"} ${category}`;
-}
-
-// Membagi tombol kategori menjadi baris agar menu otomatis mengikuti dataset.
-function chunkButtons<T>(buttons: T[], size: number) {
-  const rows: T[][] = [];
-
-  for (let index = 0; index < buttons.length; index += size) {
-    rows.push(buttons.slice(index, index + size));
-  }
-
-  return rows;
+  return `${categoryIcons[category]} ${category}`;
 }
 
 // Mengambil data FAQ sesuai halaman kategori.
