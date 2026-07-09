@@ -117,9 +117,9 @@ describe("format jawaban FAQ", () => {
   it("membuat tombol voting kepuasan", () => {
     const keyboard = buildSatisfactionKeyboard(64, { satisfied: 2, dissatisfied: 1 });
 
-    expect(keyboard.inline_keyboard[0][0].text).toBe("👍 Memuaskan 67%");
+    expect(keyboard.inline_keyboard[0][0].text).toBe("👍 Memuaskan");
     expect(keyboard.inline_keyboard[0][0].callback_data).toBe("vote:64:s");
-    expect(keyboard.inline_keyboard[0][1].text).toBe("👎 Tidak memuaskan 33%");
+    expect(keyboard.inline_keyboard[0][1].text).toBe("👎 Tidak memuaskan");
     expect(keyboard.inline_keyboard[0][1].callback_data).toBe("vote:64:d");
   });
 

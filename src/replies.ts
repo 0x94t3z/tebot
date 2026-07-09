@@ -138,14 +138,12 @@ export function buildDirectFaqMessage(
 }
 
 // Membuat tombol voting kepuasan untuk satu jawaban FAQ.
-export function buildSatisfactionKeyboard(faqId: number, stats: SatisfactionStats = emptySatisfactionStats()) {
-  const percentages = getSatisfactionPercentages(stats);
-
+export function buildSatisfactionKeyboard(faqId: number, _stats: SatisfactionStats = emptySatisfactionStats()) {
   return {
     inline_keyboard: [
       [
-        { text: `👍 Memuaskan ${percentages.satisfied}%`, callback_data: `vote:${faqId}:s` },
-        { text: `👎 Tidak memuaskan ${percentages.dissatisfied}%`, callback_data: `vote:${faqId}:d` }
+        { text: "👍 Memuaskan", callback_data: `vote:${faqId}:s` },
+        { text: "👎 Tidak memuaskan", callback_data: `vote:${faqId}:d` }
       ]
     ]
   };
