@@ -227,6 +227,8 @@ Matching flow:
 7. Return the best FAQ if the score passes the minimum threshold.
 8. Show the score as an accuracy percentage in the bot answer.
 
+The displayed score is a **pattern matching relevance score**, not a statistical machine-learning accuracy value. The score is calculated from exact/partial phrase matching, custom pattern matching, important token overlap, FAQ token coverage, known-query token coverage, synonym expansion, and a small domain-anchor bonus for SAMSAT-related terms. Regex only contributes during preprocessing through `normalize()`; it cleans text before scoring but is not the main scoring method.
+
 Accuracy interpretation:
 
 - `>= 75%`: answer is considered `Aman`.
@@ -793,6 +795,8 @@ Alur pencocokan:
 6. Kandidat diurutkan berdasarkan skor.
 7. FAQ terbaik dikembalikan jika skornya melewati batas minimum.
 8. Skor ditampilkan sebagai persentase akurasi pada jawaban bot.
+
+Skor yang ditampilkan adalah **skor relevansi pattern matching**, bukan nilai akurasi statistik seperti pada evaluasi machine learning. Skor dihitung dari kecocokan frasa persis/sebagian, custom pattern, overlap kata penting, cakupan token FAQ, cakupan token input yang dikenal dataset, perluasan sinonim, dan bonus kecil untuk istilah domain SAMSAT. Regex hanya berperan pada tahap preprocessing melalui fungsi `normalize()`; regex membersihkan teks sebelum scoring, tetapi bukan metode utama penilaian.
 
 Interpretasi akurasi:
 

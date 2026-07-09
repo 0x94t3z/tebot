@@ -92,6 +92,7 @@ const customPatterns: Record<number, string[]> = {
     "proses mutasi",
     "alur mutasi"
   ],
+  155: ["cek fisik wajib mutasi", "cek fisik untuk mutasi", "cek fisik kendaraan mutasi"],
   171: ["signal", "aplikasi signal"],
   191: ["samsat keliling", "layanan keliling"],
   196: ["jadwal samsat keliling", "jam samsat keliling"],
@@ -257,7 +258,7 @@ export function matchFaq(input: string): PatternMatchResult | null {
   }
 
   const ranked = faqEntries
-    .map((entry) => scoreEntry(entry, normalizedInput, queryTokens))
+    .map((entry) => scoreEntry(entry, normalizedInput, baseQueryTokens, queryTokens))
     .sort((a, b) => b.score - a.score);
 
   const best = ranked[0];
@@ -385,22 +386,42 @@ export function normalize(value: string) {
 function scoreEntry(
   entry: FaqEntry,
   normalizedInput: string,
+  baseQueryTokens: string[],
   queryTokens: string[]
 ): PatternMatchResult {
-  const patterns = [entry.question, entry.category, ...(customPatterns[entry.id] ?? [])];
-  const normalizedPatterns = patterns.map(normalize).filter(Boolean);
+  const patterns = [
+    { value: entry.question, exactScore: 100, partialScore: 65 },
+    { value: entry.category, exactScore: 45, partialScore: 20 },
+    ...(customPatterns[entry.id] ?? []).map((value) => ({
+      value,
+      exactScore: 100,
+      partialScore: 80
+    }))
+  ];
+  const compactInput = baseQueryTokens.join(" ");
   const entryTokens = expandTokens(tokenize([entry.question, entry.category].join(" ")));
 
-  let score = 0;
+  let phraseScore = 0;
   const matchedTerms = new Set<string>();
 
   // Skor tinggi diberikan jika input cocok persis atau cocok sebagian dengan pola.
-  for (const pattern of normalizedPatterns) {
-    if (pattern === normalizedInput) {
-      score += 100;
+  for (const patternSpec of patterns) {
+    const pattern = normalize(patternSpec.value);
+    if (!pattern) {
+      continue;
+    }
+
+    const compactPattern = tokenize(pattern).join(" ");
+    if (pattern === normalizedInput || compactPattern === compactInput) {
+      phraseScore = Math.max(phraseScore, patternSpec.exactScore);
       matchedTerms.add(pattern);
-    } else if (pattern.includes(normalizedInput) || normalizedInput.includes(pattern)) {
-      score += 45;
+    } else if (
+      pattern.includes(normalizedInput) ||
+      normalizedInput.includes(pattern) ||
+      (compactInput.length > 0 && compactPattern.includes(compactInput)) ||
+      (compactPattern.length > 0 && compactInput.includes(compactPattern))
+    ) {
+      phraseScore = Math.max(phraseScore, patternSpec.partialScore);
       matchedTerms.add(pattern);
     }
   }
@@ -408,19 +429,30 @@ function scoreEntry(
   const querySet = new Set(queryTokens);
   const entrySet = new Set(entryTokens);
   const overlap = [...querySet].filter((token) => entrySet.has(token));
+  const meaningfulOverlap = overlap.filter((token) => !genericIntentTokens.has(token));
+  const meaningfulEntryTokens = [...entrySet].filter((token) => !genericIntentTokens.has(token));
+  const knownQueryTokens = [...querySet].filter((token) => faqVocabulary.has(token));
 
   for (const token of overlap) {
     matchedTerms.add(token);
   }
 
-  const queryCoverage = overlap.length / querySet.size;
+  const queryCoverage = overlap.length / Math.max(knownQueryTokens.length, 1);
   const entryCoverage = overlap.length / Math.max(entrySet.size, 1);
-  // Skor overlap memperhitungkan jumlah kata penting yang sama.
-  score += queryCoverage * 45 + entryCoverage * 35;
+  const subjectCoverage = meaningfulOverlap.length / Math.max(meaningfulEntryTokens.length, 1);
+  const anchorBonus = overlap.some((token) => domainAnchorTokens.has(token)) ? 10 : 0;
+  // Skor relevansi mengutamakan pola/frasa dan kata inti FAQ. Kata tambahan
+  // yang tidak ada di dataset tidak langsung membuat skor turun drastis.
+  const relevanceScore =
+    phraseScore * 0.65 +
+    subjectCoverage * 20 +
+    entryCoverage * 10 +
+    queryCoverage * 5 +
+    anchorBonus;
 
   return {
     entry,
-    score: Math.round(score),
+    score: Math.min(100, Math.round(relevanceScore)),
     matchedTerms: [...matchedTerms].slice(0, 6)
   };
 }

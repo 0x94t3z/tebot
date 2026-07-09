@@ -64,6 +64,16 @@ describe("matchFaq", () => {
     expect(matchFaq("halo admin selamat pagi")).toBeNull();
   });
 
+  it("menjaga skor pertanyaan panjang yang relevan tetap aman", () => {
+    const shortQuestion = matchFaq("mutasi");
+    const longQuestion = matchFaq("Kalau begitu mobil saya Toyota, kalau mau di mutasi apa syaratnya?");
+
+    expect(shortQuestion?.entry.id).toBe(130);
+    expect(longQuestion?.entry.id).toBe(130);
+    expect(shortQuestion?.score).toBeGreaterThanOrEqual(75);
+    expect(longQuestion?.score).toBeGreaterThanOrEqual(75);
+  });
+
   it.each([
     "Kalau begitu syarat saya mencintai dia?",
     "Kalau begitu apa saja kekurangan dari bot ini?",
