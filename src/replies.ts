@@ -44,19 +44,6 @@ export const mainMenu = {
   ]
 };
 
-// Tombol rating setelah user menerima jawaban FAQ.
-export function buildRatingKeyboard(faqId: number) {
-  return {
-    inline_keyboard: [[
-      { text: "⭐ 1", callback_data: `rate:${faqId}:1` },
-      { text: "⭐ 2", callback_data: `rate:${faqId}:2` },
-      { text: "⭐ 3", callback_data: `rate:${faqId}:3` },
-      { text: "⭐ 4", callback_data: `rate:${faqId}:4` },
-      { text: "⭐ 5", callback_data: `rate:${faqId}:5` }
-    ]]
-  };
-}
-
 // Membuat pesan pembuka saat user mengirim /start atau /help.
 export function buildStartMessage() {
   return withCommandHint([
@@ -109,15 +96,16 @@ export function buildQuestionKeyboard(category: FaqCategory, page = 0) {
 // Membuat pesan jawaban dari hasil pattern matching.
 export function buildFaqMessage(result: PatternMatchResult) {
   const { entry } = result;
+  const accuracy = buildAccuracyText(result.score);
 
   return [
     `Pertanyaan: ${entry.question}`,
     "",
     entry.answer,
     "",
-    `Sumber: ${entry.source}`,
+    accuracy,
     "",
-    "Silakan beri rating untuk jawaban ini:"
+    `Sumber: ${entry.source}`,
   ].join("\n");
 }
 
@@ -128,9 +116,9 @@ export function buildDirectFaqMessage(entry: FaqEntry) {
     "",
     entry.answer,
     "",
-    `Sumber: ${entry.source}`,
+    buildAccuracyText(100),
     "",
-    "Silakan beri rating untuk jawaban ini:"
+    `Sumber: ${entry.source}`,
   ].join("\n");
 }
 
@@ -167,6 +155,23 @@ export function buildUnsupportedMessage() {
 // Membatasi panjang teks tombol agar tetap rapi di Telegram.
 function truncateButtonText(value: string) {
   return value.length > 55 ? `${value.slice(0, 52)}...` : value;
+}
+
+// Membuat label skor akurasi dari hasil scoring pattern matching.
+function buildAccuracyText(score: number) {
+  const accuracy = clampAccuracy(score);
+  const status = accuracy >= 75 ? "Aman" : "Kurang memuaskan";
+
+  return `Skor akurasi: ${accuracy}% (${status})`;
+}
+
+// Menjaga skor akurasi tetap berada pada rentang 0 sampai 100.
+function clampAccuracy(score: number) {
+  if (!Number.isFinite(score)) {
+    return 0;
+  }
+
+  return Math.max(0, Math.min(100, Math.round(score)));
 }
 
 // Menambahkan panduan command singkat pada setiap balasan bot.

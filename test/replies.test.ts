@@ -7,8 +7,7 @@ import {
   buildStartMessage,
   buildUnknownMessage,
   buildUnsupportedMessage,
-  mainMenu,
-  buildRatingKeyboard
+  mainMenu
 } from "../src/replies";
 
 describe("tampilan kategori FAQ", () => {
@@ -42,16 +41,6 @@ describe("tampilan kategori FAQ", () => {
     expect(JSON.stringify(mainMenu)).toContain("cat:Pengaduan");
   });
 
-  it("menampilkan tombol rating 1 sampai 5", () => {
-    const ratingKeyboard = buildRatingKeyboard(15);
-
-    expect(JSON.stringify(ratingKeyboard)).toContain("rate:1");
-    expect(JSON.stringify(ratingKeyboard)).toContain("rate:15:1");
-    expect(JSON.stringify(ratingKeyboard)).toContain("rate:15:5");
-  });
-});
-
-describe("format jawaban FAQ", () => {
   it("menampilkan greeting formal pada pesan pembuka", () => {
     const message = buildStartMessage();
 
@@ -62,7 +51,9 @@ describe("format jawaban FAQ", () => {
     expect(message).not.toContain("Dataset aktif");
     expect(message).not.toContain("Profil Telegram");
   });
+});
 
+describe("format jawaban FAQ", () => {
   it("menampilkan pertanyaan, jawaban, dan sumber pada hasil pattern matching", () => {
     const message = buildFaqMessage({
       entry: {
@@ -76,11 +67,28 @@ describe("format jawaban FAQ", () => {
       matchedTerms: ["syarat", "bayar", "pajak"]
     });
 
-    expect(message).toBe("Pertanyaan: Syarat bayar pajak\n\nSTNK dan KTP\n\nSumber: Referensi\n\nSilakan beri rating untuk jawaban ini:");
+    expect(message).toBe("Pertanyaan: Syarat bayar pajak\n\nSTNK dan KTP\n\nSkor akurasi: 100% (Aman)\n\nSumber: Referensi");
     expect(message).not.toContain("Jawaban:");
     expect(message).not.toContain("Kategori:");
     expect(message).toContain("Pertanyaan:");
     expect(message).not.toContain("Metode:");
+    expect(message).not.toContain("rating");
+  });
+
+  it("menampilkan status kurang memuaskan untuk skor di bawah 75", () => {
+    const message = buildFaqMessage({
+      entry: {
+        id: 997,
+        category: "Pajak",
+        question: "Cek pajak kendaraan",
+        answer: "Gunakan kanal resmi untuk mengecek pajak kendaraan.",
+        source: "Referensi"
+      },
+      score: 62,
+      matchedTerms: ["pajak"]
+    });
+
+    expect(message).toContain("Skor akurasi: 62% (Kurang memuaskan)");
   });
 
   it("menampilkan pertanyaan, jawaban, dan sumber pada pilihan tombol FAQ", () => {
@@ -92,10 +100,11 @@ describe("format jawaban FAQ", () => {
       source: "Referensi"
     });
 
-    expect(message).toBe("Pertanyaan: STNK hilang\n\nHarus lapor polisi\n\nSumber: Referensi\n\nSilakan beri rating untuk jawaban ini:");
+    expect(message).toBe("Pertanyaan: STNK hilang\n\nHarus lapor polisi\n\nSkor akurasi: 100% (Aman)\n\nSumber: Referensi");
     expect(message).not.toContain("Jawaban:");
     expect(message).not.toContain("Kategori:");
     expect(message).toContain("Pertanyaan:");
+    expect(message).not.toContain("rating");
   });
 
   it("menampilkan panduan command pada pesan kategori", () => {

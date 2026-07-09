@@ -38,7 +38,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Free-text FAQ matching using pattern matching
 - Text-only input handling
 - FAQ dataset for SAMSAT Bandung Timur
-- Answer rating buttons after FAQ responses
+- Accuracy score on each FAQ response
 
 ### Clear Command
 
@@ -62,9 +62,9 @@ The bot stores basic Telegram profile data for research after the user sends:
 /start
 ```
 
-After the bot gives an FAQ answer, the user is asked to give a rating from 1 to 5. After the rating is submitted, the rating is saved and the bot starts again from the main menu. Chat messages are only cleared when the user sends `/clear`.
+After the bot gives an FAQ answer, it shows the algorithm accuracy score. A score of `75%` or above is treated as `Aman`; a score below `75%` is treated as `Kurang memuaskan`.
 
-Exported fields are now one row per submitted rating:
+Exported fields:
 
 ```text
 telegram_id
@@ -74,13 +74,7 @@ last_name
 language_code
 started_at
 last_seen_at
-question
-category
-rating
-rated_at
 ```
-
-The `question` field stores the FAQ question connected to that specific rating. Older aggregate-only ratings are not shown in this per-question export because they cannot be mapped to exact FAQ questions.
 
 Export CSV through the protected endpoint:
 
@@ -230,6 +224,12 @@ Matching flow:
 5. Score each FAQ candidate.
 6. Sort candidates by score.
 7. Return the best FAQ if the score passes the minimum threshold.
+8. Show the score as an accuracy percentage in the bot answer.
+
+Accuracy interpretation:
+
+- `>= 75%`: answer is considered `Aman`.
+- `< 75%`: answer is considered `Kurang memuaskan`.
 
 Example:
 
@@ -248,8 +248,9 @@ Pertanyaan: Syarat bayar pajak
 
 Jawaban: STNK dan KTP
 
+Skor akurasi: 100% (Aman)
+
 Sumber: Referensi
-Metode: pattern matching (skor ...)
 ```
 
 ### Setup on a New Device or New Account
@@ -368,7 +369,7 @@ Use this section if you move the project to a new laptop, a new Cloudflare accou
 
    Then replace the `id` in `wrangler.jsonc` with the new namespace ID.
 
-   `RESEARCH_STORE` is used by `/start`, rating buttons, and `/research.csv` to store/export research profile and rating records. If you move to a different Cloudflare account, create another KV namespace:
+   `RESEARCH_STORE` is used by `/start` and `/research.csv` to store/export research profile records. If you move to a different Cloudflare account, create another KV namespace:
 
    ```sh
    npx wrangler kv namespace create RESEARCH_STORE
@@ -602,8 +603,8 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Validasi webhook secret dengan `X-Telegram-Bot-Api-Secret-Token`
 - Mode dry-run lokal untuk testing webhook tanpa mengirim pesan Telegram sungguhan
 - Pencatatan profil riset otomatis setelah `/start`
-- Tombol rating setelah jawaban FAQ
-- Export CSV terproteksi untuk data profil Telegram dan rating
+- Skor akurasi pada setiap jawaban FAQ
+- Export CSV terproteksi untuk data profil Telegram
 
 ### Command Clear
 
@@ -627,9 +628,9 @@ Bot menyimpan data profil Telegram dasar untuk kebutuhan riset setelah user meng
 /start
 ```
 
-Setelah bot memberikan jawaban FAQ, user diminta memberi rating dari 1 sampai 5. Setelah rating dikirim, rating disimpan, lalu bot kembali ke menu utama. Pesan chat hanya dibersihkan ketika user mengirim `/clear`.
+Setelah bot memberikan jawaban FAQ, bot menampilkan skor akurasi dari algoritma. Skor `75%` ke atas dianggap `Aman`, sedangkan skor di bawah `75%` dianggap `Kurang memuaskan`.
 
-Field export sekarang dibuat satu baris untuk setiap rating yang dikirim:
+Field export:
 
 ```text
 telegram_id
@@ -639,13 +640,7 @@ last_name
 language_code
 started_at
 last_seen_at
-question
-category
-rating
-rated_at
 ```
-
-Field `question` menyimpan pertanyaan FAQ yang terhubung dengan rating tersebut. Rating lama yang hanya tersimpan sebagai agregat tidak ditampilkan di export per-pertanyaan ini karena tidak bisa dipetakan ke pertanyaan FAQ yang pasti.
 
 Export CSV melalui endpoint terproteksi:
 
@@ -795,6 +790,12 @@ Alur pencocokan:
 5. Setiap kandidat FAQ diberi skor.
 6. Kandidat diurutkan berdasarkan skor.
 7. FAQ terbaik dikembalikan jika skornya melewati batas minimum.
+8. Skor ditampilkan sebagai persentase akurasi pada jawaban bot.
+
+Interpretasi akurasi:
+
+- `>= 75%`: jawaban dianggap `Aman`.
+- `< 75%`: jawaban dianggap `Kurang memuaskan`.
 
 Contoh:
 
@@ -813,8 +814,9 @@ Pertanyaan: Syarat bayar pajak
 
 Jawaban: STNK dan KTP
 
+Skor akurasi: 100% (Aman)
+
 Sumber: Referensi
-Metode: pattern matching (skor ...)
 ```
 
 ### Setup di Device Baru atau Account Baru
@@ -933,7 +935,7 @@ Gunakan bagian ini jika project dipindahkan ke laptop baru, Cloudflare account b
 
    Lalu ganti `id` di `wrangler.jsonc` dengan namespace ID yang baru.
 
-   `RESEARCH_STORE` dipakai oleh `/start`, tombol rating, dan `/research.csv` untuk menyimpan/export data profil riset dan rating. Jika pindah ke Cloudflare account lain, buat KV namespace lain:
+   `RESEARCH_STORE` dipakai oleh `/start` dan `/research.csv` untuk menyimpan/export data profil riset. Jika pindah ke Cloudflare account lain, buat KV namespace lain:
 
    ```sh
    npx wrangler kv namespace create RESEARCH_STORE

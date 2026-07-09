@@ -6,8 +6,7 @@ import {
   buildQuestionKeyboard,
   buildUnsupportedMessage,
   buildUnknownMessage,
-  mainMenu,
-  buildRatingKeyboard
+  mainMenu
 } from "./replies";
 import { getCategory, getFaqById, matchFaq } from "./pattern-matcher";
 
@@ -58,38 +57,6 @@ interface ResearchUserRecord {
   language_code: string;
   started_at: string;
   last_seen_at: string;
-  rating_count: number;
-  last_question: string;
-  last_rating: number;
-  last_rating_at: string;
-}
-
-interface ResearchRatingRecord {
-  telegram_id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  language_code: string;
-  started_at: string;
-  last_seen_at: string;
-  question: string;
-  category: string;
-  rating: number;
-  rated_at: string;
-}
-
-interface ResearchExportRow {
-  telegram_id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  language_code: string;
-  started_at: string;
-  last_seen_at: string;
-  question: string;
-  category: string;
-  rating: number;
-  rated_at: string;
 }
 
 interface TelegramApiResponse {
@@ -209,7 +176,7 @@ export async function handleUpdate(update: TelegramUpdate, env: Env) {
       score: result.score
     })
   );
-  await sendMessage(env, chatId, buildFaqMessage(result), buildRatingKeyboard(result.entry.id));
+  await sendMessage(env, chatId, buildFaqMessage(result));
 }
 
 // Endpoint sederhana untuk memastikan Worker aktif.
@@ -239,17 +206,6 @@ async function handleCallback(
 
   // Callback tanpa chat tidak bisa dibalas.
   if (!chatId) {
-    return;
-  }
-
-  // Callback rating menyimpan penilaian, lalu memulai ulang menu tanpa membersihkan chat.
-  if (data.startsWith("rate:")) {
-    const ratingData = parseRatingCallback(data);
-    if (ratingData) {
-      await saveResearchRating(env, callback.from, ratingData.rating, ratingData.faqId);
-      await trackMessageId(env, chatId, messageId);
-      await sendMessage(env, chatId, buildStartMessage(), mainMenu);
-    }
     return;
   }
 
@@ -283,7 +239,7 @@ async function handleCallback(
     }
 
     console.log(JSON.stringify({ event: "callback_route", route: "faq", faq_id: entry.id }));
-    await editOrSendMessage(env, chatId, messageId, buildDirectFaqMessage(entry), buildRatingKeyboard(entry.id));
+    await editOrSendMessage(env, chatId, messageId, buildDirectFaqMessage(entry));
   }
 }
 
@@ -302,30 +258,6 @@ function isTextMessage(
   message: NonNullable<TelegramUpdate["message"]>
 ): message is NonNullable<TelegramUpdate["message"]> & { text: string } {
   return typeof message.text === "string" && message.text.trim().length > 0;
-}
-
-// Mengambil FAQ ID dan nilai rating dari callback rating.
-function parseRatingCallback(data: string) {
-  const parts = data.split(":");
-
-  if (parts.length === 2) {
-    const rating = Number(parts[1]);
-    return isValidRating(rating) ? { rating } : null;
-  }
-
-  if (parts.length === 3) {
-    const faqId = Number(parts[1]);
-    const rating = Number(parts[2]);
-
-    return Number.isInteger(faqId) && isValidRating(rating) ? { faqId, rating } : null;
-  }
-
-  return null;
-}
-
-// Memastikan rating berada di rentang 1 sampai 5.
-function isValidRating(rating: number) {
-  return Number.isInteger(rating) && rating >= 1 && rating <= 5;
 }
 
 // Menampilkan menu utama sekaligus menyimpan profil dasar untuk data riset.
@@ -441,10 +373,7 @@ async function getAuthorizedResearchRows(request: Request, env: Env) {
     return json({ ok: false, error: "RESEARCH_STORE is not configured" }, 500);
   }
 
-  const users = await listResearchUsers(env);
-  const ratings = await listResearchRatings(env);
-
-  return buildResearchExportRows(users, ratings);
+  return listResearchUsers(env);
 }
 
 // Mengirim pesan teks ke chat Telegram.
@@ -612,83 +541,10 @@ async function saveResearchUser(env: Env, user: TelegramUser, timestamp: string,
     last_name: user.last_name ?? existing?.last_name ?? "",
     language_code: user.language_code ?? existing?.language_code ?? "",
     started_at: isNewStart ? timestamp : existing?.started_at ?? timestamp,
-    last_seen_at: timestamp,
-    rating_count: existing?.rating_count ?? 0,
-    last_question: existing?.last_question ?? "",
-    last_rating: existing?.last_rating ?? 0,
-    last_rating_at: existing?.last_rating_at ?? ""
+    last_seen_at: timestamp
   };
 
   await env.RESEARCH_STORE.put(getResearchUserKey(user.id), JSON.stringify(record));
-}
-
-// Menyimpan rating terakhir user setelah jawaban FAQ selesai.
-async function saveResearchRating(env: Env, user: TelegramUser | undefined, rating: number, faqId?: number) {
-  if (!user || !env.RESEARCH_STORE) {
-    return;
-  }
-
-  const timestamp = new Date().toISOString();
-  const existing = await getResearchUser(env, user.id);
-  const entry = faqId ? getFaqById(faqId) : null;
-
-  if (!existing) {
-    await saveResearchUser(env, user, timestamp, true);
-  }
-
-  const latest = await getResearchUser(env, user.id);
-  if (!latest) {
-    return;
-  }
-
-  const record: ResearchUserRecord = {
-    ...latest,
-    last_seen_at: timestamp,
-    rating_count: latest.rating_count + 1,
-    last_question: entry?.question ?? latest.last_question,
-    last_rating: rating,
-    last_rating_at: timestamp
-  };
-
-  await env.RESEARCH_STORE.put(getResearchUserKey(user.id), JSON.stringify(record));
-  await saveResearchRatingEvent(
-    env,
-    record,
-    entry?.question ?? "",
-    entry?.category ?? "",
-    rating,
-    timestamp
-  );
-}
-
-// Menyimpan satu baris rating agar export riset tidak hanya berisi ringkasan terakhir.
-async function saveResearchRatingEvent(
-  env: Env,
-  user: ResearchUserRecord,
-  question: string,
-  category: string,
-  rating: number,
-  timestamp: string
-) {
-  if (!env.RESEARCH_STORE) {
-    return;
-  }
-
-  const record: ResearchRatingRecord = {
-    telegram_id: user.telegram_id,
-    username: user.username,
-    first_name: user.first_name,
-    last_name: user.last_name,
-    language_code: user.language_code,
-    started_at: user.started_at,
-    last_seen_at: user.last_seen_at,
-    question,
-    category,
-    rating,
-    rated_at: timestamp
-  };
-
-  await env.RESEARCH_STORE.put(getResearchRatingKey(user.telegram_id, timestamp), JSON.stringify(record));
 }
 
 // Mengambil satu data user riset dari KV.
@@ -731,32 +587,6 @@ async function listResearchUsers(env: Env) {
   return records.sort((a, b) => a.telegram_id - b.telegram_id);
 }
 
-// Mengambil semua event rating individual dari KV.
-async function listResearchRatings(env: Env) {
-  const records: ResearchRatingRecord[] = [];
-  let cursor: string | undefined;
-
-  do {
-    const result = await env.RESEARCH_STORE!.list({ prefix: "research:rating:", cursor });
-    cursor = result.list_complete ? undefined : result.cursor;
-
-    for (const key of result.keys) {
-      const value = await env.RESEARCH_STORE!.get(key.name);
-      if (!value) {
-        continue;
-      }
-
-      try {
-        records.push(normalizeResearchRatingRecord(JSON.parse(value)));
-      } catch {
-        console.log(JSON.stringify({ event: "research_rating_export", ok: false, key: key.name }));
-      }
-    }
-  } while (cursor);
-
-  return records.sort((a, b) => a.rated_at.localeCompare(b.rated_at));
-}
-
 // Menyamakan record lama/baru agar field CSV selalu lengkap.
 function normalizeResearchUserRecord(value: unknown): ResearchUserRecord {
   const record = value as Partial<ResearchUserRecord> & { consented_at?: string };
@@ -768,57 +598,12 @@ function normalizeResearchUserRecord(value: unknown): ResearchUserRecord {
     last_name: record.last_name ?? "",
     language_code: record.language_code ?? "",
     started_at: record.started_at ?? record.consented_at ?? "",
-    last_seen_at: record.last_seen_at ?? "",
-    rating_count: Number(record.rating_count ?? 0),
-    last_question: record.last_question ?? "",
-    last_rating: Number(record.last_rating ?? 0),
-    last_rating_at: record.last_rating_at ?? ""
+    last_seen_at: record.last_seen_at ?? ""
   };
 }
 
-// Menyamakan event rating agar field export selalu lengkap.
-function normalizeResearchRatingRecord(value: unknown): ResearchRatingRecord {
-  const record = value as Partial<ResearchRatingRecord>;
-
-  return {
-    telegram_id: Number(record.telegram_id ?? 0),
-    username: record.username ?? "",
-    first_name: record.first_name ?? "",
-    last_name: record.last_name ?? "",
-    language_code: record.language_code ?? "",
-    started_at: record.started_at ?? "",
-    last_seen_at: record.last_seen_at ?? "",
-    question: record.question ?? "",
-    category: record.category ?? "",
-    rating: Number(record.rating ?? 0),
-    rated_at: record.rated_at ?? ""
-  };
-}
-
-// Membuat baris export per rating yang benar-benar tercatat per pertanyaan.
-function buildResearchExportRows(users: ResearchUserRecord[], ratings: ResearchRatingRecord[]) {
-  const usersById = new Map(users.map((user) => [user.telegram_id, user]));
-  return ratings.map((rating): ResearchExportRow => {
-    const user = usersById.get(rating.telegram_id);
-
-    return {
-      telegram_id: rating.telegram_id,
-      username: rating.username || user?.username || "",
-      first_name: rating.first_name || user?.first_name || "",
-      last_name: rating.last_name || user?.last_name || "",
-      language_code: rating.language_code || user?.language_code || "",
-      started_at: rating.started_at || user?.started_at || "",
-      last_seen_at: user?.last_seen_at || rating.last_seen_at,
-      question: rating.question,
-      category: rating.category,
-      rating: rating.rating,
-      rated_at: rating.rated_at
-    };
-  }).sort((a, b) => a.rated_at.localeCompare(b.rated_at));
-}
-
-// Membuat isi CSV untuk data rating riset.
-function buildResearchCsv(records: ResearchExportRow[]) {
+// Membuat isi CSV untuk data profil riset.
+function buildResearchCsv(records: ResearchUserRecord[]) {
   const header = [
     "telegram_id",
     "username",
@@ -826,11 +611,7 @@ function buildResearchCsv(records: ResearchExportRow[]) {
     "last_name",
     "language_code",
     "started_at",
-    "last_seen_at",
-    "question",
-    "category",
-    "rating",
-    "rated_at"
+    "last_seen_at"
   ];
   const rows = records.map((record) => [
     record.telegram_id,
@@ -839,18 +620,14 @@ function buildResearchCsv(records: ResearchExportRow[]) {
     record.last_name,
     record.language_code,
     record.started_at,
-    record.last_seen_at,
-    record.question,
-    record.category,
-    record.rating,
-    record.rated_at
+    record.last_seen_at
   ]);
 
   return [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n") + "\n";
 }
 
 // Membuat tabel teks agar data riset nyaman dibaca di terminal.
-function buildResearchTextTable(records: ResearchExportRow[]) {
+function buildResearchTextTable(records: ResearchUserRecord[]) {
   const table = buildResearchDisplayRows(records);
   const widths = table[0].map((_, columnIndex) =>
     Math.max(...table.map((row) => visibleLength(row[columnIndex])))
@@ -867,7 +644,7 @@ function buildResearchTextTable(records: ResearchExportRow[]) {
 }
 
 // Membuat HTML table untuk laporan data riset.
-function buildResearchHtmlTable(records: ResearchExportRow[]) {
+function buildResearchHtmlTable(records: ResearchUserRecord[]) {
   const [header, ...rows] = buildResearchDisplayRows(records);
   const headerCells = header.map((cell) => `<th>${escapeHtml(cell)}</th>`).join("");
   const bodyRows = rows
@@ -935,13 +712,6 @@ function buildResearchHtmlTable(records: ResearchExportRow[]) {
       border-bottom: 0;
     }
 
-    th:nth-child(7),
-    td:nth-child(7) {
-      min-width: 260px;
-      max-width: 460px;
-      white-space: normal;
-    }
-
     .table-wrap {
       overflow-x: auto;
     }
@@ -950,7 +720,7 @@ function buildResearchHtmlTable(records: ResearchExportRow[]) {
 <body>
   <main>
     <h1>Data Riset Chatbot SAMSAT Bandung Timur</h1>
-    <p>Total rating: ${records.length}. Waktu ditampilkan dalam WIB.</p>
+    <p>Total responden: ${records.length}. Waktu ditampilkan dalam WIB.</p>
     <div class="table-wrap">
       <table>
         <thead><tr>${headerCells}</tr></thead>
@@ -964,7 +734,7 @@ function buildResearchHtmlTable(records: ResearchExportRow[]) {
 }
 
 // Membuat baris tampilan dengan label kolom yang lebih ramah dibaca.
-function buildResearchDisplayRows(records: ResearchExportRow[]) {
+function buildResearchDisplayRows(records: ResearchUserRecord[]) {
   return [
     [
       "Telegram ID",
@@ -972,11 +742,7 @@ function buildResearchDisplayRows(records: ResearchExportRow[]) {
       "Nama",
       "Bahasa",
       "Mulai (WIB)",
-      "Terakhir Aktif (WIB)",
-      "Pertanyaan",
-      "Kategori",
-      "Rating",
-      "Waktu Rating (WIB)"
+      "Terakhir Aktif (WIB)"
     ],
     ...records.map((record) => [
       String(record.telegram_id),
@@ -984,11 +750,7 @@ function buildResearchDisplayRows(records: ResearchExportRow[]) {
       [record.first_name, record.last_name].filter(Boolean).join(" ") || "-",
       record.language_code || "-",
       formatJakartaTime(record.started_at),
-      formatJakartaTime(record.last_seen_at),
-      record.question || "-",
-      record.category || "-",
-      record.rating ? `${record.rating}/5` : "-",
-      formatJakartaTime(record.rated_at)
+      formatJakartaTime(record.last_seen_at)
     ])
   ];
 }
@@ -1040,11 +802,6 @@ function escapeHtml(value: string) {
 // Key penyimpanan data user riset.
 function getResearchUserKey(telegramId: number) {
   return `research:user:${telegramId}`;
-}
-
-// Key penyimpanan event rating individual.
-function getResearchRatingKey(telegramId: number, timestamp: string) {
-  return `research:rating:${timestamp}:${telegramId}:${crypto.randomUUID()}`;
 }
 
 // Menyimpan message_id agar bisa dibersihkan lewat command /clear.
