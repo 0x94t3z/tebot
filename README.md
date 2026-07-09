@@ -262,7 +262,7 @@ User input:
 syarat bayar pajak kendaraan
 ```
 
-The matcher normalizes and tokenizes the input, then compares it with all 100 FAQ entries. The FAQ question `Syarat bayar pajak` gets a high score because it shares the important terms `syarat`, `bayar`, and `pajak`.
+The matcher normalizes and tokenizes the input, then compares it with all 233 FAQ entries. The FAQ question `Syarat bayar pajak` gets a high score because it shares the important terms `syarat`, `bayar`, and `pajak`.
 
 Bot response:
 
@@ -614,23 +614,294 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Navigasi tombol memperbarui pesan menu yang sama, bukan mengirim chat baru
 - Pencarian pertanyaan bebas dengan pattern matching
 - Input hanya teks; media seperti foto, video, sticker, voice note, dan file ditolak dengan pesan instruksi singkat
-- 100 data FAQ dari dataset SAMSAT Bandung Timur
+- 233 data FAQ dari dataset SAMSAT Bandung Timur
 - Menu utama ditampilkan kembali setelah setiap jawaban FAQ
 - UI voting kepuasan pada setiap jawaban FAQ
-- 9 kategori FAQ:
+- 14 kategori FAQ:
   - Layanan
   - Pajak
   - Dokumen
   - Balik Nama
   - Mutasi
+  - Cek Fisik
+  - SIGNAL
+  - Samsat Keliling
+  - Fasilitas
   - Layanan Tambahan
   - Sistem
   - Perkembangan
+  - Pengaduan
   - Umum
 - Validasi webhook secret dengan `X-Telegram-Bot-Api-Secret-Token`
 - Mode dry-run lokal untuk testing webhook tanpa mengirim pesan Telegram sungguhan
 - Pencatatan profil riset otomatis setelah `/start`
 - Export CSV terproteksi untuk data profil Telegram dan rekap kepuasan FAQ
+
+### Rancangan Sistem untuk Penelitian
+
+Bagian ini dapat digunakan sebagai dasar penulisan Bab III atau bagian perancangan sistem pada Tugas Akhir dengan judul:
+
+```text
+Implementasi Metode Pattern Matching pada Chatbot Frequently Asked Questions: SAMSAT Bandung Timur
+```
+
+#### Tujuan Sistem
+
+Sistem dirancang untuk membantu pengguna memperoleh informasi FAQ seputar SAMSAT Bandung Timur melalui chatbot Telegram. Chatbot menerima pertanyaan dalam bentuk teks, mencocokkannya dengan dataset FAQ menggunakan metode pattern matching, lalu mengembalikan jawaban yang paling relevan. Setelah jawaban diberikan, user dapat menilai apakah jawaban tersebut memuaskan atau tidak memuaskan melalui tombol voting.
+
+#### Aktor Sistem
+
+| Aktor | Peran |
+| --- | --- |
+| User Telegram | Mengirim pertanyaan, memilih kategori FAQ, memilih pertanyaan dari menu, dan memberi voting kepuasan terhadap jawaban |
+| Chatbot Telegram | Menampilkan menu, menerima input, mengirim jawaban, dan menampilkan UI voting |
+| Cloudflare Worker | Menjalankan backend chatbot, menerima webhook Telegram, memproses pattern matching, menyimpan data riset, dan memanggil Telegram Bot API |
+| Admin/Peneliti | Mengelola token, deploy Worker, memperbarui dataset FAQ, dan mengekspor data riset |
+
+#### Tech Stack
+
+| Komponen | Teknologi | Fungsi |
+| --- | --- | --- |
+| Platform chat | Telegram Bot API | Media interaksi user dengan chatbot |
+| Bot management | BotFather | Membuat bot dan mendapatkan `BOT_TOKEN` |
+| Backend | Cloudflare Workers | Menjalankan logic chatbot secara serverless melalui endpoint HTTPS |
+| Runtime | TypeScript | Bahasa utama untuk implementasi backend |
+| Deployment | Wrangler | CLI untuk deploy dan konfigurasi Cloudflare Workers |
+| Penyimpanan data dinamis | Cloudflare KV | Menyimpan profil riset, vote kepuasan, dan message ID untuk `/clear` |
+| Dataset FAQ | JSON | Menyimpan data FAQ agar terpisah dari logic algoritma |
+| Testing | Vitest | Unit test dataset, tampilan pesan, dan perilaku pattern matching |
+| Type checking | TypeScript Compiler | Memastikan tipe data aman sebelum deploy |
+
+#### Arsitektur Sistem
+
+```text
+User Telegram
+    |
+    | pesan teks / callback button
+    v
+Telegram Bot API
+    |
+    | webhook POST /webhook
+    v
+Cloudflare Worker
+    |
+    | validasi secret webhook
+    | routing command/callback/input teks
+    | pattern matching terhadap dataset FAQ
+    | simpan data riset dan vote ke KV
+    v
+Telegram Bot API
+    |
+    | sendMessage / editMessageText / deleteMessages
+    v
+User Telegram
+```
+
+#### Alur Utama Sistem
+
+1. User membuka bot dan mengirim `/start`.
+2. Bot menyimpan profil dasar user ke `RESEARCH_STORE`.
+3. Bot menampilkan pesan pembuka dan menu kategori FAQ.
+4. User dapat memilih kategori, memilih pertanyaan dari tombol, atau mengetik pertanyaan bebas.
+5. Jika user mengetik pertanyaan bebas, sistem menjalankan proses pattern matching.
+6. Sistem memilih FAQ dengan skor relevansi tertinggi jika melewati batas minimum.
+7. Bot mengirim jawaban, sumber referensi, dan tombol voting kepuasan.
+8. Bot menampilkan kembali menu utama agar user dapat melanjutkan pencarian.
+9. Jika user memilih voting, sistem menyimpan atau memperbarui vote user.
+10. Bot memperbarui tampilan hasil voting dalam bentuk persentase memuaskan dan tidak memuaskan.
+
+#### Flow Pattern Matching
+
+```text
+Input user
+  -> normalisasi teks
+  -> tokenisasi
+  -> penghapusan stop word
+  -> perluasan sinonim
+  -> validasi konteks domain SAMSAT
+  -> pencocokan terhadap pertanyaan, kategori, dan custom pattern FAQ
+  -> perhitungan skor relevansi
+  -> pemeringkatan kandidat FAQ
+  -> jawaban terbaik atau fallback
+```
+
+Tahapan preprocessing memakai regex di fungsi `normalize()` untuk membersihkan tanda baca, karakter non-alfanumerik, dan spasi. Regex bukan metode utama pencocokan. Metode utama tetap pattern matching berbasis aturan melalui pencocokan frasa, token, sinonim, custom pattern, dan scoring.
+
+#### Flow Voting Kepuasan Jawaban
+
+```text
+Jawaban FAQ dikirim
+  -> bot menampilkan tombol Memuaskan / Tidak memuaskan
+  -> user memilih salah satu tombol
+  -> callback vote:FAQ_ID:s atau vote:FAQ_ID:d diterima Worker
+  -> Worker mengecek vote lama user untuk FAQ tersebut
+  -> jika vote berubah, total lama dikurangi dan total baru ditambah
+  -> hasil voting disimpan ke RESEARCH_STORE
+  -> pesan jawaban di-update dengan persentase voting terbaru
+```
+
+Rumus skor kepuasan:
+
+```text
+Memuaskan (%) = jumlah vote memuaskan / total vote * 100
+Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
+```
+
+Satu user hanya memiliki satu vote aktif untuk satu FAQ. Jika user menekan tombol yang berbeda pada FAQ yang sama, sistem memperbarui pilihan tersebut dan tidak menghitungnya sebagai suara ganda.
+
+#### Rancangan Database
+
+Project ini tidak menggunakan database relasional seperti MySQL atau PostgreSQL. Penyimpanan data dinamis menggunakan **Cloudflare KV**, yaitu database key-value. Dataset FAQ disimpan sebagai file JSON karena data FAQ bersifat relatif statis dan perlu mudah diperbarui tanpa mengubah logic algoritma.
+
+##### Dataset FAQ
+
+Lokasi file:
+
+```text
+src/data/faq-samsat-bandung-timur.json
+```
+
+Struktur data:
+
+| Field | Tipe | Keterangan |
+| --- | --- | --- |
+| `id` | number | ID unik FAQ |
+| `category` | string | Kategori FAQ |
+| `question` | string | Pertanyaan FAQ |
+| `answer` | string | Jawaban FAQ |
+| `source` | string | Sumber referensi jawaban |
+
+Contoh struktur:
+
+```json
+{
+  "id": 64,
+  "category": "Pajak",
+  "question": "Apa syarat membayar pajak tahunan",
+  "answer": "STNK dan KTP asli sesuai identitas pemilik kendaraan.",
+  "source": "Referensi"
+}
+```
+
+##### KV Namespace
+
+| Binding | Fungsi |
+| --- | --- |
+| `MESSAGE_STORE` | Menyimpan daftar `message_id` Telegram agar command `/clear` dapat menghapus chat yang dilacak |
+| `RESEARCH_STORE` | Menyimpan profil user riset, total voting kepuasan, dan pilihan voting terakhir user |
+
+##### Struktur Key-Value
+
+| Key | Value | Fungsi |
+| --- | --- | --- |
+| `chat:{chatId}:message_ids` | `number[]` | Menyimpan daftar message ID yang dapat dibersihkan oleh `/clear` |
+| `research:user:{telegramId}` | `ResearchUserRecord` | Menyimpan profil dasar user Telegram untuk kebutuhan riset |
+| `research:faq_stats:{faqId}` | `SatisfactionStats` | Menyimpan total vote memuaskan dan tidak memuaskan per FAQ |
+| `research:faq_vote:{faqId}:{telegramId}` | `SatisfactionVoteRecord` | Menyimpan pilihan terakhir satu user untuk satu FAQ |
+
+##### Struktur `ResearchUserRecord`
+
+| Field | Tipe | Keterangan |
+| --- | --- | --- |
+| `telegram_id` | number | ID Telegram user |
+| `username` | string | Username Telegram jika tersedia |
+| `first_name` | string | Nama depan Telegram |
+| `last_name` | string | Nama belakang Telegram |
+| `language_code` | string | Kode bahasa dari Telegram |
+| `started_at` | string | Waktu pertama user menjalankan `/start` |
+| `last_seen_at` | string | Waktu terakhir user berinteraksi setelah terdaftar |
+
+Contoh:
+
+```json
+{
+  "telegram_id": 5565698191,
+  "username": "Kingkha1933",
+  "first_name": "Khang",
+  "last_name": "Skuyy",
+  "language_code": "id",
+  "started_at": "2026-06-21T09:56:48.858Z",
+  "last_seen_at": "2026-06-21T09:59:40.990Z"
+}
+```
+
+##### Struktur `SatisfactionStats`
+
+| Field | Tipe | Keterangan |
+| --- | --- | --- |
+| `satisfied` | number | Jumlah vote memuaskan |
+| `dissatisfied` | number | Jumlah vote tidak memuaskan |
+
+Contoh:
+
+```json
+{
+  "satisfied": 8,
+  "dissatisfied": 2
+}
+```
+
+##### Struktur `SatisfactionVoteRecord`
+
+| Field | Tipe | Keterangan |
+| --- | --- | --- |
+| `faq_id` | number | ID FAQ yang dinilai |
+| `telegram_id` | number | ID Telegram user yang memberi vote |
+| `choice` | string | `satisfied` atau `dissatisfied` |
+| `updated_at` | string | Waktu vote dibuat atau diperbarui |
+
+Contoh:
+
+```json
+{
+  "faq_id": 64,
+  "telegram_id": 5565698191,
+  "choice": "satisfied",
+  "updated_at": "2026-06-21T10:05:00.000Z"
+}
+```
+
+#### Endpoint Sistem
+
+| Endpoint | Method | Akses | Fungsi |
+| --- | --- | --- | --- |
+| `/` | GET | Publik | Health check dasar Worker |
+| `/health` | GET | Publik | Health check Worker |
+| `/webhook` | POST | Telegram + secret | Menerima update dari Telegram |
+| `/research.csv` | GET | Admin token | Export profil user riset dalam CSV |
+| `/research.txt` | GET | Admin token | Export profil user riset dalam tabel teks |
+| `/research.html` | GET | Admin token | Export profil user riset dalam HTML |
+| `/satisfaction.csv` | GET | Admin token | Export rekap voting kepuasan FAQ dalam CSV |
+| `/satisfaction.txt` | GET | Admin token | Export rekap voting kepuasan FAQ dalam tabel teks |
+| `/satisfaction.html` | GET | Admin token | Export rekap voting kepuasan FAQ dalam HTML |
+
+#### Keamanan Sistem
+
+- Webhook divalidasi memakai header `X-Telegram-Bot-Api-Secret-Token`.
+- Endpoint export riset dilindungi dengan `Authorization: Bearer $ADMIN_EXPORT_TOKEN`.
+- Token rahasia disimpan di `.env` atau secret Cloudflare, bukan di source code.
+- Input selain teks ditolak agar chatbot hanya memproses pertanyaan tertulis.
+- Chatbot hanya menjawab pertanyaan yang memiliki konteks domain SAMSAT atau administrasi kendaraan.
+
+#### Batasan Sistem
+
+- Chatbot tidak menggunakan AI generatif, sehingga jawaban terbatas pada dataset FAQ.
+- Jika pertanyaan tidak cocok dengan dataset atau berada di luar konteks SAMSAT, bot menampilkan fallback.
+- Regex hanya digunakan untuk preprocessing, bukan sebagai metode utama pencocokan.
+- Penghapusan chat dengan `/clear` mengikuti batasan Telegram Bot API dan hanya dapat menghapus pesan yang dilacak oleh bot.
+- Data FAQ diperbarui melalui file JSON, sehingga perubahan dataset perlu dilakukan di repository lalu dideploy ulang.
+
+#### Output Penelitian
+
+Data yang dapat digunakan untuk kebutuhan analisis penelitian:
+
+| Output | Sumber | Fungsi |
+| --- | --- | --- |
+| Data FAQ | `src/data/faq-samsat-bandung-timur.json` | Objek utama pencocokan pattern matching |
+| Hasil pencocokan | Log Worker dan perilaku bot | Melihat FAQ yang dipilih dari input user |
+| Profil responden | `/research.csv` | Mendata user yang mencoba bot |
+| Rekap kepuasan jawaban | `/satisfaction.csv` | Mengukur persentase jawaban yang dinilai memuaskan atau tidak memuaskan |
+| Unit test | `test/` | Membuktikan dataset dan matcher berjalan sesuai ekspektasi |
 
 ### Command Clear
 
@@ -853,7 +1124,7 @@ Input user:
 syarat bayar pajak kendaraan
 ```
 
-Matcher menormalisasi dan memecah input menjadi token, lalu membandingkannya dengan 100 FAQ. Pertanyaan FAQ `Syarat bayar pajak` mendapat skor tinggi karena memiliki kata penting yang sama: `syarat`, `bayar`, dan `pajak`.
+Matcher menormalisasi dan memecah input menjadi token, lalu membandingkannya dengan 233 FAQ. Pertanyaan FAQ `Syarat bayar pajak` mendapat skor tinggi karena memiliki kata penting yang sama: `syarat`, `bayar`, dan `pajak`.
 
 Balasan bot:
 
