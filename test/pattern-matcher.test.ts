@@ -56,6 +56,8 @@ describe("matchFaq", () => {
     ["syarat bayar pajak kendaraan", 47, "Pajak"],
     ["bisa bayar pajak online?", 35, "Pajak"],
     ["stnk saya hilang", 54, "Dokumen"],
+    ["Bagaimana jika stnk hilang?", 54, "Dokumen"],
+    ["Kalau stnk hilang bagaimana?", 54, "Dokumen"],
     ["dokumen balik nama", 73, "Balik Nama"],
     ["alur mutasi kendaraan", 90, "Mutasi"],
     ["kalau mau mutasi?", 90, "Mutasi"],
