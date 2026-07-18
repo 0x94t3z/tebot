@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { faqEntries } from "../src/faq-data";
-import { getCategory, getEntriesByCategory, matchFaq } from "../src/pattern-matcher";
+import { getCategory, getEntriesByCategory, matchFaq, normalize } from "../src/pattern-matcher";
 
 describe("FAQ dataset", () => {
   it("memiliki 150 baris FAQ terkurasi yang diimpor", () => {
@@ -27,6 +27,15 @@ describe("matchFaq", () => {
   it("tetap mencocokkan seluruh pertanyaan resmi ke FAQ asalnya", () => {
     for (const entry of faqEntries) {
       expect(matchFaq(entry.question)?.entry.id, entry.question).toBe(entry.id);
+    }
+  });
+
+  it("tidak fallback saat urutan kata pertanyaan resmi dibalik", () => {
+    for (const entry of faqEntries) {
+      const reversedQuestion = normalize(entry.question).split(" ").reverse().join(" ");
+      const result = matchFaq(reversedQuestion);
+
+      expect(result, reversedQuestion).not.toBeNull();
     }
   });
 
@@ -72,6 +81,27 @@ describe("matchFaq", () => {
     ["pindah domisili kendaraan", 90, "Mutasi"],
     ["gesek rangka kendaraan", 103, "Cek Fisik"]
   ] as const)("mencocokkan variasi regex: %s", (input, expectedId, expectedCategory) => {
+    const result = matchFaq(input);
+
+    expect(result?.entry.id).toBe(expectedId);
+    expect(result?.entry.category).toBe(expectedCategory);
+  });
+
+  it.each([
+    ["hilang stnk saya bagaimana", 54, "Dokumen"],
+    ["bpkb hilang harus bagaimana", 55, "Dokumen"],
+    ["pajak kendaraan bayar syaratnya apa", 47, "Pajak"],
+    ["lima tahunan pajak syaratnya apa", 48, "Pajak"],
+    ["balik nama kendaraan syaratnya apa", 73, "Balik Nama"],
+    ["nama balik dokumen apa saja", 73, "Balik Nama"],
+    ["mutasi kendaraan apa saja syaratnya", 90, "Mutasi"],
+    ["kendaraan mutasi mau syaratnya apa", 90, "Mutasi"],
+    ["fisik cek mutasi wajib tidak", 107, "Cek Fisik"],
+    ["keliling samsat jadwalnya kapan", 134, "Samsat Keliling"],
+    ["signal daftar caranya gimana", 120, "SIGNAL"],
+    ["drive thru syaratnya apa", 150, "Layanan"],
+    ["pengaduan layanan samsat bagaimana cara", 142, "Pengaduan"]
+  ] as const)("mencocokkan urutan kata yang dibalik: %s", (input, expectedId, expectedCategory) => {
     const result = matchFaq(input);
 
     expect(result?.entry.id).toBe(expectedId);

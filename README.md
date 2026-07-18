@@ -249,7 +249,7 @@ If the Worker URL changes, the webhook must be set again.
 
 The chatbot is intentionally rule-based and used as the main implementation object in the thesis.
 
-For academic writing, the core method should be described as **Pattern Matching**, with Regex as a supporting technique. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, synonym expansion, custom patterns, regex-assisted patterns, and scoring.
+For academic writing, the core method should be described as **Pattern Matching**, with Regex as a supporting technique. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, order-insensitive token matching for custom patterns, synonym expansion, custom patterns, regex-assisted patterns, and scoring.
 
 Regex is developed in two parts. First, regex is used in `normalize()` to clean punctuation, remove non-alphanumeric characters, normalize spacing, and standardize domain terms such as `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, and `gesek rangka`. Second, regex-assisted FAQ patterns are used to detect specific question forms such as `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, and `Drive Thru`. Regex is **not** the only matching method; it supports the rule-based pattern matching process.
 
@@ -270,7 +270,9 @@ Matching flow:
 7. Return the best FAQ if the score passes the minimum threshold.
 8. Use the score internally to decide whether the FAQ answer is relevant enough.
 
-The pattern matching score is an **internal relevance score**, not a statistical machine-learning accuracy value. The score is calculated from exact/partial phrase matching, custom pattern matching, regex-assisted pattern matching, important token overlap, FAQ token coverage, known-query token coverage, synonym expansion, and a small domain-anchor bonus for SAMSAT-related terms.
+The pattern matching score is an **internal relevance score**, not a statistical machine-learning accuracy value. The score is calculated from exact/partial phrase matching, order-insensitive custom pattern matching, regex-assisted pattern matching, important token overlap, FAQ token coverage, known-query token coverage, synonym expansion, and a small domain-anchor bonus for SAMSAT-related terms.
+
+The matcher also checks custom-pattern tokens without depending on word order. For example, `syarat bayar pajak`, `pajak bayar syaratnya`, and `bayar pajak apa syaratnya` can point to the same FAQ because the important tokens are still present even though the sentence order changes.
 
 User-facing satisfaction score:
 
@@ -745,7 +747,7 @@ Input user
   -> jawaban terbaik atau fallback
 ```
 
-Regex dikembangkan untuk dua kebutuhan. Pertama, regex preprocessing di fungsi `normalize()` membersihkan tanda baca, karakter non-alfanumerik, spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern membantu mendeteksi bentuk pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex tetap berperan sebagai pendukung, sedangkan metode utama tetap pattern matching berbasis aturan melalui pencocokan frasa, token, sinonim, custom pattern, regex pattern, dan scoring.
+Regex dikembangkan untuk dua kebutuhan. Pertama, regex preprocessing di fungsi `normalize()` membersihkan tanda baca, karakter non-alfanumerik, spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern membantu mendeteksi bentuk pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex tetap berperan sebagai pendukung, sedangkan metode utama tetap pattern matching berbasis aturan melalui pencocokan frasa, token, pencocokan token tanpa bergantung urutan kata, sinonim, custom pattern, regex pattern, dan scoring.
 
 #### Flow Voting Kepuasan Jawaban
 
@@ -1134,7 +1136,7 @@ Jika URL Worker berubah, webhook harus diset ulang.
 
 Chatbot ini sengaja dibuat rule-based.
 
-Untuk penulisan Tugas Akhir, metode utama sebaiknya disebut **Pattern Matching**, dengan Regex sebagai teknik pendukung. Implementasi ini memakai pattern matching melalui pencocokan frasa persis, pencocokan frasa sebagian, overlap token, perluasan sinonim, custom pattern, regex-assisted pattern, dan scoring.
+Untuk penulisan Tugas Akhir, metode utama sebaiknya disebut **Pattern Matching**, dengan Regex sebagai teknik pendukung. Implementasi ini memakai pattern matching melalui pencocokan frasa persis, pencocokan frasa sebagian, overlap token, pencocokan token tanpa bergantung urutan kata pada custom pattern, perluasan sinonim, custom pattern, regex-assisted pattern, dan scoring.
 
 Regex dikembangkan dalam dua bagian. Pertama, regex pada `normalize()` dipakai untuk membersihkan tanda baca, menghapus karakter non-alfanumerik, merapikan spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern dipakai untuk mendeteksi pola pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex **bukan satu-satunya metode pencocokan**, tetapi memperkuat proses pattern matching berbasis aturan.
 
@@ -1155,7 +1157,9 @@ Alur pencocokan:
 7. FAQ terbaik dikembalikan jika skornya melewati batas minimum.
 8. Skor dipakai secara internal untuk menentukan apakah jawaban FAQ cukup relevan.
 
-Skor pattern matching adalah **skor relevansi internal**, bukan nilai akurasi statistik seperti pada evaluasi machine learning. Skor dihitung dari kecocokan frasa persis/sebagian, custom pattern, regex pattern, overlap kata penting, cakupan token FAQ, cakupan token input yang dikenal dataset, perluasan sinonim, dan bonus kecil untuk istilah domain SAMSAT.
+Skor pattern matching adalah **skor relevansi internal**, bukan nilai akurasi statistik seperti pada evaluasi machine learning. Skor dihitung dari kecocokan frasa persis/sebagian, custom pattern tanpa bergantung urutan kata, regex pattern, overlap kata penting, cakupan token FAQ, cakupan token input yang dikenal dataset, perluasan sinonim, dan bonus kecil untuk istilah domain SAMSAT.
+
+Matcher juga mengecek token custom pattern tanpa bergantung pada urutan kata. Contohnya, `syarat bayar pajak`, `pajak bayar syaratnya`, dan `bayar pajak apa syaratnya` tetap dapat diarahkan ke FAQ yang sama karena token pentingnya masih sama walaupun susunan kalimat user berubah.
 
 Skor kepuasan yang terlihat oleh user:
 
