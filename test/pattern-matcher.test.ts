@@ -38,21 +38,21 @@ describe("matchFaq", () => {
     ["Kalau tutup operasional samsat jam berapa?", 6, "Layanan"],
     ["Kalau Sabtu?", 7, "Layanan"],
     ["Kalau Minggu?", 8, "Layanan"],
-    ["Kalau mutasi?", 130, "Mutasi"],
-    ["Kalau balik nama?", 105, "Balik Nama"],
-    ["Kalau pajak online?", 45, "Pajak"],
-    ["Kalau SIGNAL?", 171, "SIGNAL"],
-    ["Kalau parkir?", 206, "Fasilitas"],
-    ["Kalau komplain?", 219, "Pengaduan"],
-    ["syarat bayar pajak kendaraan", 64, "Pajak"],
-    ["bisa bayar pajak online?", 45, "Pajak"],
-    ["stnk saya hilang", 76, "Dokumen"],
-    ["dokumen balik nama", 105, "Balik Nama"],
-    ["alur mutasi kendaraan", 130, "Mutasi"],
-    ["kalau mau mutasi?", 130, "Mutasi"],
-    ["Kalau begitu mobil saya Toyota, kalau mau di mutasi apa syaratnya?", 130, "Mutasi"],
-    ["jadwal samsat keliling", 196, "Samsat Keliling"],
-    ["apa itu signal", 171, "SIGNAL"]
+    ["Kalau mutasi?", 90, "Mutasi"],
+    ["Kalau balik nama?", 73, "Balik Nama"],
+    ["Kalau pajak online?", 35, "Pajak"],
+    ["Kalau SIGNAL?", 117, "SIGNAL"],
+    ["Kalau parkir?", 136, "Fasilitas"],
+    ["Kalau komplain?", 142, "Pengaduan"],
+    ["syarat bayar pajak kendaraan", 47, "Pajak"],
+    ["bisa bayar pajak online?", 35, "Pajak"],
+    ["stnk saya hilang", 54, "Dokumen"],
+    ["dokumen balik nama", 73, "Balik Nama"],
+    ["alur mutasi kendaraan", 90, "Mutasi"],
+    ["kalau mau mutasi?", 90, "Mutasi"],
+    ["Kalau begitu mobil saya Toyota, kalau mau di mutasi apa syaratnya?", 90, "Mutasi"],
+    ["jadwal samsat keliling", 134, "Samsat Keliling"],
+    ["apa itu signal", 117, "SIGNAL"]
   ] as const)("mencocokkan %s", (input, expectedId, expectedCategory) => {
     const result = matchFaq(input);
 
@@ -61,16 +61,16 @@ describe("matchFaq", () => {
   });
 
   it.each([
-    ["drive-thru samsat", 229, "Layanan"],
-    ["drivethru samsat", 229, "Layanan"],
-    ["surat tanda nomor kendaraan hilang", 76, "Dokumen"],
-    ["buku pemilik kendaraan bermotor hilang", 77, "Dokumen"],
-    ["pajak 5 tahunan", 40, "Pajak"],
-    ["pajak lima tahun", 40, "Pajak"],
-    ["syarat pajak 5 tahunan", 65, "Pajak"],
-    ["cabut berkas kendaraan", 130, "Mutasi"],
-    ["pindah domisili kendaraan", 130, "Mutasi"],
-    ["gesek rangka kendaraan", 151, "Cek Fisik"]
+    ["drive-thru samsat", 146, "Layanan"],
+    ["drivethru samsat", 146, "Layanan"],
+    ["surat tanda nomor kendaraan hilang", 54, "Dokumen"],
+    ["buku pemilik kendaraan bermotor hilang", 55, "Dokumen"],
+    ["pajak 5 tahunan", 30, "Pajak"],
+    ["pajak lima tahun", 30, "Pajak"],
+    ["syarat pajak 5 tahunan", 48, "Pajak"],
+    ["cabut berkas kendaraan", 90, "Mutasi"],
+    ["pindah domisili kendaraan", 90, "Mutasi"],
+    ["gesek rangka kendaraan", 103, "Cek Fisik"]
   ] as const)("mencocokkan variasi regex: %s", (input, expectedId, expectedCategory) => {
     const result = matchFaq(input);
 
@@ -86,8 +86,8 @@ describe("matchFaq", () => {
     const shortQuestion = matchFaq("mutasi");
     const longQuestion = matchFaq("Kalau begitu mobil saya Toyota, kalau mau di mutasi apa syaratnya?");
 
-    expect(shortQuestion?.entry.id).toBe(130);
-    expect(longQuestion?.entry.id).toBe(130);
+    expect(shortQuestion?.entry.id).toBe(90);
+    expect(longQuestion?.entry.id).toBe(90);
     expect(shortQuestion?.score).toBeGreaterThanOrEqual(75);
     expect(longQuestion?.score).toBeGreaterThanOrEqual(75);
   });

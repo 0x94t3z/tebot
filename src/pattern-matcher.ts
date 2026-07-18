@@ -88,17 +88,17 @@ const customPatterns: Record<number, string[]> = {
   9: ["lokasi samsat bandung timur", "samsat soekarno hatta"],
   10: ["alamat samsat bandung timur"],
   15: ["cek fisik samsat", "melayani cek fisik"],
-  32: ["jatuh tempo", "masa berlaku pajak"],
-  36: ["denda pajak", "telat bayar pajak"],
-  40: ["pajak lima tahunan", "pajak 5 tahun"],
-  45: ["bayar pajak online", "pajak online"],
-  64: ["syarat bayar pajak", "dokumen bayar pajak", "syarat pajak tahunan"],
-  65: ["pajak lima tahunan", "pajak 5 tahun", "syarat pajak lima tahunan"],
-  76: ["stnk hilang", "kehilangan stnk"],
-  77: ["bpkb hilang", "kehilangan bpkb"],
-  84: ["bpkb pajak lima tahunan", "bpkb diperlukan pajak lima tahunan"],
-  105: ["syarat balik nama", "dokumen balik nama", "balik nama"],
-  130: [
+  22: ["jatuh tempo", "masa berlaku pajak"],
+  26: ["denda pajak", "telat bayar pajak"],
+  30: ["pajak lima tahunan", "pajak 5 tahun"],
+  35: ["bayar pajak online", "pajak online"],
+  47: ["syarat bayar pajak", "dokumen bayar pajak", "syarat pajak tahunan"],
+  48: ["pajak lima tahunan", "pajak 5 tahun", "syarat pajak lima tahunan"],
+  54: ["stnk hilang", "kehilangan stnk"],
+  55: ["bpkb hilang", "kehilangan bpkb"],
+  62: ["bpkb pajak lima tahunan", "bpkb diperlukan pajak lima tahunan"],
+  73: ["syarat balik nama", "dokumen balik nama", "balik nama"],
+  90: [
     "mutasi",
     "syarat mutasi",
     "dokumen mutasi",
@@ -108,12 +108,12 @@ const customPatterns: Record<number, string[]> = {
     "proses mutasi",
     "alur mutasi"
   ],
-  155: ["cek fisik wajib mutasi", "cek fisik untuk mutasi", "cek fisik kendaraan mutasi"],
-  171: ["signal", "aplikasi signal"],
-  191: ["samsat keliling", "layanan keliling"],
-  196: ["jadwal samsat keliling", "jam samsat keliling"],
-  206: ["parkir samsat", "tempat parkir samsat", "samsat punya tempat parkir"],
-  219: [
+  107: ["cek fisik wajib mutasi", "cek fisik untuk mutasi", "cek fisik kendaraan mutasi"],
+  117: ["signal", "aplikasi signal"],
+  129: ["samsat keliling", "layanan keliling"],
+  134: ["jadwal samsat keliling", "jam samsat keliling"],
+  136: ["parkir samsat", "tempat parkir samsat", "samsat punya tempat parkir"],
+  142: [
     "pengaduan",
     "komplain",
     "pengaduan samsat",
@@ -122,8 +122,8 @@ const customPatterns: Record<number, string[]> = {
     "komplain layanan samsat",
     "cara komplain layanan samsat"
   ],
-  229: ["drive thru", "samsat drive thru"],
-  230: ["memiliki drive thru", "tersedia drive thru", "samsat punya drive thru"]
+  146: ["drive thru", "samsat drive thru"],
+  147: ["memiliki drive thru", "tersedia drive thru", "samsat punya drive thru"]
 };
 
 // Regex normalisasi menyamakan variasi penulisan sebelum tokenisasi.
@@ -150,24 +150,24 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
   7: [{ pattern: /\b(sabtu).*\b(buka|layanan|operasional)\b|\b(buka|layanan|operasional).*\b(sabtu)\b/, label: "regex:sabtu buka", score: 90 }],
   8: [{ pattern: /\b(minggu).*\b(buka|layanan|operasional)\b|\b(buka|layanan|operasional).*\b(minggu)\b/, label: "regex:minggu buka", score: 90 }],
   10: [{ pattern: /\b(alamat|lokasi|dimana|tempat).*\b(samsat).*\b(bandung\s+timur)\b/, label: "regex:alamat samsat bandung timur", score: 95 }],
-  45: [{ pattern: /\b(bayar|pembayaran).*\b(pajak).*\b(online|digital|signal)\b|\b(pajak).*\b(online|digital|signal)\b/, label: "regex:pajak online", score: 95 }],
-  64: [{ pattern: /\b(syarat|dokumen|persyaratan).*\b(bayar|pembayaran).*\b(pajak)\b|\b(syarat|dokumen|persyaratan).*\b(pajak)\b/, label: "regex:syarat pajak", score: 95 }],
-  40: [{ pattern: /\b(pajak).*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(pajak)\b/, label: "regex:pajak lima tahunan", score: 70 }],
-  65: [{ pattern: /\b(syarat|dokumen|persyaratan).*\b(pajak).*\b(lima\s+tahunan)\b|\b(syarat|dokumen|persyaratan).*\b(lima\s+tahunan)\b/, label: "regex:syarat pajak lima tahunan", score: 130 }],
-  76: [{ pattern: /\b(stnk).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(stnk)\b/, label: "regex:stnk hilang", score: 95 }],
-  77: [{ pattern: /\b(bpkb).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(bpkb)\b/, label: "regex:bpkb hilang", score: 95 }],
-  84: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", score: 135 }],
-  105: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses)\b/, label: "regex:balik nama", score: 95 }],
-  130: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|ingin).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur)\b/, label: "regex:mutasi", score: 95 }],
-  151: [{ pattern: /\b(apa|pengertian).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kendaraan)\b/, label: "regex:apa cek fisik", score: 85 }],
-  155: [{ pattern: /\b(cek\s+fisik).*\b(wajib|perlu|harus).*\b(mutasi)\b|\b(mutasi).*\b(cek\s+fisik)\b/, label: "regex:cek fisik mutasi", score: 98 }],
-  171: [{ pattern: /\b(signal|sambara|aplikasi\s+signal)\b/, label: "regex:signal", score: 95 }],
-  191: [{ pattern: /\b(samsat\s+keliling|layanan\s+keliling)\b/, label: "regex:samsat keliling", score: 95 }],
-  196: [{ pattern: /\b(jadwal|jam|kapan).*\b(samsat\s+keliling)\b|\b(samsat\s+keliling).*\b(jadwal|jam|kapan)\b/, label: "regex:jadwal samsat keliling", score: 120 }],
-  206: [{ pattern: /\b(parkir|tempat\s+parkir|area\s+parkir).*\b(samsat)?\b/, label: "regex:parkir samsat", score: 90 }],
-  219: [{ pattern: /\b(pengaduan|keluhan|komplain|lapor).*\b(samsat|layanan)?\b/, label: "regex:pengaduan", score: 90 }],
-  229: [{ pattern: /\b(drive\s+thru|drivethru)\b/, label: "regex:drive thru", score: 80 }],
-  230: [{ pattern: /\b(memiliki|tersedia|ada|punya).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(memiliki|tersedia|ada|punya)\b/, label: "regex:ketersediaan drive thru", score: 130 }]
+  35: [{ pattern: /\b(bayar|pembayaran).*\b(pajak).*\b(online|digital|signal)\b|\b(pajak).*\b(online|digital|signal)\b/, label: "regex:pajak online", score: 95 }],
+  47: [{ pattern: /\b(syarat|dokumen|persyaratan).*\b(bayar|pembayaran).*\b(pajak)\b|\b(syarat|dokumen|persyaratan).*\b(pajak)\b/, label: "regex:syarat pajak", score: 95 }],
+  30: [{ pattern: /\b(pajak).*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(pajak)\b/, label: "regex:pajak lima tahunan", score: 70 }],
+  48: [{ pattern: /\b(syarat|dokumen|persyaratan).*\b(pajak).*\b(lima\s+tahunan)\b|\b(syarat|dokumen|persyaratan).*\b(lima\s+tahunan)\b/, label: "regex:syarat pajak lima tahunan", score: 130 }],
+  54: [{ pattern: /\b(stnk).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(stnk)\b/, label: "regex:stnk hilang", score: 95 }],
+  55: [{ pattern: /\b(bpkb).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(bpkb)\b/, label: "regex:bpkb hilang", score: 95 }],
+  62: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", score: 135 }],
+  73: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses)\b/, label: "regex:balik nama", score: 95 }],
+  90: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|ingin).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur)\b/, label: "regex:mutasi", score: 95 }],
+  103: [{ pattern: /\b(apa|pengertian).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kendaraan)\b/, label: "regex:apa cek fisik", score: 85 }],
+  107: [{ pattern: /\b(cek\s+fisik).*\b(wajib|perlu|harus).*\b(mutasi)\b|\b(mutasi).*\b(cek\s+fisik)\b/, label: "regex:cek fisik mutasi", score: 98 }],
+  117: [{ pattern: /\b(signal|sambara|aplikasi\s+signal)\b/, label: "regex:signal", score: 95 }],
+  129: [{ pattern: /\b(samsat\s+keliling|layanan\s+keliling)\b/, label: "regex:samsat keliling", score: 95 }],
+  134: [{ pattern: /\b(jadwal|jam|kapan).*\b(samsat\s+keliling)\b|\b(samsat\s+keliling).*\b(jadwal|jam|kapan)\b/, label: "regex:jadwal samsat keliling", score: 120 }],
+  136: [{ pattern: /\b(parkir|tempat\s+parkir|area\s+parkir).*\b(samsat)?\b/, label: "regex:parkir samsat", score: 90 }],
+  142: [{ pattern: /\b(pengaduan|keluhan|komplain|lapor).*\b(samsat|layanan)?\b/, label: "regex:pengaduan", score: 90 }],
+  146: [{ pattern: /\b(drive\s+thru|drivethru)\b/, label: "regex:drive thru", score: 80 }],
+  147: [{ pattern: /\b(memiliki|tersedia|ada|punya).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(memiliki|tersedia|ada|punya)\b/, label: "regex:ketersediaan drive thru", score: 130 }]
 };
 
 // Kata intent umum tidak cukup untuk membuktikan bahwa pertanyaan membahas

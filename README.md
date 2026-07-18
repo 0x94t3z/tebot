@@ -144,23 +144,17 @@ src/pattern-matcher.ts
 Contains the pattern matching algorithm: normalization, stop-word removal, synonym expansion, custom patterns, scoring, and FAQ ranking.
 
 ```text
-src/data/faq-samsat-bandung-timur-curated-150.json
-```
-
-The active curated FAQ dataset used by the bot. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic.
-
-```text
 src/data/faq-samsat-bandung-timur.json
 ```
 
-The full 233-row FAQ archive. Use it as a source when selecting or updating the active curated dataset.
+The active 150-row FAQ dataset used by the bot. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic. The `id` field is sequential from `1` to `150`.
 
-The active 150-row dataset is curated from the full archive using these criteria:
+The active dataset is curated using these criteria:
 
 - Prioritize questions related to core SAMSAT services, vehicle tax, documents, ownership transfer, mutation, physical check, SIGNAL, mobile SAMSAT, facilities, and complaints.
 - Keep FAQ rows that have a clear answer and a `source` field.
 - Keep the dataset focused on SAMSAT Bandung Timur and relevant West Java SAMSAT information.
-- Remove lower-priority or duplicate-like entries from the active bot dataset while keeping them in the full archive.
+- Remove lower-priority or duplicate-like entries so the bot focuses on the most important FAQ rows.
 
 Active dataset distribution:
 
@@ -517,14 +511,10 @@ curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
 Edit:
 
 ```text
-src/data/faq-samsat-bandung-timur-curated-150.json
-```
-
-This is the active dataset used by the bot. The full 233-row archive remains available in:
-
-```text
 src/data/faq-samsat-bandung-timur.json
 ```
+
+This is the active 150-row dataset used by the bot. Keep `id` values sequential from `1` to `150` when replacing the dataset.
 
 Then run:
 
@@ -784,14 +774,14 @@ Satu user hanya memiliki satu vote aktif untuk satu FAQ. Jika user menekan tombo
 
 Project ini tidak menggunakan database relasional seperti MySQL atau PostgreSQL. Penyimpanan data dinamis menggunakan **Cloudflare KV**, yaitu database key-value. Dataset FAQ disimpan sebagai file JSON karena data FAQ bersifat relatif statis dan perlu mudah diperbarui tanpa mengubah logic algoritma.
 
-Dataset aktif untuk bot berisi **150 FAQ terkurasi**. Dataset lengkap 233 data tetap disimpan sebagai arsip/development dataset agar peneliti masih memiliki sumber data yang lebih luas ketika ingin menambah, mengganti, atau mengevaluasi data aktif.
+Dataset aktif untuk bot berisi **150 FAQ terkurasi** di satu file JSON. Field `id` dibuat berurutan dari `1` sampai `150` agar data mudah dibaca, tidak ambigu, dan sesuai dengan jumlah dataset aktif.
 
 Kriteria kurasi dataset aktif:
 
 - Memprioritaskan pertanyaan yang berkaitan dengan layanan inti SAMSAT, pajak kendaraan, dokumen kendaraan, balik nama, mutasi, cek fisik, SIGNAL, Samsat Keliling, fasilitas, dan pengaduan.
 - Mempertahankan data FAQ yang memiliki jawaban jelas dan field `source`.
 - Menjaga fokus data pada SAMSAT Bandung Timur dan informasi SAMSAT Jawa Barat yang masih relevan.
-- Mengeluarkan data yang prioritasnya lebih rendah atau mirip duplikat dari dataset aktif, tetapi tetap menyimpannya di arsip 233 data.
+- Mengeluarkan data yang prioritasnya lebih rendah atau mirip duplikat agar dataset aktif tetap fokus pada FAQ penting.
 
 Distribusi dataset aktif:
 
@@ -811,12 +801,6 @@ Distribusi dataset aktif:
 ##### Dataset FAQ
 
 Lokasi file:
-
-```text
-src/data/faq-samsat-bandung-timur-curated-150.json
-```
-
-Arsip dataset lengkap:
 
 ```text
 src/data/faq-samsat-bandung-timur.json
@@ -958,8 +942,7 @@ Data yang dapat digunakan untuk kebutuhan analisis penelitian:
 
 | Output | Sumber | Fungsi |
 | --- | --- | --- |
-| Data FAQ aktif | `src/data/faq-samsat-bandung-timur-curated-150.json` | Objek utama pencocokan pattern matching |
-| Arsip data FAQ | `src/data/faq-samsat-bandung-timur.json` | Dataset lengkap untuk pengembangan dan kurasi ulang |
+| Data FAQ aktif | `src/data/faq-samsat-bandung-timur.json` | Objek utama pencocokan pattern matching |
 | Hasil pencocokan | Log Worker dan perilaku bot | Melihat FAQ yang dipilih dari input user |
 | Profil responden | `/research.csv` | Mendata user yang mencoba bot |
 | Rekap kepuasan jawaban | `/satisfaction.csv` | Mengukur persentase jawaban yang dinilai memuaskan atau tidak memuaskan |
@@ -1068,16 +1051,10 @@ src/pattern-matcher.ts
 Berisi algoritma pattern matching: normalisasi teks, penghapusan stop word, perluasan sinonim, custom pattern, scoring, dan pemeringkatan FAQ.
 
 ```text
-src/data/faq-samsat-bandung-timur-curated-150.json
-```
-
-Dataset FAQ aktif berisi 150 data terkurasi. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
-
-```text
 src/data/faq-samsat-bandung-timur.json
 ```
 
-Arsip dataset lengkap berisi 233 data untuk kebutuhan pengembangan dan kurasi ulang.
+Dataset FAQ aktif berisi 150 data terkurasi dengan ID berurutan `1-150`. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
 
 ```text
 src/faq-data.ts
@@ -1419,14 +1396,10 @@ curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
 Edit:
 
 ```text
-src/data/faq-samsat-bandung-timur-curated-150.json
-```
-
-File ini adalah dataset aktif yang dipakai bot. Dataset lengkap 233 data tetap tersedia sebagai arsip di:
-
-```text
 src/data/faq-samsat-bandung-timur.json
 ```
+
+File ini adalah dataset aktif 150 data yang dipakai bot. Pastikan field `id` tetap berurutan dari `1` sampai `150` jika dataset diganti.
 
 Lalu jalankan:
 
