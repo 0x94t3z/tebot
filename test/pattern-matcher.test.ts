@@ -153,6 +153,34 @@ describe("matchFaq", () => {
     expect(result?.entry.category).toBe(expectedCategory);
   });
 
+  it.each([
+    ["deadline pajak motor kapan sih", 22, "Pajak"],
+    ["cariin tagihan pkb motor dong", 23, "Pajak"],
+    ["pajak telat apakah kena denda", 26, "Pajak"],
+    ["mau bayar pkb online lewat e-samsat", 35, "Pajak"],
+    ["stnknya raib cara urus gimana", 54, "Dokumen"],
+    ["bpkbnya ilang ngurus dimana", 55, "Dokumen"],
+    ["dokumen apa bwt balik nama motor second", 73, "Balik Nama"],
+    ["motor seken pajaknya nunggak bisa balik nama ga", 85, "Balik Nama"],
+    ["pelat luar daerah mau cabut berkas", 90, "Mutasi"],
+    ["motor wajib dibawa pas mutasi?", 92, "Mutasi"],
+    ["mutasi perlu bpkb ori ga", 94, "Mutasi"],
+    ["cek fisik itu buat gesek mesin doang?", 103, "Cek Fisik"],
+    ["kapan kendaraan harus cek fisik", 105, "Cek Fisik"],
+    ["nomer rangka susah ketemu", 115, "Cek Fisik"],
+    ["bikin akun sinyal gimana", 120, "SIGNAL"],
+    ["signal bisa dipakai di jabar?", 121, "SIGNAL"],
+    ["face matching signal error kenapa", 126, "SIGNAL"],
+    ["jadwal samkel hari ini ada dimana", 135, "Samsat Keliling"],
+    ["ada cs atau loket informasi di samsat?", 140, "Fasilitas"],
+    ["drive through bawa apa aja", 150, "Layanan"]
+  ] as const)("mencocokkan slang, singkatan, dan imbuhan: %s", (input, expectedId, expectedCategory) => {
+    const result = matchFaq(input);
+
+    expect(result?.entry.id).toBe(expectedId);
+    expect(result?.entry.category).toBe(expectedCategory);
+  });
+
   it("mengembalikan null jika tidak ada pola FAQ yang cukup cocok", () => {
     expect(matchFaq("halo admin selamat pagi")).toBeNull();
   });
