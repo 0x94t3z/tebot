@@ -6,10 +6,20 @@ export interface PatternMatchResult {
   matchedTerms: string[];
 }
 
+interface ScoredPatternMatchResult extends PatternMatchResult {
+  rankingScore: number;
+}
+
 // Metode utama: pattern matching dengan perhitungan skor.
-// Regex hanya digunakan di dalam normalize() untuk preprocessing tanda baca/spasi,
-// bukan sebagai algoritma utama pencocokan FAQ.
+// Regex dipakai sebagai pendukung preprocessing dan pendeteksian pola frasa,
+// bukan sebagai pengganti algoritma utama pencocokan FAQ.
 const minimumScore = 25;
+
+interface RegexPatternSpec {
+  pattern: RegExp;
+  label: string;
+  score: number;
+}
 
 // Kata umum yang diabaikan agar pencocokan fokus pada kata bermakna.
 const stopWords = new Set([
@@ -61,7 +71,11 @@ const synonymGroups = [
   ["dokumen", "syarat", "persyaratan"],
   ["pemilik", "kepemilikan", "nama"],
   ["pengaduan", "keluhan", "komplain"],
-  ["daftar", "mendaftar", "pendaftaran"]
+  ["daftar", "mendaftar", "pendaftaran"],
+  ["drive", "thru", "drivethru"],
+  ["nomor", "nopol", "polisi"],
+  ["plat", "pelat"],
+  ["lima", "tahunan"]
 ];
 
 // Pola tambahan untuk FAQ tertentu agar variasi pertanyaan user tetap cocok.
@@ -76,11 +90,13 @@ const customPatterns: Record<number, string[]> = {
   15: ["cek fisik samsat", "melayani cek fisik"],
   32: ["jatuh tempo", "masa berlaku pajak"],
   36: ["denda pajak", "telat bayar pajak"],
+  40: ["pajak lima tahunan", "pajak 5 tahun"],
   45: ["bayar pajak online", "pajak online"],
   64: ["syarat bayar pajak", "dokumen bayar pajak", "syarat pajak tahunan"],
   65: ["pajak lima tahunan", "pajak 5 tahun", "syarat pajak lima tahunan"],
   76: ["stnk hilang", "kehilangan stnk"],
   77: ["bpkb hilang", "kehilangan bpkb"],
+  84: ["bpkb pajak lima tahunan", "bpkb diperlukan pajak lima tahunan"],
   105: ["syarat balik nama", "dokumen balik nama", "balik nama"],
   130: [
     "mutasi",
@@ -106,7 +122,52 @@ const customPatterns: Record<number, string[]> = {
     "komplain layanan samsat",
     "cara komplain layanan samsat"
   ],
-  229: ["drive thru", "samsat drive thru"]
+  229: ["drive thru", "samsat drive thru"],
+  230: ["memiliki drive thru", "tersedia drive thru", "samsat punya drive thru"]
+};
+
+// Regex normalisasi menyamakan variasi penulisan sebelum tokenisasi.
+// Contoh: "drive-thru" dan "drivethru" disamakan menjadi "drive thru".
+const regexNormalizationRules = [
+  { pattern: /\bdrive\s*-?\s*thru\b/g, replacement: "drive thru" },
+  { pattern: /\bdrivethru\b/g, replacement: "drive thru" },
+  { pattern: /\b(no\s*pol|nopol|nomor\s*polisi|no\s*polisi)\b/g, replacement: "nomor polisi" },
+  { pattern: /\b(plat|pelat)\b/g, replacement: "pelat" },
+  { pattern: /\b(5|lima)\s*(tahun|tahunan)\b/g, replacement: "lima tahunan" },
+  { pattern: /\bsurat\s+tanda\s+nomor\s+kendaraan\b/g, replacement: "stnk" },
+  { pattern: /\bbuku\s+pemilik\s+kendaraan\s+bermotor\b/g, replacement: "bpkb" },
+  { pattern: /\btanda\s+nomor\s+kendaraan\s+bermotor\b/g, replacement: "tnkb" },
+  { pattern: /\b(cabut\s+berkas|pindah\s+domisili)\b/g, replacement: "syarat mutasi" },
+  { pattern: /\b(gesek\s+rangka|gesek\s+mesin)\b/g, replacement: "cek fisik" },
+  { pattern: /\b(bb?nkb|bea\s+balik\s+nama)\b/g, replacement: "balik nama" }
+];
+
+// Regex pattern memberi sinyal tambahan untuk FAQ yang punya bentuk kalimat
+// khas. Skor ini tetap digabung dengan token/sinonim/custom pattern.
+const regexPatterns: Record<number, RegexPatternSpec[]> = {
+  5: [{ pattern: /\b(samsat\s+)?buka\s+(jam|pukul)?\b/, label: "regex:samsat buka", score: 85 }],
+  6: [{ pattern: /\b(samsat\s+)?tutup\s+(jam|pukul)?\b/, label: "regex:samsat tutup", score: 85 }],
+  7: [{ pattern: /\b(sabtu).*\b(buka|layanan|operasional)\b|\b(buka|layanan|operasional).*\b(sabtu)\b/, label: "regex:sabtu buka", score: 90 }],
+  8: [{ pattern: /\b(minggu).*\b(buka|layanan|operasional)\b|\b(buka|layanan|operasional).*\b(minggu)\b/, label: "regex:minggu buka", score: 90 }],
+  10: [{ pattern: /\b(alamat|lokasi|dimana|tempat).*\b(samsat).*\b(bandung\s+timur)\b/, label: "regex:alamat samsat bandung timur", score: 95 }],
+  45: [{ pattern: /\b(bayar|pembayaran).*\b(pajak).*\b(online|digital|signal)\b|\b(pajak).*\b(online|digital|signal)\b/, label: "regex:pajak online", score: 95 }],
+  64: [{ pattern: /\b(syarat|dokumen|persyaratan).*\b(bayar|pembayaran).*\b(pajak)\b|\b(syarat|dokumen|persyaratan).*\b(pajak)\b/, label: "regex:syarat pajak", score: 95 }],
+  40: [{ pattern: /\b(pajak).*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(pajak)\b/, label: "regex:pajak lima tahunan", score: 70 }],
+  65: [{ pattern: /\b(syarat|dokumen|persyaratan).*\b(pajak).*\b(lima\s+tahunan)\b|\b(syarat|dokumen|persyaratan).*\b(lima\s+tahunan)\b/, label: "regex:syarat pajak lima tahunan", score: 130 }],
+  76: [{ pattern: /\b(stnk).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(stnk)\b/, label: "regex:stnk hilang", score: 95 }],
+  77: [{ pattern: /\b(bpkb).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(bpkb)\b/, label: "regex:bpkb hilang", score: 95 }],
+  84: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", score: 135 }],
+  105: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses)\b/, label: "regex:balik nama", score: 95 }],
+  130: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|ingin).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur)\b/, label: "regex:mutasi", score: 95 }],
+  151: [{ pattern: /\b(apa|pengertian).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kendaraan)\b/, label: "regex:apa cek fisik", score: 85 }],
+  155: [{ pattern: /\b(cek\s+fisik).*\b(wajib|perlu|harus).*\b(mutasi)\b|\b(mutasi).*\b(cek\s+fisik)\b/, label: "regex:cek fisik mutasi", score: 98 }],
+  171: [{ pattern: /\b(signal|sambara|aplikasi\s+signal)\b/, label: "regex:signal", score: 95 }],
+  191: [{ pattern: /\b(samsat\s+keliling|layanan\s+keliling)\b/, label: "regex:samsat keliling", score: 95 }],
+  196: [{ pattern: /\b(jadwal|jam|kapan).*\b(samsat\s+keliling)\b|\b(samsat\s+keliling).*\b(jadwal|jam|kapan)\b/, label: "regex:jadwal samsat keliling", score: 120 }],
+  206: [{ pattern: /\b(parkir|tempat\s+parkir|area\s+parkir).*\b(samsat)?\b/, label: "regex:parkir samsat", score: 90 }],
+  219: [{ pattern: /\b(pengaduan|keluhan|komplain|lapor).*\b(samsat|layanan)?\b/, label: "regex:pengaduan", score: 90 }],
+  229: [{ pattern: /\b(drive\s+thru|drivethru)\b/, label: "regex:drive thru", score: 80 }],
+  230: [{ pattern: /\b(memiliki|tersedia|ada|punya).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(memiliki|tersedia|ada|punya)\b/, label: "regex:ketersediaan drive thru", score: 130 }]
 };
 
 // Kata intent umum tidak cukup untuk membuktikan bahwa pertanyaan membahas
@@ -259,7 +320,7 @@ export function matchFaq(input: string): PatternMatchResult | null {
 
   const ranked = faqEntries
     .map((entry) => scoreEntry(entry, normalizedInput, baseQueryTokens, queryTokens))
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => b.rankingScore - a.rankingScore || b.score - a.score);
 
   const best = ranked[0];
   if (!best || best.score < minimumScore || !hasSubjectOverlap(best.entry, queryTokens)) {
@@ -373,13 +434,23 @@ export function getEntriesByCategory(category: FaqCategory) {
 
 // Menyamakan format teks sebelum dicocokkan.
 export function normalize(value: string) {
-  return value
+  const normalized = value
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  return applyRegexNormalization(normalized)
     .replace(/[^a-z0-9]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+// Menjalankan aturan regex untuk menyamakan variasi istilah domain Samsat.
+function applyRegexNormalization(value: string) {
+  return regexNormalizationRules.reduce(
+    (currentValue, rule) => currentValue.replace(rule.pattern, rule.replacement),
+    value
+  );
 }
 
 // Menghitung skor kecocokan antara input user dan satu data FAQ.
@@ -388,7 +459,7 @@ function scoreEntry(
   normalizedInput: string,
   baseQueryTokens: string[],
   queryTokens: string[]
-): PatternMatchResult {
+): ScoredPatternMatchResult {
   const patterns = [
     { value: entry.question, exactScore: 100, partialScore: 65 },
     { value: entry.category, exactScore: 45, partialScore: 20 },
@@ -402,6 +473,7 @@ function scoreEntry(
   const entryTokens = expandTokens(tokenize([entry.question, entry.category].join(" ")));
 
   let phraseScore = 0;
+  let regexScore = 0;
   const matchedTerms = new Set<string>();
 
   // Skor tinggi diberikan jika input cocok persis atau cocok sebagian dengan pola.
@@ -426,6 +498,13 @@ function scoreEntry(
     }
   }
 
+  for (const regexPattern of regexPatterns[entry.id] ?? []) {
+    if (regexPattern.pattern.test(normalizedInput)) {
+      regexScore = Math.max(regexScore, regexPattern.score);
+      matchedTerms.add(regexPattern.label);
+    }
+  }
+
   const querySet = new Set(queryTokens);
   const entrySet = new Set(entryTokens);
   const overlap = [...querySet].filter((token) => entrySet.has(token));
@@ -443,8 +522,9 @@ function scoreEntry(
   const anchorBonus = overlap.some((token) => domainAnchorTokens.has(token)) ? 10 : 0;
   // Skor relevansi mengutamakan pola/frasa dan kata inti FAQ. Kata tambahan
   // yang tidak ada di dataset tidak langsung membuat skor turun drastis.
+  const patternScore = Math.max(phraseScore, regexScore);
   const relevanceScore =
-    phraseScore * 0.65 +
+    patternScore * 0.65 +
     subjectCoverage * 20 +
     entryCoverage * 10 +
     queryCoverage * 5 +
@@ -453,6 +533,7 @@ function scoreEntry(
   return {
     entry,
     score: Math.min(100, Math.round(relevanceScore)),
+    rankingScore: relevanceScore,
     matchedTerms: [...matchedTerms].slice(0, 6)
   };
 }

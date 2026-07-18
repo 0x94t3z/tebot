@@ -60,6 +60,24 @@ describe("matchFaq", () => {
     expect(result?.entry.category).toBe(expectedCategory);
   });
 
+  it.each([
+    ["drive-thru samsat", 229, "Layanan"],
+    ["drivethru samsat", 229, "Layanan"],
+    ["surat tanda nomor kendaraan hilang", 76, "Dokumen"],
+    ["buku pemilik kendaraan bermotor hilang", 77, "Dokumen"],
+    ["pajak 5 tahunan", 40, "Pajak"],
+    ["pajak lima tahun", 40, "Pajak"],
+    ["syarat pajak 5 tahunan", 65, "Pajak"],
+    ["cabut berkas kendaraan", 130, "Mutasi"],
+    ["pindah domisili kendaraan", 130, "Mutasi"],
+    ["gesek rangka kendaraan", 151, "Cek Fisik"]
+  ] as const)("mencocokkan variasi regex: %s", (input, expectedId, expectedCategory) => {
+    const result = matchFaq(input);
+
+    expect(result?.entry.id).toBe(expectedId);
+    expect(result?.entry.category).toBe(expectedCategory);
+  });
+
   it("mengembalikan null jika tidak ada pola FAQ yang cukup cocok", () => {
     expect(matchFaq("halo admin selamat pagi")).toBeNull();
   });

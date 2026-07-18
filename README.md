@@ -227,14 +227,14 @@ If the Worker URL changes, the webhook must be set again.
 
 The chatbot is intentionally rule-based and used as the main implementation object in the thesis.
 
-For academic writing, the core method should be described as **Pattern Matching**, not Regex. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, synonym expansion, custom patterns, and scoring.
+For academic writing, the core method should be described as **Pattern Matching**, with Regex as a supporting technique. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, synonym expansion, custom patterns, regex-assisted patterns, and scoring.
 
-Regex appears only as a small preprocessing tool inside the `normalize()` function. It is used to clean punctuation, remove non-alphanumeric characters, and normalize spacing before matching. Regex is **not** the main FAQ matching method.
+Regex is developed in two parts. First, regex is used in `normalize()` to clean punctuation, remove non-alphanumeric characters, normalize spacing, and standardize domain terms such as `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, and `gesek rangka`. Second, regex-assisted FAQ patterns are used to detect specific question forms such as `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, and `Drive Thru`. Regex is **not** the only matching method; it supports the rule-based pattern matching process.
 
 Safe wording for the thesis:
 
 ```text
-The chatbot applies a rule-based pattern matching method. User input is normalized, tokenized, expanded with simple synonym rules, and compared against FAQ patterns. Regex is only used during text preprocessing, while answer selection is performed using pattern matching and scoring.
+The chatbot applies a rule-based pattern matching method. User input is normalized, tokenized, expanded with simple synonym rules, and compared against FAQ patterns. Regex is used as a supporting technique for text normalization and specific phrase detection, while final answer selection is performed using pattern matching and scoring.
 ```
 
 Matching flow:
@@ -242,13 +242,13 @@ Matching flow:
 1. Normalize user input into lowercase alphanumeric text.
 2. Remove common stop words.
 3. Expand simple synonyms, such as `alamat/lokasi`, `jam/jadwal/operasional`, and `bayar/pembayaran`.
-4. Compare user input against FAQ questions, categories, and custom patterns.
+4. Compare user input against FAQ questions, categories, custom patterns, and regex-assisted patterns.
 5. Score each FAQ candidate.
 6. Sort candidates by score.
 7. Return the best FAQ if the score passes the minimum threshold.
 8. Use the score internally to decide whether the FAQ answer is relevant enough.
 
-The pattern matching score is an **internal relevance score**, not a statistical machine-learning accuracy value. The score is calculated from exact/partial phrase matching, custom pattern matching, important token overlap, FAQ token coverage, known-query token coverage, synonym expansion, and a small domain-anchor bonus for SAMSAT-related terms. Regex only contributes during preprocessing through `normalize()`; it cleans text before scoring but is not the main scoring method.
+The pattern matching score is an **internal relevance score**, not a statistical machine-learning accuracy value. The score is calculated from exact/partial phrase matching, custom pattern matching, regex-assisted pattern matching, important token overlap, FAQ token coverage, known-query token coverage, synonym expansion, and a small domain-anchor bonus for SAMSAT-related terms.
 
 User-facing satisfaction score:
 
@@ -719,13 +719,13 @@ Input user
   -> penghapusan stop word
   -> perluasan sinonim
   -> validasi konteks domain SAMSAT
-  -> pencocokan terhadap pertanyaan, kategori, dan custom pattern FAQ
+  -> pencocokan terhadap pertanyaan, kategori, custom pattern, dan regex pattern FAQ
   -> perhitungan skor relevansi
   -> pemeringkatan kandidat FAQ
   -> jawaban terbaik atau fallback
 ```
 
-Tahapan preprocessing memakai regex di fungsi `normalize()` untuk membersihkan tanda baca, karakter non-alfanumerik, dan spasi. Regex bukan metode utama pencocokan. Metode utama tetap pattern matching berbasis aturan melalui pencocokan frasa, token, sinonim, custom pattern, dan scoring.
+Regex dikembangkan untuk dua kebutuhan. Pertama, regex preprocessing di fungsi `normalize()` membersihkan tanda baca, karakter non-alfanumerik, spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern membantu mendeteksi bentuk pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex tetap berperan sebagai pendukung, sedangkan metode utama tetap pattern matching berbasis aturan melalui pencocokan frasa, token, sinonim, custom pattern, regex pattern, dan scoring.
 
 #### Flow Voting Kepuasan Jawaban
 
@@ -888,7 +888,7 @@ Contoh:
 
 - Chatbot tidak menggunakan AI generatif, sehingga jawaban terbatas pada dataset FAQ.
 - Jika pertanyaan tidak cocok dengan dataset atau berada di luar konteks SAMSAT, bot menampilkan fallback.
-- Regex hanya digunakan untuk preprocessing, bukan sebagai metode utama pencocokan.
+- Regex digunakan untuk preprocessing dan pendeteksian pola spesifik, tetapi bukan satu-satunya metode pencocokan.
 - Penghapusan chat dengan `/clear` mengikuti batasan Telegram Bot API dan hanya dapat menghapus pesan yang dilacak oleh bot.
 - Data FAQ diperbarui melalui file JSON, sehingga perubahan dataset perlu dilakukan di repository lalu dideploy ulang.
 
@@ -1090,14 +1090,14 @@ Jika URL Worker berubah, webhook harus diset ulang.
 
 Chatbot ini sengaja dibuat rule-based.
 
-Untuk penulisan Tugas Akhir, metode utama sebaiknya disebut **Pattern Matching**, bukan Regex. Implementasi ini memakai pattern matching melalui pencocokan frasa persis, pencocokan frasa sebagian, overlap token, perluasan sinonim, custom pattern, dan scoring.
+Untuk penulisan Tugas Akhir, metode utama sebaiknya disebut **Pattern Matching**, dengan Regex sebagai teknik pendukung. Implementasi ini memakai pattern matching melalui pencocokan frasa persis, pencocokan frasa sebagian, overlap token, perluasan sinonim, custom pattern, regex-assisted pattern, dan scoring.
 
-Regex hanya muncul sebagai alat bantu kecil di fungsi `normalize()`. Regex dipakai untuk membersihkan tanda baca, menghapus karakter non-alfanumerik, dan merapikan spasi sebelum proses pencocokan. Regex **bukan** metode utama pencocokan FAQ.
+Regex dikembangkan dalam dua bagian. Pertama, regex pada `normalize()` dipakai untuk membersihkan tanda baca, menghapus karakter non-alfanumerik, merapikan spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern dipakai untuk mendeteksi pola pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex **bukan satu-satunya metode pencocokan**, tetapi memperkuat proses pattern matching berbasis aturan.
 
 Kalimat aman untuk Tugas Akhir:
 
 ```text
-Chatbot menerapkan metode pattern matching berbasis aturan. Input pengguna dinormalisasi, ditokenisasi, diperluas dengan aturan sinonim sederhana, lalu dibandingkan dengan pola FAQ. Regex hanya digunakan pada tahap preprocessing teks, sedangkan pemilihan jawaban dilakukan menggunakan pattern matching dan scoring.
+Chatbot menerapkan metode pattern matching berbasis aturan. Input pengguna dinormalisasi, ditokenisasi, diperluas dengan aturan sinonim sederhana, lalu dibandingkan dengan pola FAQ. Regex digunakan sebagai teknik pendukung untuk normalisasi teks dan deteksi frasa spesifik, sedangkan pemilihan jawaban akhir dilakukan menggunakan pattern matching dan scoring.
 ```
 
 Alur pencocokan:
@@ -1105,13 +1105,13 @@ Alur pencocokan:
 1. Input user dinormalisasi menjadi teks lowercase alphanumeric.
 2. Stop word umum dihapus.
 3. Sinonim sederhana diperluas, seperti `alamat/lokasi`, `jam/jadwal/operasional`, dan `bayar/pembayaran`.
-4. Input user dibandingkan dengan pertanyaan FAQ, kategori, dan custom pattern.
+4. Input user dibandingkan dengan pertanyaan FAQ, kategori, custom pattern, dan regex pattern.
 5. Setiap kandidat FAQ diberi skor.
 6. Kandidat diurutkan berdasarkan skor.
 7. FAQ terbaik dikembalikan jika skornya melewati batas minimum.
 8. Skor dipakai secara internal untuk menentukan apakah jawaban FAQ cukup relevan.
 
-Skor pattern matching adalah **skor relevansi internal**, bukan nilai akurasi statistik seperti pada evaluasi machine learning. Skor dihitung dari kecocokan frasa persis/sebagian, custom pattern, overlap kata penting, cakupan token FAQ, cakupan token input yang dikenal dataset, perluasan sinonim, dan bonus kecil untuk istilah domain SAMSAT. Regex hanya berperan pada tahap preprocessing melalui fungsi `normalize()`; regex membersihkan teks sebelum scoring, tetapi bukan metode utama penilaian.
+Skor pattern matching adalah **skor relevansi internal**, bukan nilai akurasi statistik seperti pada evaluasi machine learning. Skor dihitung dari kecocokan frasa persis/sebagian, custom pattern, regex pattern, overlap kata penting, cakupan token FAQ, cakupan token input yang dikenal dataset, perluasan sinonim, dan bonus kecil untuk istilah domain SAMSAT.
 
 Skor kepuasan yang terlihat oleh user:
 
