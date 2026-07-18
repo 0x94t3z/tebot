@@ -147,7 +147,7 @@ Contains the pattern matching algorithm: normalization, stop-word removal, synon
 src/data/faq-samsat-bandung-timur.json
 ```
 
-The active 150-row FAQ dataset used by the bot. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic. The `id` field is sequential from `1` to `150`.
+The active 150-row FAQ dataset used by the bot. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic. The `id` field is sequential from `1` to `150`, and the `source` field points to a topic-specific reference page instead of only a website homepage.
 
 The active dataset is curated using these criteria:
 
@@ -1054,7 +1054,7 @@ Berisi algoritma pattern matching: normalisasi teks, penghapusan stop word, perl
 src/data/faq-samsat-bandung-timur.json
 ```
 
-Dataset FAQ aktif berisi 150 data terkurasi dengan ID berurutan `1-150`. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
+Dataset FAQ aktif berisi 150 data terkurasi dengan ID berurutan `1-150`. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan. Field `source` diarahkan ke halaman referensi yang spesifik sesuai topik, bukan hanya halaman utama website.
 
 ```text
 src/faq-data.ts
