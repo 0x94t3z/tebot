@@ -1,4 +1,4 @@
-import faqEntriesJson from "./data/faq-samsat-bandung-timur.json";
+import faqEntriesJson from "./data/faq-samsat-bandung-timur-curated-150.json";
 
 // Daftar kategori resmi yang dipakai oleh dataset FAQ.
 export const faqCategories = [

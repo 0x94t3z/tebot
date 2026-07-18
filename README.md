@@ -37,7 +37,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Inline category menu and FAQ buttons per category
 - Free-text FAQ matching using pattern matching
 - Text-only input handling
-- FAQ dataset for SAMSAT Bandung Timur
+- 150 curated FAQ entries for SAMSAT Bandung Timur
 - Satisfaction voting UI on each FAQ response
 - Main menu is shown again after each FAQ answer
 
@@ -144,10 +144,38 @@ src/pattern-matcher.ts
 Contains the pattern matching algorithm: normalization, stop-word removal, synonym expansion, custom patterns, scoring, and FAQ ranking.
 
 ```text
+src/data/faq-samsat-bandung-timur-curated-150.json
+```
+
+The active curated FAQ dataset used by the bot. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic.
+
+```text
 src/data/faq-samsat-bandung-timur.json
 ```
 
-The FAQ dataset. It stores the FAQ rows separately from the algorithm so the data is not hardcoded inside the matching logic.
+The full 233-row FAQ archive. Use it as a source when selecting or updating the active curated dataset.
+
+The active 150-row dataset is curated from the full archive using these criteria:
+
+- Prioritize questions related to core SAMSAT services, vehicle tax, documents, ownership transfer, mutation, physical check, SIGNAL, mobile SAMSAT, facilities, and complaints.
+- Keep FAQ rows that have a clear answer and a `source` field.
+- Keep the dataset focused on SAMSAT Bandung Timur and relevant West Java SAMSAT information.
+- Remove lower-priority or duplicate-like entries from the active bot dataset while keeping them in the full archive.
+
+Active dataset distribution:
+
+| Category | Rows |
+| --- | ---: |
+| Layanan | 25 |
+| Pajak | 28 |
+| Dokumen | 20 |
+| Balik Nama | 17 |
+| Mutasi | 17 |
+| Cek Fisik | 14 |
+| SIGNAL | 12 |
+| Samsat Keliling | 7 |
+| Fasilitas | 6 |
+| Pengaduan | 4 |
 
 ```text
 src/faq-data.ts
@@ -169,7 +197,7 @@ Unit tests for the dataset and pattern matching behavior.
 
 ### Environment Variables
 
-Production only needs two variables:
+Production uses three secret variables:
 
 ```env
 BOT_TOKEN=your-telegram-botfather-token
@@ -262,7 +290,7 @@ User input:
 syarat bayar pajak kendaraan
 ```
 
-The matcher normalizes and tokenizes the input, then compares it with all 233 FAQ entries. The FAQ question `Syarat bayar pajak` gets a high score because it shares the important terms `syarat`, `bayar`, and `pajak`.
+The matcher normalizes and tokenizes the input, then compares it with all 150 active FAQ entries. The FAQ question `Syarat bayar pajak` gets a high score because it shares the important terms `syarat`, `bayar`, and `pajak`.
 
 Bot response:
 
@@ -489,6 +517,12 @@ curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
 Edit:
 
 ```text
+src/data/faq-samsat-bandung-timur-curated-150.json
+```
+
+This is the active dataset used by the bot. The full 233-row archive remains available in:
+
+```text
 src/data/faq-samsat-bandung-timur.json
 ```
 
@@ -614,10 +648,10 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Navigasi tombol memperbarui pesan menu yang sama, bukan mengirim chat baru
 - Pencarian pertanyaan bebas dengan pattern matching
 - Input hanya teks; media seperti foto, video, sticker, voice note, dan file ditolak dengan pesan instruksi singkat
-- 233 data FAQ dari dataset SAMSAT Bandung Timur
+- 150 data FAQ terkurasi untuk SAMSAT Bandung Timur
 - Menu utama ditampilkan kembali setelah setiap jawaban FAQ
 - UI voting kepuasan pada setiap jawaban FAQ
-- 14 kategori FAQ:
+- 10 kategori aktif FAQ:
   - Layanan
   - Pajak
   - Dokumen
@@ -627,11 +661,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
   - SIGNAL
   - Samsat Keliling
   - Fasilitas
-  - Layanan Tambahan
-  - Sistem
-  - Perkembangan
   - Pengaduan
-  - Umum
 - Validasi webhook secret dengan `X-Telegram-Bot-Api-Secret-Token`
 - Mode dry-run lokal untuk testing webhook tanpa mengirim pesan Telegram sungguhan
 - Pencatatan profil riset otomatis setelah `/start`
@@ -754,9 +784,39 @@ Satu user hanya memiliki satu vote aktif untuk satu FAQ. Jika user menekan tombo
 
 Project ini tidak menggunakan database relasional seperti MySQL atau PostgreSQL. Penyimpanan data dinamis menggunakan **Cloudflare KV**, yaitu database key-value. Dataset FAQ disimpan sebagai file JSON karena data FAQ bersifat relatif statis dan perlu mudah diperbarui tanpa mengubah logic algoritma.
 
+Dataset aktif untuk bot berisi **150 FAQ terkurasi**. Dataset lengkap 233 data tetap disimpan sebagai arsip/development dataset agar peneliti masih memiliki sumber data yang lebih luas ketika ingin menambah, mengganti, atau mengevaluasi data aktif.
+
+Kriteria kurasi dataset aktif:
+
+- Memprioritaskan pertanyaan yang berkaitan dengan layanan inti SAMSAT, pajak kendaraan, dokumen kendaraan, balik nama, mutasi, cek fisik, SIGNAL, Samsat Keliling, fasilitas, dan pengaduan.
+- Mempertahankan data FAQ yang memiliki jawaban jelas dan field `source`.
+- Menjaga fokus data pada SAMSAT Bandung Timur dan informasi SAMSAT Jawa Barat yang masih relevan.
+- Mengeluarkan data yang prioritasnya lebih rendah atau mirip duplikat dari dataset aktif, tetapi tetap menyimpannya di arsip 233 data.
+
+Distribusi dataset aktif:
+
+| Kategori | Jumlah |
+| --- | ---: |
+| Layanan | 25 |
+| Pajak | 28 |
+| Dokumen | 20 |
+| Balik Nama | 17 |
+| Mutasi | 17 |
+| Cek Fisik | 14 |
+| SIGNAL | 12 |
+| Samsat Keliling | 7 |
+| Fasilitas | 6 |
+| Pengaduan | 4 |
+
 ##### Dataset FAQ
 
 Lokasi file:
+
+```text
+src/data/faq-samsat-bandung-timur-curated-150.json
+```
+
+Arsip dataset lengkap:
 
 ```text
 src/data/faq-samsat-bandung-timur.json
@@ -898,7 +958,8 @@ Data yang dapat digunakan untuk kebutuhan analisis penelitian:
 
 | Output | Sumber | Fungsi |
 | --- | --- | --- |
-| Data FAQ | `src/data/faq-samsat-bandung-timur.json` | Objek utama pencocokan pattern matching |
+| Data FAQ aktif | `src/data/faq-samsat-bandung-timur-curated-150.json` | Objek utama pencocokan pattern matching |
+| Arsip data FAQ | `src/data/faq-samsat-bandung-timur.json` | Dataset lengkap untuk pengembangan dan kurasi ulang |
 | Hasil pencocokan | Log Worker dan perilaku bot | Melihat FAQ yang dipilih dari input user |
 | Profil responden | `/research.csv` | Mendata user yang mencoba bot |
 | Rekap kepuasan jawaban | `/satisfaction.csv` | Mengukur persentase jawaban yang dinilai memuaskan atau tidak memuaskan |
@@ -1007,10 +1068,16 @@ src/pattern-matcher.ts
 Berisi algoritma pattern matching: normalisasi teks, penghapusan stop word, perluasan sinonim, custom pattern, scoring, dan pemeringkatan FAQ.
 
 ```text
+src/data/faq-samsat-bandung-timur-curated-150.json
+```
+
+Dataset FAQ aktif berisi 150 data terkurasi. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
+
+```text
 src/data/faq-samsat-bandung-timur.json
 ```
 
-Dataset FAQ. Data disimpan terpisah dari algoritma agar tidak hardcoded di logic pencocokan.
+Arsip dataset lengkap berisi 233 data untuk kebutuhan pengembangan dan kurasi ulang.
 
 ```text
 src/faq-data.ts
@@ -1032,7 +1099,7 @@ Unit test untuk dataset dan perilaku pattern matching.
 
 ### Environment Variables
 
-Production hanya membutuhkan dua variabel:
+Production memakai tiga secret variable:
 
 ```env
 BOT_TOKEN=token-dari-botfather
@@ -1125,7 +1192,7 @@ Input user:
 syarat bayar pajak kendaraan
 ```
 
-Matcher menormalisasi dan memecah input menjadi token, lalu membandingkannya dengan 233 FAQ. Pertanyaan FAQ `Syarat bayar pajak` mendapat skor tinggi karena memiliki kata penting yang sama: `syarat`, `bayar`, dan `pajak`.
+Matcher menormalisasi dan memecah input menjadi token, lalu membandingkannya dengan 150 FAQ aktif. Pertanyaan FAQ `Syarat bayar pajak` mendapat skor tinggi karena memiliki kata penting yang sama: `syarat`, `bayar`, dan `pajak`.
 
 Balasan bot:
 
@@ -1350,6 +1417,12 @@ curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
 ### Update Data FAQ
 
 Edit:
+
+```text
+src/data/faq-samsat-bandung-timur-curated-150.json
+```
+
+File ini adalah dataset aktif yang dipakai bot. Dataset lengkap 233 data tetap tersedia sebagai arsip di:
 
 ```text
 src/data/faq-samsat-bandung-timur.json

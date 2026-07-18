@@ -3,21 +3,21 @@ import { faqEntries } from "../src/faq-data";
 import { getCategory, getEntriesByCategory, matchFaq } from "../src/pattern-matcher";
 
 describe("FAQ dataset", () => {
-  it("memiliki 233 baris FAQ yang diimpor", () => {
-    expect(faqEntries).toHaveLength(233);
+  it("memiliki 150 baris FAQ terkurasi yang diimpor", () => {
+    expect(faqEntries).toHaveLength(150);
   });
 
   it.each([
-    ["Layanan", 35],
-    ["Pajak", 40],
-    ["Dokumen", 30],
-    ["Balik Nama", 25],
-    ["Mutasi", 25],
-    ["Cek Fisik", 20],
-    ["SIGNAL", 20],
-    ["Samsat Keliling", 15],
-    ["Fasilitas", 13],
-    ["Pengaduan", 10]
+    ["Layanan", 25],
+    ["Pajak", 28],
+    ["Dokumen", 20],
+    ["Balik Nama", 17],
+    ["Mutasi", 17],
+    ["Cek Fisik", 14],
+    ["SIGNAL", 12],
+    ["Samsat Keliling", 7],
+    ["Fasilitas", 6],
+    ["Pengaduan", 4]
   ] as const)("memetakan kategori %s ke %s baris", (category, count) => {
     expect(getEntriesByCategory(category)).toHaveLength(count);
   });

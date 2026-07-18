@@ -1,0 +1,1052 @@
+[
+  {
+    "id": 1,
+    "category": "Layanan",
+    "question": "Apa itu Samsat",
+    "answer": "Samsat adalah Sistem Administrasi Manunggal Satu Atap yang memberikan pelayanan administrasi kendaraan bermotor, pembayaran pajak kendaraan, pengesahan STNK, serta layanan terkait kendaraan bermotor lainnya.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 2,
+    "category": "Layanan",
+    "question": "Apa fungsi Samsat",
+    "answer": "Samsat berfungsi sebagai pusat pelayanan administrasi kendaraan bermotor yang melibatkan Kepolisian, Bapenda, dan Jasa Raharja dalam satu lokasi pelayanan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 3,
+    "category": "Layanan",
+    "question": "Apa tujuan Samsat",
+    "answer": "Tujuan Samsat adalah memberikan kemudahan kepada masyarakat dalam mengurus administrasi kendaraan bermotor secara cepat, efektif, dan terintegrasi.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 4,
+    "category": "Layanan",
+    "question": "Jam operasional Samsat Bandung Timur",
+    "answer": "Samsat Bandung Timur melayani masyarakat pada hari Senin sampai Jumat pukul 08.00 WIB hingga 15.00 WIB dan hari Sabtu hingga pukul 11.00 WIB sesuai jadwal pelayanan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 5,
+    "category": "Layanan",
+    "question": "Samsat buka jam berapa",
+    "answer": "Pelayanan Samsat Bandung Timur dimulai pada pukul 08.00 WIB. Masyarakat disarankan datang lebih awal untuk menghindari antrean yang panjang.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 6,
+    "category": "Layanan",
+    "question": "Samsat tutup jam berapa",
+    "answer": "Pelayanan Samsat Bandung Timur berakhir pada pukul 15.00 WIB untuk hari kerja dan pukul 11.00 WIB pada hari Sabtu.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 7,
+    "category": "Layanan",
+    "question": "Apakah Samsat buka hari Sabtu",
+    "answer": "Ya, Samsat Bandung Timur tetap membuka pelayanan pada hari Sabtu hingga pukul 11.00 WIB.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 8,
+    "category": "Layanan",
+    "question": "Apakah Samsat buka hari Minggu",
+    "answer": "Tidak, Samsat Bandung Timur umumnya tidak beroperasi pada hari Minggu dan hari libur nasional.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 9,
+    "category": "Layanan",
+    "question": "Dimana lokasi Samsat Bandung Timur",
+    "answer": "Samsat Bandung Timur berlokasi di Jalan Soekarno-Hatta Nomor 528, Kota Bandung dan dapat diakses menggunakan kendaraan pribadi maupun transportasi umum.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 10,
+    "category": "Layanan",
+    "question": "Alamat Samsat Bandung Timur",
+    "answer": "Alamat Samsat Bandung Timur adalah Jalan Soekarno-Hatta Nomor 528, Kota Bandung.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 11,
+    "category": "Layanan",
+    "question": "Apa saja layanan di Samsat",
+    "answer": "Samsat menyediakan layanan pembayaran pajak kendaraan bermotor, pengesahan STNK, perpanjangan STNK, balik nama kendaraan, mutasi kendaraan, dan layanan administrasi kendaraan lainnya.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 12,
+    "category": "Layanan",
+    "question": "Apakah Samsat melayani perpanjangan STNK",
+    "answer": "Ya, Samsat Bandung Timur melayani perpanjangan STNK tahunan maupun lima tahunan sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 13,
+    "category": "Layanan",
+    "question": "Apakah Samsat melayani balik nama kendaraan",
+    "answer": "Ya, Samsat Bandung Timur melayani proses balik nama kendaraan bermotor dengan melengkapi persyaratan administrasi yang diperlukan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 14,
+    "category": "Layanan",
+    "question": "Apakah Samsat melayani mutasi kendaraan",
+    "answer": "Ya, Samsat Bandung Timur melayani mutasi kendaraan baik dalam wilayah maupun antar daerah sesuai prosedur yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 15,
+    "category": "Layanan",
+    "question": "Apakah Samsat melayani cek fisik kendaraan",
+    "answer": "Ya, Samsat Bandung Timur menyediakan layanan cek fisik kendaraan yang diperlukan untuk proses tertentu seperti balik nama, mutasi, dan perpanjangan STNK lima tahunan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 16,
+    "category": "Layanan",
+    "question": "Apakah bisa mengurus pajak kendaraan di Samsat Bandung Timur",
+    "answer": "Ya, Samsat Bandung Timur melayani pembayaran pajak kendaraan bermotor tahunan maupun layanan administrasi kendaraan lainnya sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 17,
+    "category": "Layanan",
+    "question": "Apakah bisa mengurus kendaraan atas nama orang lain",
+    "answer": "Beberapa layanan dapat diurus oleh perwakilan dengan membawa dokumen persyaratan yang lengkap serta surat kuasa apabila diperlukan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 18,
+    "category": "Layanan",
+    "question": "Apakah perlu membawa kendaraan ke Samsat",
+    "answer": "Tidak semua layanan mengharuskan membawa kendaraan. Namun untuk layanan seperti cek fisik, mutasi, atau balik nama kendaraan, kendaraan biasanya perlu dihadirkan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 19,
+    "category": "Layanan",
+    "question": "Apakah Samsat melayani kendaraan perusahaan",
+    "answer": "Ya, Samsat Bandung Timur juga melayani administrasi kendaraan milik perusahaan dengan melengkapi dokumen yang dipersyaratkan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 20,
+    "category": "Layanan",
+    "question": "Apakah ada layanan konsultasi",
+    "answer": "Ya, masyarakat dapat meminta informasi dan konsultasi terkait administrasi kendaraan kepada petugas layanan informasi yang tersedia.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 31,
+    "category": "Pajak",
+    "question": "Apa itu pajak kendaraan bermotor",
+    "answer": "Pajak Kendaraan Bermotor atau PKB adalah pajak yang dikenakan atas kepemilikan dan penguasaan kendaraan bermotor yang wajib dibayarkan sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 32,
+    "category": "Pajak",
+    "question": "Kapan jatuh tempo pajak kendaraan",
+    "answer": "Jatuh tempo pajak kendaraan dapat dilihat pada STNK kendaraan. Pemilik kendaraan disarankan membayar sebelum tanggal jatuh tempo untuk menghindari denda.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 33,
+    "category": "Pajak",
+    "question": "Bagaimana cara cek pajak kendaraan",
+    "answer": "Informasi pajak kendaraan dapat dicek melalui layanan resmi https://bapenda.jabarprov.go.id seperti Info PKB atau kanal informasi resmi lainnya yang disediakan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 34,
+    "category": "Pajak",
+    "question": "Apakah bisa cek pajak kendaraan secara online",
+    "answer": "Ya, masyarakat dapat melakukan pengecekan informasi pajak kendaraan secara online melalui layanan resmi yang disediakan oleh https://bapenda.jabarprov.go.id.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 35,
+    "category": "Pajak",
+    "question": "Apa yang terjadi jika telat bayar pajak kendaraan",
+    "answer": "Keterlambatan pembayaran pajak kendaraan dapat menyebabkan dikenakannya denda sesuai peraturan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 36,
+    "category": "Pajak",
+    "question": "Apakah ada denda keterlambatan pajak",
+    "answer": "Ya, keterlambatan pembayaran pajak kendaraan bermotor akan dikenakan denda sesuai ketentuan yang berlaku pada saat pembayaran dilakukan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 37,
+    "category": "Pajak",
+    "question": "Bagaimana cara mengetahui besaran pajak kendaraan",
+    "answer": "Besaran pajak kendaraan dapat diketahui melalui STNK, layanan Info PKB, atau dengan menanyakan langsung kepada petugas Samsat.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 38,
+    "category": "Pajak",
+    "question": "Apakah pembayaran pajak bisa diwakilkan",
+    "answer": "Ya, pembayaran pajak kendaraan pada layanan tertentu dapat diwakilkan dengan membawa dokumen yang dipersyaratkan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 39,
+    "category": "Pajak",
+    "question": "Apa itu pajak tahunan kendaraan",
+    "answer": "Pajak tahunan kendaraan adalah kewajiban pembayaran PKB yang dilakukan setiap tahun untuk pengesahan STNK kendaraan bermotor.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 40,
+    "category": "Pajak",
+    "question": "Apa itu pajak lima tahunan",
+    "answer": "Pajak lima tahunan merupakan proses pembayaran pajak kendaraan yang disertai penggantian STNK dan pelat nomor kendaraan serta memerlukan cek fisik kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 41,
+    "category": "Pajak",
+    "question": "Apakah pajak kendaraan wajib dibayar setiap tahun",
+    "answer": "Ya, pemilik kendaraan bermotor wajib membayar pajak kendaraan setiap tahun sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 42,
+    "category": "Pajak",
+    "question": "Apakah bisa membayar pajak sebelum jatuh tempo",
+    "answer": "Ya, pembayaran pajak kendaraan dapat dilakukan sebelum tanggal jatuh tempo sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 43,
+    "category": "Pajak",
+    "question": "Apakah kendaraan mati pajak bertahun tahun bisa dibayar",
+    "answer": "Ya, kendaraan yang menunggak pajak tetap dapat dilakukan pembayaran sesuai prosedur dan ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 44,
+    "category": "Pajak",
+    "question": "Bagaimana cara membayar pajak kendaraan",
+    "answer": "Pembayaran pajak kendaraan dapat dilakukan melalui Samsat, Samsat Keliling, layanan digital yang tersedia, atau kanal pembayaran resmi yang ditentukan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 45,
+    "category": "Pajak",
+    "question": "Apakah pembayaran pajak bisa dilakukan secara online",
+    "answer": "Ya, pembayaran pajak kendaraan dapat dilakukan secara online melalui layanan resmi yang telah disediakan oleh pemerintah daerah dan Samsat Digital Nasional.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 46,
+    "category": "Pajak",
+    "question": "Apa itu PKB",
+    "answer": "PKB atau Pajak Kendaraan Bermotor merupakan pajak yang dikenakan atas kepemilikan dan penguasaan kendaraan bermotor sesuai peraturan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 47,
+    "category": "Pajak",
+    "question": "Apa itu SWDKLLJ",
+    "answer": "SWDKLLJ adalah Sumbangan Wajib Dana Kecelakaan Lalu Lintas Jalan yang dikelola oleh Jasa Raharja untuk memberikan perlindungan dasar kepada korban kecelakaan lalu lintas.",
+    "source": "https://www.jasaraharja.co.id"
+  },
+  {
+    "id": 48,
+    "category": "Pajak",
+    "question": "Apakah SWDKLLJ wajib dibayar",
+    "answer": "Ya, SWDKLLJ merupakan komponen wajib yang dibayarkan bersamaan dengan pajak kendaraan bermotor sesuai ketentuan yang berlaku.",
+    "source": "https://www.jasaraharja.co.id"
+  },
+  {
+    "id": 49,
+    "category": "Pajak",
+    "question": "Bagaimana cara mengetahui denda pajak kendaraan",
+    "answer": "Informasi denda pajak kendaraan dapat diperoleh melalui layanan resmi https://bapenda.jabarprov.go.id atau dengan menanyakan langsung kepada petugas Samsat.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 50,
+    "category": "Pajak",
+    "question": "Apakah ada program pemutihan pajak kendaraan",
+    "answer": "Program pemutihan pajak kendaraan dapat diselenggarakan oleh pemerintah daerah pada periode tertentu. Informasi resmi dapat dilihat melalui pengumuman https://bapenda.jabarprov.go.id.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 51,
+    "category": "Pajak",
+    "question": "Apa manfaat membayar pajak kendaraan tepat waktu",
+    "answer": "Membayar pajak kendaraan tepat waktu membantu menghindari denda serta mendukung pembangunan daerah melalui penerimaan pajak kendaraan bermotor.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 55,
+    "category": "Pajak",
+    "question": "Bagaimana jika STNK hilang saat ingin membayar pajak",
+    "answer": "Pemilik kendaraan perlu mengurus kehilangan STNK sesuai prosedur yang berlaku sebelum atau bersamaan dengan proses administrasi tertentu di Samsat.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 59,
+    "category": "Pajak",
+    "question": "Apakah pembayaran pajak mendapatkan bukti pembayaran",
+    "answer": "Ya, setiap pembayaran pajak kendaraan akan disertai bukti pembayaran resmi yang dapat digunakan sebagai dokumen administrasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 61,
+    "category": "Pajak",
+    "question": "Apakah pajak kendaraan bisa dibayar melalui aplikasi",
+    "answer": "Ya, pembayaran pajak kendaraan tahunan dapat dilakukan melalui aplikasi resmi yang bekerja sama dengan Samsat sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 62,
+    "category": "Pajak",
+    "question": "Apakah pajak kendaraan bisa dibayar melalui SIGNAL",
+    "answer": "Ya, pembayaran pajak kendaraan tahunan dapat dilakukan melalui aplikasi SIGNAL untuk kendaraan yang memenuhi persyaratan layanan digital.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 63,
+    "category": "Pajak",
+    "question": "Apakah pembayaran pajak online aman",
+    "answer": "Pembayaran pajak kendaraan melalui kanal resmi yang disediakan pemerintah dan Samsat Digital Nasional aman digunakan selama mengikuti prosedur yang berlaku.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 64,
+    "category": "Pajak",
+    "question": "Apa syarat membayar pajak tahunan",
+    "answer": "Secara umum pembayaran pajak tahunan memerlukan STNK asli dan identitas pemilik kendaraan yang masih berlaku sesuai ketentuan pelayanan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 65,
+    "category": "Pajak",
+    "question": "Apa syarat membayar pajak lima tahunan",
+    "answer": "Pembayaran pajak lima tahunan umumnya memerlukan STNK asli, BPKB asli, identitas pemilik kendaraan, serta kendaraan untuk proses cek fisik.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 71,
+    "category": "Dokumen",
+    "question": "Apa itu STNK",
+    "answer": "STNK atau Surat Tanda Nomor Kendaraan adalah dokumen resmi yang menjadi bukti registrasi dan identifikasi kendaraan bermotor yang diterbitkan oleh Kepolisian Republik Indonesia.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 72,
+    "category": "Dokumen",
+    "question": "Apa itu BPKB",
+    "answer": "BPKB atau Buku Pemilik Kendaraan Bermotor adalah dokumen resmi yang menjadi bukti kepemilikan kendaraan bermotor yang diterbitkan oleh Kepolisian Republik Indonesia.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 73,
+    "category": "Dokumen",
+    "question": "Apa perbedaan STNK dan BPKB",
+    "answer": "STNK berfungsi sebagai bukti registrasi dan legalitas kendaraan untuk digunakan di jalan, sedangkan BPKB merupakan bukti kepemilikan kendaraan bermotor.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 74,
+    "category": "Dokumen",
+    "question": "Apa fungsi STNK",
+    "answer": "STNK berfungsi sebagai bukti bahwa kendaraan telah terdaftar secara resmi dan memenuhi persyaratan administrasi untuk digunakan di jalan raya.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 75,
+    "category": "Dokumen",
+    "question": "Apa fungsi BPKB",
+    "answer": "BPKB berfungsi sebagai bukti sah kepemilikan kendaraan bermotor dan sering digunakan dalam berbagai keperluan administrasi kendaraan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 76,
+    "category": "Dokumen",
+    "question": "Bagaimana jika STNK hilang",
+    "answer": "Pemilik kendaraan perlu melaporkan kehilangan dan mengikuti prosedur penerbitan STNK pengganti sesuai ketentuan yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 77,
+    "category": "Dokumen",
+    "question": "Bagaimana jika BPKB hilang",
+    "answer": "Kehilangan BPKB harus segera dilaporkan dan pemilik kendaraan perlu mengurus penerbitan BPKB pengganti sesuai prosedur yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 78,
+    "category": "Dokumen",
+    "question": "Bagaimana jika STNK rusak",
+    "answer": "STNK yang rusak dapat diganti dengan mengajukan permohonan penggantian dokumen sesuai persyaratan yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 79,
+    "category": "Dokumen",
+    "question": "Apakah STNK wajib dibawa saat berkendara",
+    "answer": "Ya, pengendara wajib dapat menunjukkan STNK yang sah saat diperlukan sesuai ketentuan peraturan lalu lintas yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 80,
+    "category": "Dokumen",
+    "question": "Apakah BPKB wajib dibawa saat berkendara",
+    "answer": "Tidak, BPKB tidak perlu dibawa saat berkendara dan sebaiknya disimpan dengan aman karena merupakan bukti kepemilikan kendaraan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 81,
+    "category": "Dokumen",
+    "question": "Apakah STNK memiliki masa berlaku",
+    "answer": "Ya, STNK memiliki masa berlaku dan perlu dilakukan pengesahan serta perpanjangan sesuai ketentuan yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 82,
+    "category": "Dokumen",
+    "question": "Kapan STNK harus diperpanjang",
+    "answer": "STNK perlu diperpanjang setiap lima tahun bersamaan dengan penggantian pelat nomor kendaraan dan pemeriksaan fisik kendaraan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 83,
+    "category": "Dokumen",
+    "question": "Apakah fotokopi STNK bisa digunakan untuk perpanjangan",
+    "answer": "Pada umumnya proses administrasi kendaraan memerlukan STNK asli sesuai persyaratan yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 84,
+    "category": "Dokumen",
+    "question": "Apakah BPKB diperlukan untuk pajak lima tahunan",
+    "answer": "Ya, BPKB asli biasanya menjadi salah satu dokumen yang diperlukan dalam proses perpanjangan STNK lima tahunan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 85,
+    "category": "Dokumen",
+    "question": "Apakah data pada STNK harus sesuai dengan kendaraan",
+    "answer": "Ya, data yang tercantum pada STNK harus sesuai dengan identitas kendaraan untuk menghindari masalah administrasi maupun hukum.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 86,
+    "category": "Dokumen",
+    "question": "Apakah BPKB dapat dijadikan jaminan",
+    "answer": "BPKB sering digunakan sebagai dokumen pendukung dalam pengajuan pembiayaan atau kredit sesuai ketentuan lembaga yang bersangkutan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 87,
+    "category": "Dokumen",
+    "question": "Bagaimana cara mengurus BPKB yang rusak",
+    "answer": "Pemilik kendaraan dapat mengajukan permohonan penggantian BPKB yang rusak dengan melengkapi persyaratan yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 88,
+    "category": "Dokumen",
+    "question": "Apakah STNK digital dapat menggantikan STNK fisik",
+    "answer": "Penggunaan dokumen digital mengikuti kebijakan dan ketentuan yang berlaku. Masyarakat tetap disarankan membawa dokumen resmi yang dipersyaratkan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 89,
+    "category": "Dokumen",
+    "question": "Apakah data pemilik kendaraan dapat diubah",
+    "answer": "Ya, perubahan data kepemilikan kendaraan dapat dilakukan melalui proses administrasi seperti balik nama kendaraan.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 90,
+    "category": "Dokumen",
+    "question": "Apakah STNK bisa dicetak ulang",
+    "answer": "STNK yang hilang atau rusak dapat diajukan untuk penerbitan kembali sesuai prosedur yang berlaku.",
+    "source": "https://korlantas.polri.go.id"
+  },
+  {
+    "id": 101,
+    "category": "Balik Nama",
+    "question": "Apa itu balik nama kendaraan",
+    "answer": "Balik nama kendaraan adalah proses perubahan data kepemilikan kendaraan dari pemilik lama kepada pemilik baru yang tercatat secara resmi dalam dokumen kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 102,
+    "category": "Balik Nama",
+    "question": "Mengapa harus melakukan balik nama kendaraan",
+    "answer": "Balik nama dilakukan agar data kepemilikan kendaraan sesuai dengan pemilik yang sebenarnya dan memudahkan proses administrasi di masa mendatang.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 103,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama kendaraan wajib",
+    "answer": "Balik nama sangat disarankan setelah terjadi transaksi jual beli kendaraan agar data kepemilikan kendaraan menjadi sesuai dan sah secara administrasi.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 104,
+    "category": "Balik Nama",
+    "question": "Dimana mengurus balik nama kendaraan",
+    "answer": "Balik nama kendaraan dapat diurus melalui kantor Samsat sesuai wilayah registrasi kendaraan dengan melengkapi persyaratan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 105,
+    "category": "Balik Nama",
+    "question": "Apa syarat balik nama kendaraan",
+    "answer": "Secara umum diperlukan dokumen identitas pemilik baru, STNK, BPKB, bukti jual beli kendaraan, dan persyaratan administrasi lainnya sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 106,
+    "category": "Balik Nama",
+    "question": "Apakah kendaraan harus dibawa saat balik nama",
+    "answer": "Ya, kendaraan biasanya perlu dihadirkan untuk proses cek fisik kendaraan sebagai bagian dari proses balik nama.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 107,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama memerlukan cek fisik",
+    "answer": "Ya, cek fisik kendaraan merupakan salah satu tahapan yang umumnya diperlukan dalam proses balik nama kendaraan bermotor.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 108,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama dapat diwakilkan",
+    "answer": "Balik nama dapat diwakilkan sesuai ketentuan yang berlaku dengan melengkapi surat kuasa dan dokumen pendukung lainnya apabila diperlukan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 109,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama memerlukan BPKB asli",
+    "answer": "Ya, BPKB asli merupakan salah satu dokumen penting yang biasanya diperlukan dalam proses balik nama kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 110,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama memerlukan STNK asli",
+    "answer": "Ya, STNK asli umumnya menjadi salah satu persyaratan administrasi dalam proses balik nama kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 111,
+    "category": "Balik Nama",
+    "question": "Apakah kendaraan bekas perlu balik nama",
+    "answer": "Ya, kendaraan bekas yang berpindah kepemilikan sebaiknya segera dilakukan balik nama agar data administrasi kendaraan sesuai dengan pemilik baru.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 112,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama mempengaruhi pajak kendaraan",
+    "answer": "Balik nama dapat mempengaruhi data administrasi kendaraan dan kewajiban yang terkait dengan kepemilikan kendaraan tersebut.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 113,
+    "category": "Balik Nama",
+    "question": "Berapa lama proses balik nama kendaraan",
+    "answer": "Lama proses balik nama dapat berbeda tergantung kelengkapan dokumen dan prosedur administrasi yang berlaku pada saat pengurusan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 114,
+    "category": "Balik Nama",
+    "question": "Apakah bukti jual beli diperlukan untuk balik nama",
+    "answer": "Ya, bukti jual beli kendaraan biasanya menjadi salah satu dokumen pendukung yang diperlukan dalam proses balik nama kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 115,
+    "category": "Balik Nama",
+    "question": "Apa manfaat melakukan balik nama kendaraan",
+    "answer": "Balik nama memberikan kepastian hukum atas kepemilikan kendaraan serta mempermudah proses administrasi kendaraan di kemudian hari.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 116,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama kendaraan bekas wajib segera dilakukan",
+    "answer": "Balik nama sebaiknya segera dilakukan setelah transaksi jual beli kendaraan agar data kepemilikan sesuai dengan pemilik yang sebenarnya.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 117,
+    "category": "Balik Nama",
+    "question": "Apakah balik nama dapat dilakukan jika pajak menunggak",
+    "answer": "Proses balik nama tetap mengikuti ketentuan administrasi yang berlaku dan kewajiban pajak kendaraan perlu diselesaikan sesuai prosedur yang ditetapkan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 126,
+    "category": "Mutasi",
+    "question": "Apa itu mutasi kendaraan",
+    "answer": "Mutasi kendaraan adalah proses pemindahan data registrasi kendaraan dari satu wilayah administrasi ke wilayah administrasi lainnya sesuai domisili pemilik kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 127,
+    "category": "Mutasi",
+    "question": "Apa itu mutasi keluar daerah",
+    "answer": "Mutasi keluar daerah adalah proses pemindahan data kendaraan dari wilayah asal ke wilayah tujuan karena perubahan domisili pemilik kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 128,
+    "category": "Mutasi",
+    "question": "Apa itu mutasi masuk daerah",
+    "answer": "Mutasi masuk daerah adalah proses pendaftaran kendaraan yang sebelumnya berasal dari wilayah lain agar terdaftar di wilayah administrasi yang baru.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 129,
+    "category": "Mutasi",
+    "question": "Mengapa perlu melakukan mutasi kendaraan",
+    "answer": "Mutasi kendaraan diperlukan agar data kendaraan sesuai dengan wilayah domisili pemilik dan mempermudah proses administrasi kendaraan di kemudian hari.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 130,
+    "category": "Mutasi",
+    "question": "Apa syarat mutasi kendaraan",
+    "answer": "Secara umum diperlukan STNK, BPKB, identitas pemilik kendaraan, hasil cek fisik kendaraan, dan dokumen pendukung lainnya sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 131,
+    "category": "Mutasi",
+    "question": "Apakah mutasi kendaraan memerlukan cek fisik",
+    "answer": "Ya, cek fisik kendaraan merupakan salah satu persyaratan yang umumnya diperlukan dalam proses mutasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 132,
+    "category": "Mutasi",
+    "question": "Apakah kendaraan harus dibawa saat mutasi",
+    "answer": "Ya, kendaraan biasanya perlu dihadirkan untuk proses pemeriksaan fisik kendaraan sebagai bagian dari prosedur mutasi.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 133,
+    "category": "Mutasi",
+    "question": "Apakah mutasi dapat diwakilkan",
+    "answer": "Mutasi kendaraan dapat diwakilkan sesuai ketentuan yang berlaku dengan melampirkan surat kuasa dan dokumen pendukung yang diperlukan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 134,
+    "category": "Mutasi",
+    "question": "Apakah mutasi memerlukan BPKB asli",
+    "answer": "Ya, BPKB asli biasanya menjadi salah satu dokumen utama yang diperlukan dalam proses mutasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 135,
+    "category": "Mutasi",
+    "question": "Apakah mutasi memerlukan STNK asli",
+    "answer": "Ya, STNK asli umumnya menjadi salah satu persyaratan administrasi dalam proses mutasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 136,
+    "category": "Mutasi",
+    "question": "Berapa lama proses mutasi kendaraan",
+    "answer": "Lama proses mutasi kendaraan dapat berbeda tergantung kelengkapan dokumen dan prosedur administrasi yang berlaku pada saat pengurusan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 137,
+    "category": "Mutasi",
+    "question": "Apakah ada biaya mutasi kendaraan",
+    "answer": "Ya, proses mutasi kendaraan dikenakan biaya sesuai peraturan dan ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 138,
+    "category": "Mutasi",
+    "question": "Apakah kendaraan luar provinsi dapat dimutasi",
+    "answer": "Ya, kendaraan yang berasal dari luar provinsi dapat diproses mutasi sesuai prosedur administrasi yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 139,
+    "category": "Mutasi",
+    "question": "Dimana mengurus mutasi kendaraan",
+    "answer": "Mutasi kendaraan dapat diurus melalui kantor Samsat sesuai wilayah registrasi kendaraan dan ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 140,
+    "category": "Mutasi",
+    "question": "Apa manfaat melakukan mutasi kendaraan",
+    "answer": "Mutasi kendaraan membantu memastikan data kendaraan sesuai dengan wilayah domisili pemilik serta mempermudah proses administrasi kendaraan di masa mendatang.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 141,
+    "category": "Mutasi",
+    "question": "Apakah mutasi kendaraan bekas wajib dilakukan",
+    "answer": "Mutasi perlu dilakukan apabila terjadi perpindahan wilayah registrasi kendaraan sesuai domisili pemilik kendaraan yang baru.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 142,
+    "category": "Mutasi",
+    "question": "Apakah mutasi kendaraan dapat dilakukan secara online",
+    "answer": "Beberapa tahapan administrasi dapat memanfaatkan layanan digital, namun proses mutasi kendaraan umumnya tetap memerlukan verifikasi dokumen dan prosedur tertentu secara langsung.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 151,
+    "category": "Cek Fisik",
+    "question": "Apa itu cek fisik kendaraan",
+    "answer": "Cek fisik kendaraan adalah proses pemeriksaan kendaraan untuk mencocokkan nomor rangka dan nomor mesin dengan data administrasi kendaraan yang terdaftar.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 152,
+    "category": "Cek Fisik",
+    "question": "Mengapa cek fisik kendaraan diperlukan",
+    "answer": "Cek fisik dilakukan untuk memastikan kesesuaian identitas kendaraan dengan dokumen administrasi yang dimiliki oleh pemilik kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 153,
+    "category": "Cek Fisik",
+    "question": "Kapan cek fisik kendaraan diperlukan",
+    "answer": "Cek fisik kendaraan umumnya diperlukan pada proses balik nama, mutasi kendaraan, perpanjangan STNK lima tahunan, dan layanan administrasi tertentu lainnya.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 154,
+    "category": "Cek Fisik",
+    "question": "Apakah cek fisik wajib untuk balik nama",
+    "answer": "Ya, cek fisik kendaraan umumnya menjadi salah satu persyaratan dalam proses balik nama kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 155,
+    "category": "Cek Fisik",
+    "question": "Apakah cek fisik wajib untuk mutasi kendaraan",
+    "answer": "Ya, cek fisik kendaraan merupakan salah satu tahapan yang biasanya diperlukan dalam proses mutasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 156,
+    "category": "Cek Fisik",
+    "question": "Apakah kendaraan harus dibawa saat cek fisik",
+    "answer": "Ya, kendaraan harus dihadirkan agar petugas dapat melakukan pemeriksaan nomor rangka dan nomor mesin secara langsung.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 157,
+    "category": "Cek Fisik",
+    "question": "Apa yang diperiksa saat cek fisik kendaraan",
+    "answer": "Petugas akan memeriksa nomor rangka, nomor mesin, serta kesesuaian identitas kendaraan dengan dokumen administrasi yang dimiliki.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 158,
+    "category": "Cek Fisik",
+    "question": "Apakah cek fisik dikenakan biaya",
+    "answer": "Biaya cek fisik mengikuti ketentuan dan kebijakan pelayanan yang berlaku pada saat pengurusan administrasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 159,
+    "category": "Cek Fisik",
+    "question": "Berapa lama proses cek fisik kendaraan",
+    "answer": "Lama proses cek fisik dapat berbeda tergantung antrean pelayanan dan kondisi kendaraan saat dilakukan pemeriksaan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 160,
+    "category": "Cek Fisik",
+    "question": "Apakah cek fisik dapat diwakilkan",
+    "answer": "Proses administrasi tertentu dapat diwakilkan sesuai ketentuan yang berlaku, namun kendaraan tetap harus dihadirkan untuk diperiksa.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 161,
+    "category": "Cek Fisik",
+    "question": "Apa itu nomor rangka kendaraan",
+    "answer": "Nomor rangka adalah identitas unik kendaraan yang diberikan oleh pabrikan dan digunakan untuk keperluan registrasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 162,
+    "category": "Cek Fisik",
+    "question": "Apa itu nomor mesin kendaraan",
+    "answer": "Nomor mesin adalah identitas unik yang terdapat pada mesin kendaraan dan digunakan sebagai bagian dari data registrasi kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 163,
+    "category": "Cek Fisik",
+    "question": "Bagaimana jika nomor rangka sulit ditemukan",
+    "answer": "Pemilik kendaraan dapat meminta bantuan petugas untuk menunjukkan lokasi nomor rangka sesuai jenis dan merek kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 164,
+    "category": "Cek Fisik",
+    "question": "Bagaimana jika nomor mesin sulit ditemukan",
+    "answer": "Petugas dapat membantu melakukan pemeriksaan dan menunjukkan lokasi nomor mesin sesuai spesifikasi kendaraan yang diperiksa.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 171,
+    "category": "SIGNAL",
+    "question": "Apa itu SIGNAL",
+    "answer": "SIGNAL atau Samsat Digital Nasional adalah layanan digital yang memudahkan masyarakat dalam melakukan pembayaran pajak kendaraan bermotor secara online.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 173,
+    "category": "SIGNAL",
+    "question": "Apa manfaat menggunakan SIGNAL",
+    "answer": "SIGNAL memudahkan masyarakat dalam mengakses layanan pembayaran pajak kendaraan tanpa harus datang langsung ke kantor Samsat untuk layanan tertentu.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 174,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL resmi",
+    "answer": "Ya, SIGNAL merupakan layanan resmi Samsat Digital Nasional yang digunakan untuk mendukung pelayanan administrasi kendaraan bermotor secara digital.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 175,
+    "category": "SIGNAL",
+    "question": "Bagaimana cara mendaftar SIGNAL",
+    "answer": "Pendaftaran SIGNAL dilakukan melalui aplikasi resmi dengan melengkapi data identitas dan data kendaraan sesuai petunjuk yang tersedia.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 176,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL dapat digunakan di Jawa Barat",
+    "answer": "Ya, layanan SIGNAL dapat digunakan untuk kendaraan yang memenuhi persyaratan layanan digital sesuai ketentuan yang berlaku.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 177,
+    "category": "SIGNAL",
+    "question": "Apakah pembayaran pajak melalui SIGNAL aman",
+    "answer": "Ya, pembayaran melalui SIGNAL dilakukan melalui sistem resmi yang terintegrasi dengan layanan Samsat Digital Nasional.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 179,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL dapat digunakan untuk kendaraan atas nama sendiri",
+    "answer": "Ya, SIGNAL dapat digunakan untuk kendaraan yang memenuhi persyaratan layanan dan terhubung dengan data kepemilikan yang sesuai.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 180,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL dapat digunakan untuk kendaraan keluarga",
+    "answer": "SIGNAL menyediakan fitur tertentu yang memungkinkan pengelolaan kendaraan sesuai ketentuan yang berlaku pada aplikasi.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 181,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL memerlukan verifikasi wajah",
+    "answer": "Ya, proses verifikasi identitas pada SIGNAL dapat melibatkan verifikasi wajah sesuai prosedur keamanan yang diterapkan.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 182,
+    "category": "SIGNAL",
+    "question": "Apa yang harus dilakukan jika verifikasi SIGNAL gagal",
+    "answer": "Pengguna dapat mengulangi proses verifikasi sesuai petunjuk aplikasi atau menghubungi layanan bantuan yang tersedia.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 183,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL dapat digunakan untuk pajak tahunan",
+    "answer": "Ya, SIGNAL dapat digunakan untuk pembayaran pajak kendaraan tahunan pada kendaraan yang memenuhi persyaratan layanan.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 184,
+    "category": "SIGNAL",
+    "question": "Apakah SIGNAL dapat digunakan untuk pajak lima tahunan",
+    "answer": "Tidak semua layanan lima tahunan dapat dilakukan secara digital karena beberapa proses masih memerlukan pemeriksaan fisik kendaraan.",
+    "source": "https://samsatdigital.id"
+  },
+  {
+    "id": 191,
+    "category": "Samsat Keliling",
+    "question": "Apa itu Samsat Keliling",
+    "answer": "Samsat Keliling adalah layanan Samsat bergerak yang bertujuan mendekatkan pelayanan kepada masyarakat di lokasi tertentu.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 192,
+    "category": "Samsat Keliling",
+    "question": "Apa fungsi Samsat Keliling",
+    "answer": "Samsat Keliling berfungsi memberikan kemudahan kepada masyarakat dalam mengakses layanan administrasi kendaraan tanpa harus datang ke kantor Samsat induk.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 193,
+    "category": "Samsat Keliling",
+    "question": "Layanan apa saja yang tersedia di Samsat Keliling",
+    "answer": "Samsat Keliling umumnya melayani pembayaran pajak kendaraan tahunan dan layanan administrasi tertentu sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 194,
+    "category": "Samsat Keliling",
+    "question": "Apakah Samsat Keliling melayani pajak tahunan",
+    "answer": "Ya, Samsat Keliling umumnya melayani pembayaran pajak kendaraan tahunan sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 195,
+    "category": "Samsat Keliling",
+    "question": "Apakah Samsat Keliling melayani pajak lima tahunan",
+    "answer": "Tidak, pajak lima tahunan biasanya memerlukan pemeriksaan fisik kendaraan sehingga harus dilakukan melalui layanan yang sesuai di kantor Samsat.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 196,
+    "category": "Samsat Keliling",
+    "question": "Bagaimana cara mengetahui jadwal Samsat Keliling",
+    "answer": "Informasi jadwal Samsat Keliling dapat diperoleh melalui pengumuman resmi Bapenda Jawa Barat atau kanal informasi resmi yang tersedia.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 197,
+    "category": "Samsat Keliling",
+    "question": "Dimana lokasi Samsat Keliling hari ini",
+    "answer": "Lokasi Samsat Keliling dapat berubah sesuai jadwal pelayanan. Informasi terbaru dapat dilihat melalui pengumuman resmi yang tersedia.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 206,
+    "category": "Fasilitas",
+    "question": "Apakah tersedia area parkir di Samsat Bandung Timur",
+    "answer": "Ya, Samsat Bandung Timur menyediakan area parkir untuk kendaraan roda dua maupun roda empat bagi masyarakat yang menggunakan layanan.",
+    "source": "Observasi Lapangan Samsat Bandung Timur"
+  },
+  {
+    "id": 207,
+    "category": "Fasilitas",
+    "question": "Apakah tersedia ruang tunggu",
+    "answer": "Ya, tersedia ruang tunggu yang dapat digunakan masyarakat selama menunggu proses pelayanan administrasi kendaraan.",
+    "source": "Observasi Lapangan Samsat Bandung Timur"
+  },
+  {
+    "id": 208,
+    "category": "Fasilitas",
+    "question": "Apakah tersedia toilet",
+    "answer": "Ya, toilet tersedia untuk digunakan oleh masyarakat yang sedang mengurus keperluan administrasi kendaraan di Samsat Bandung Timur.",
+    "source": "Observasi Lapangan Samsat Bandung Timur"
+  },
+  {
+    "id": 209,
+    "category": "Fasilitas",
+    "question": "Apakah tersedia mushola",
+    "answer": "Ya, tersedia mushola yang dapat digunakan oleh masyarakat dan pegawai untuk melaksanakan ibadah.",
+    "source": "Observasi Lapangan Samsat Bandung Timur"
+  },
+  {
+    "id": 210,
+    "category": "Fasilitas",
+    "question": "Apakah tersedia loket informasi",
+    "answer": "Ya, tersedia loket informasi yang membantu masyarakat memperoleh informasi mengenai persyaratan dan prosedur layanan.",
+    "source": "Observasi Lapangan Samsat Bandung Timur"
+  },
+  {
+    "id": 211,
+    "category": "Fasilitas",
+    "question": "Apakah tersedia area cek fisik kendaraan",
+    "answer": "Ya, tersedia area khusus untuk pelaksanaan pemeriksaan fisik kendaraan yang diperlukan dalam beberapa layanan administrasi kendaraan.",
+    "source": "Observasi Lapangan Samsat Bandung Timur"
+  },
+  {
+    "id": 219,
+    "category": "Pengaduan",
+    "question": "Bagaimana cara menyampaikan pengaduan layanan Samsat",
+    "answer": "Masyarakat dapat menyampaikan pengaduan melalui kanal layanan pengaduan resmi yang disediakan oleh instansi terkait atau langsung kepada petugas pelayanan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 220,
+    "category": "Pengaduan",
+    "question": "Kemana melapor jika mengalami kendala pelayanan",
+    "answer": "Apabila mengalami kendala pelayanan, masyarakat dapat melaporkannya kepada petugas yang bertugas atau melalui kanal pengaduan resmi yang tersedia.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 221,
+    "category": "Pengaduan",
+    "question": "Bagaimana cara memberikan kritik dan saran",
+    "answer": "Kritik dan saran dapat disampaikan melalui media pengaduan resmi atau sarana umpan balik yang tersedia pada layanan Samsat.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 222,
+    "category": "Pengaduan",
+    "question": "Apakah pengaduan masyarakat akan ditindaklanjuti",
+    "answer": "Setiap pengaduan yang disampaikan melalui jalur resmi akan diproses dan ditindaklanjuti sesuai prosedur yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 229,
+    "category": "Layanan",
+    "question": "Apa itu layanan Drive Thru Samsat",
+    "answer": "Layanan Drive Thru Samsat merupakan layanan pembayaran pajak kendaraan yang memungkinkan masyarakat melakukan transaksi tanpa perlu turun dari kendaraan sesuai ketentuan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 230,
+    "category": "Layanan",
+    "question": "Apakah Samsat Bandung Timur memiliki layanan Drive Thru",
+    "answer": "Informasi mengenai ketersediaan layanan Drive Thru dapat diperoleh melalui petugas pelayanan atau informasi resmi Samsat Bandung Timur.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 231,
+    "category": "Layanan",
+    "question": "Apa keuntungan menggunakan layanan Drive Thru",
+    "answer": "Layanan Drive Thru membantu masyarakat melakukan pembayaran pajak kendaraan dengan lebih cepat dan praktis tanpa harus meninggalkan kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 232,
+    "category": "Layanan",
+    "question": "Layanan apa yang dapat dilakukan melalui Drive Thru",
+    "answer": "Layanan yang tersedia melalui Drive Thru mengikuti ketentuan yang berlaku dan umumnya berkaitan dengan pembayaran pajak kendaraan tahunan.",
+    "source": "https://bapenda.jabarprov.go.id"
+  },
+  {
+    "id": 233,
+    "category": "Layanan",
+    "question": "Apa syarat menggunakan layanan Drive Thru",
+    "answer": "Masyarakat perlu membawa dokumen yang dipersyaratkan sesuai jenis layanan yang akan dilakukan melalui Drive Thru.",
+    "source": "https://bapenda.jabarprov.go.id"
+  }
+]
