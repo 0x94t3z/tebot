@@ -134,7 +134,7 @@ describe("matchFaq", () => {
     ["pajak motor mau bayar tapi stnk hilang duluan", 42, "Pajak"],
     ["beli motor bekas tapi nama masih pemilik lama harus apa", 73, "Balik Nama"],
     ["motor bekas belum balik nama pajaknya gimana", 85, "Balik Nama"],
-    ["plat luar kota mau pindah ke bandung timur gimana", 90, "Mutasi"],
+    ["plat luar kota mau pindah ke bandung timur gimana", 98, "Mutasi"],
     ["cabut berkas motor ke domisili baru apa aja", 90, "Mutasi"],
     ["gesek rangka mesin buat apa sih", 103, "Cek Fisik"],
     ["nomor rangka susah dicari gimana", 115, "Cek Fisik"],
@@ -162,7 +162,7 @@ describe("matchFaq", () => {
     ["bpkbnya ilang ngurus dimana", 55, "Dokumen"],
     ["dokumen apa bwt balik nama motor second", 73, "Balik Nama"],
     ["motor seken pajaknya nunggak bisa balik nama ga", 85, "Balik Nama"],
-    ["pelat luar daerah mau cabut berkas", 90, "Mutasi"],
+    ["pelat luar daerah mau cabut berkas", 98, "Mutasi"],
     ["motor wajib dibawa pas mutasi?", 92, "Mutasi"],
     ["mutasi perlu bpkb ori ga", 94, "Mutasi"],
     ["cek fisik itu buat gesek mesin doang?", 103, "Cek Fisik"],
@@ -175,6 +175,24 @@ describe("matchFaq", () => {
     ["ada cs atau loket informasi di samsat?", 140, "Fasilitas"],
     ["drive through bawa apa aja", 150, "Layanan"]
   ] as const)("mencocokkan slang, singkatan, dan imbuhan: %s", (input, expectedId, expectedCategory) => {
+    const result = matchFaq(input);
+
+    expect(result?.entry.id).toBe(expectedId);
+    expect(result?.entry.category).toBe(expectedCategory);
+  });
+
+  it.each([
+    ["Motor saya waktunya ganti plat, syaratnya apa aja?", 48, "Pajak"],
+    ["Ganti plat harus cek fisik ya?", 48, "Pajak"],
+    ["Bisa ganti plat di Samsat Keliling gak?", 133, "Samsat Keliling"],
+    ["Mobil masih kredit dan BPKB di leasing, kalau ganti plat gimana?", 48, "Pajak"],
+    ["Kalau plat nomor rusak dan tulisannya sudah gak jelas bisa diganti?", 66, "Dokumen"],
+    ["Saya sudah bayar lewat SIGNAL tapi statusnya belum berubah.", 143, "Pengaduan"],
+    ["Uang sudah terpotong tapi pembayaran pajak gagal, gimana?", 143, "Pengaduan"],
+    ["Saya salah memasukkan nomor polisi di aplikasi, gimana?", 143, "Pengaduan"],
+    ["Katanya BBNKB kendaraan bekas gratis, kok masih ada biaya?", 40, "Pajak"],
+    ["Balik nama gratis itu maksudnya semua biaya gratis?", 40, "Pajak"]
+  ] as const)("menjaga intent pertanyaan natural hasil audit: %s", (input, expectedId, expectedCategory) => {
     const result = matchFaq(input);
 
     expect(result?.entry.id).toBe(expectedId);

@@ -1,0 +1,1072 @@
+{
+  "total": 117,
+  "matched": 112,
+  "fallback": 5,
+  "categoryCounts": {
+    "Layanan": 9,
+    "Pajak": 30,
+    "Dokumen": 22,
+    "Balik Nama": 12,
+    "Mutasi": 9,
+    "Samsat Keliling": 11,
+    "SIGNAL": 7,
+    "Cek Fisik": 2,
+    "Pengaduan": 3,
+    "Fasilitas": 7
+  },
+  "rows": [
+    {
+      "no": 1,
+      "question": "Samsat Bandung Timur buka jam berapa ya?",
+      "status": "MATCH",
+      "id": 4,
+      "category": "Layanan",
+      "selectedQuestion": "Jam operasional Samsat Bandung Timur",
+      "score": 100
+    },
+    {
+      "no": 2,
+      "question": "Hari Sabtu Samsat buka gak?",
+      "status": "MATCH",
+      "id": 7,
+      "category": "Layanan",
+      "selectedQuestion": "Apakah Samsat buka hari Sabtu",
+      "score": 100
+    },
+    {
+      "no": 3,
+      "question": "Kalau hari Minggu bisa bayar pajak gak?",
+      "status": "MATCH",
+      "id": 8,
+      "category": "Layanan",
+      "selectedQuestion": "Apakah Samsat buka hari Minggu",
+      "score": 100
+    },
+    {
+      "no": 4,
+      "question": "Saya mau ke Samsat Bandung Timur alamatnya di mana?",
+      "status": "MATCH",
+      "id": 9,
+      "category": "Layanan",
+      "selectedQuestion": "Dimana lokasi Samsat Bandung Timur",
+      "score": 100
+    },
+    {
+      "no": 5,
+      "question": "Saya datang siang sekitar jam 1 masih dilayani gak?",
+      "status": "MATCH",
+      "id": 6,
+      "category": "Layanan",
+      "selectedQuestion": "Samsat tutup jam berapa",
+      "score": 100
+    },
+    {
+      "no": 6,
+      "question": "Kalau tanggal merah Samsat tetap buka?",
+      "status": "MATCH",
+      "id": 8,
+      "category": "Layanan",
+      "selectedQuestion": "Apakah Samsat buka hari Minggu",
+      "score": 100
+    },
+    {
+      "no": 7,
+      "question": "Loket pembayaran pajak tutup jam berapa?",
+      "status": "MATCH",
+      "id": 6,
+      "category": "Layanan",
+      "selectedQuestion": "Samsat tutup jam berapa",
+      "score": 100
+    },
+    {
+      "no": 8,
+      "question": "Saya kerja Senin sampai Jumat, ada layanan Samsat yang buka hari Sabtu gak?",
+      "status": "MATCH",
+      "id": 7,
+      "category": "Layanan",
+      "selectedQuestion": "Apakah Samsat buka hari Sabtu",
+      "score": 100
+    },
+    {
+      "no": 9,
+      "question": "Mau bayar pajak motor tahunan bawa apa aja?",
+      "status": "MATCH",
+      "id": 47,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 10,
+      "question": "Kalau bayar pajak harus pakai KTP asli?",
+      "status": "MATCH",
+      "id": 47,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 11,
+      "question": "Pajak motor saya sudah telat masih bisa dibayar?",
+      "status": "MATCH",
+      "id": 26,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada denda keterlambatan pajak",
+      "score": 100
+    },
+    {
+      "no": 12,
+      "question": "Saya mau bayarin pajak motor punya orang tua, bisa diwakilkan gak?",
+      "status": "MATCH",
+      "id": 28,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah pembayaran pajak bisa diwakilkan",
+      "score": 100
+    },
+    {
+      "no": 13,
+      "question": "STNK atas nama istri, suami yang bayar bisa gak?",
+      "status": "MATCH",
+      "id": 28,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah pembayaran pajak bisa diwakilkan",
+      "score": 100
+    },
+    {
+      "no": 14,
+      "question": "KTP saya beda alamat dengan yang di STNK gimana?",
+      "status": "MATCH",
+      "id": 63,
+      "category": "Dokumen",
+      "selectedQuestion": "Apakah data pada STNK harus sesuai dengan kendaraan",
+      "score": 100
+    },
+    {
+      "no": 15,
+      "question": "Motor bekas belum balik nama, saya masih bisa bayar pajaknya gak?",
+      "status": "MATCH",
+      "id": 85,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apakah balik nama dapat dilakukan jika pajak menunggak",
+      "score": 100
+    },
+    {
+      "no": 16,
+      "question": "Pemilik lama susah dihubungi, gimana saya bayar pajak motor?",
+      "status": "MATCH",
+      "id": 76,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apakah balik nama dapat diwakilkan",
+      "score": 84
+    },
+    {
+      "no": 17,
+      "question": "KTP pemilik lama gak ada, pajak masih bisa diperpanjang?",
+      "status": "MATCH",
+      "id": 47,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 18,
+      "question": "Pajak mati sudah beberapa tahun, ngurusnya gimana?",
+      "status": "MATCH",
+      "id": 33,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah kendaraan mati pajak bertahun tahun bisa dibayar",
+      "score": 100
+    },
+    {
+      "no": 19,
+      "question": "Kalau telat bayar pajak kena denda berapa?",
+      "status": "MATCH",
+      "id": 26,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada denda keterlambatan pajak",
+      "score": 100
+    },
+    {
+      "no": 20,
+      "question": "Saya cuma bawa fotokopi KTP bisa bayar pajak gak?",
+      "status": "MATCH",
+      "id": 47,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 21,
+      "question": "Motor saya waktunya ganti plat, syaratnya apa aja?",
+      "status": "MATCH",
+      "id": 48,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 22,
+      "question": "Kalau pajak 5 tahunan kendaraan wajib dibawa?",
+      "status": "MATCH",
+      "id": 48,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 23,
+      "question": "Ganti plat harus cek fisik ya?",
+      "status": "MATCH",
+      "id": 48,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 24,
+      "question": "BPKB asli harus dibawa untuk pajak 5 tahunan?",
+      "status": "MATCH",
+      "id": 62,
+      "category": "Dokumen",
+      "selectedQuestion": "Apakah BPKB diperlukan untuk pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 25,
+      "question": "Kendaraan saya lagi di luar kota tapi platnya mau habis, gimana?",
+      "status": "MATCH",
+      "id": 98,
+      "category": "Mutasi",
+      "selectedQuestion": "Apakah kendaraan luar provinsi dapat dimutasi",
+      "score": 100
+    },
+    {
+      "no": 26,
+      "question": "Bisa ganti plat di Samsat Keliling gak?",
+      "status": "MATCH",
+      "id": 133,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Apakah Samsat Keliling melayani pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 27,
+      "question": "Pajak 5 tahunan bisa dibayar online?",
+      "status": "MATCH",
+      "id": 128,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apakah SIGNAL dapat digunakan untuk pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 28,
+      "question": "Plat saya sudah mati tapi pajaknya juga nunggak, harus ngurus yang mana dulu?",
+      "status": "MATCH",
+      "id": 48,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak lima tahunan",
+      "score": 91
+    },
+    {
+      "no": 29,
+      "question": "Mobil masih kredit dan BPKB di leasing, kalau ganti plat gimana?",
+      "status": "MATCH",
+      "id": 48,
+      "category": "Pajak",
+      "selectedQuestion": "Apa syarat membayar pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 30,
+      "question": "Kalau plat nomor rusak dan tulisannya sudah gak jelas bisa diganti?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 31,
+      "question": "STNK saya hilang, ngurusnya harus gimana?",
+      "status": "MATCH",
+      "id": 54,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK hilang",
+      "score": 100
+    },
+    {
+      "no": 32,
+      "question": "STNK hilang harus bikin surat kehilangan dari polisi dulu?",
+      "status": "MATCH",
+      "id": 54,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK hilang",
+      "score": 96
+    },
+    {
+      "no": 33,
+      "question": "Plat nomor motor saya hilang, bisa bikin lagi di Samsat?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 34,
+      "question": "Motor saya kebanjiran dan platnya hanyut, apa harus bikin surat kehilangan?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 35,
+      "question": "Saya kena musibah banjir, STNK dan plat nomor hilang semua, pertama harus ke mana?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 36,
+      "question": "Plat depan hilang tapi plat belakang masih ada, tetap harus lapor kehilangan?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 37,
+      "question": "Plat motor saya patah karena kecelakaan, bisa minta ganti?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 38,
+      "question": "STNK rusak kena air banjir tapi masih terbaca, harus bikin baru atau masih bisa dipakai?",
+      "status": "MATCH",
+      "id": 56,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK rusak",
+      "score": 100
+    },
+    {
+      "no": 39,
+      "question": "STNK saya kebakar tapi BPKB masih ada, bagaimana cara mengurusnya?",
+      "status": "MATCH",
+      "id": 56,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK rusak",
+      "score": 100
+    },
+    {
+      "no": 40,
+      "question": "STNK hilang tapi kendaraan masih kredit dan BPKB di leasing, gimana ngurusnya?",
+      "status": "MATCH",
+      "id": 54,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK hilang",
+      "score": 100
+    },
+    {
+      "no": 41,
+      "question": "Plat saya dicuri orang, prosedurnya sama dengan plat hilang biasa?",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 42,
+      "question": "Kalau STNK sama BPKB hilang sekaligus harus ngurus yang mana dulu?",
+      "status": "MATCH",
+      "id": 54,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK hilang",
+      "score": 100
+    },
+    {
+      "no": 43,
+      "question": "Saya baru beli motor bekas, cara balik namanya gimana?",
+      "status": "MATCH",
+      "id": 73,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apa syarat balik nama kendaraan",
+      "score": 100
+    },
+    {
+      "no": 44,
+      "question": "Balik nama motor perlu KTP pemilik lama gak?",
+      "status": "MATCH",
+      "id": 76,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apakah balik nama dapat diwakilkan",
+      "score": 100
+    },
+    {
+      "no": 45,
+      "question": "Pemilik lama sudah gak bisa dihubungi, masih bisa balik nama?",
+      "status": "MATCH",
+      "id": 76,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apakah balik nama dapat diwakilkan",
+      "score": 100
+    },
+    {
+      "no": 46,
+      "question": "Motor yang saya beli sudah pindah tangan beberapa kali, balik namanya gimana?",
+      "status": "MATCH",
+      "id": 73,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apa syarat balik nama kendaraan",
+      "score": 100
+    },
+    {
+      "no": 47,
+      "question": "Balik nama kendaraan sekarang gratis atau masih bayar?",
+      "status": "MATCH",
+      "id": 40,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada program pemutihan pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 48,
+      "question": "Katanya BBNKB kendaraan bekas gratis, kok masih ada biaya?",
+      "status": "MATCH",
+      "id": 40,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada program pemutihan pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 49,
+      "question": "Balik nama harus kendaraan dibawa ke Samsat?",
+      "status": "MATCH",
+      "id": 74,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apakah kendaraan harus dibawa saat balik nama",
+      "score": 100
+    },
+    {
+      "no": 50,
+      "question": "Balik nama harus cek fisik kendaraan?",
+      "status": "MATCH",
+      "id": 103,
+      "category": "Cek Fisik",
+      "selectedQuestion": "Apa itu cek fisik kendaraan",
+      "score": 100
+    },
+    {
+      "no": 51,
+      "question": "Bisa balik nama di Samsat Keliling?",
+      "status": "MATCH",
+      "id": 131,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Layanan apa saja yang tersedia di Samsat Keliling",
+      "score": 100
+    },
+    {
+      "no": 52,
+      "question": "Saya beli motor dari luar Bandung, bisa balik nama di Samsat Bandung Timur?",
+      "status": "MATCH",
+      "id": 69,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apa itu balik nama kendaraan",
+      "score": 95
+    },
+    {
+      "no": 53,
+      "question": "Motor warisan orang tua yang sudah meninggal mau dibalik nama gimana?",
+      "status": "MATCH",
+      "id": 73,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apa syarat balik nama kendaraan",
+      "score": 100
+    },
+    {
+      "no": 54,
+      "question": "Kendaraan atas nama perusahaan mau dipindah ke perorangan gimana?",
+      "status": "MATCH",
+      "id": 73,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apa syarat balik nama kendaraan",
+      "score": 100
+    },
+    {
+      "no": 55,
+      "question": "Saya cuma punya STNK dan BPKB, kuitansi pembelian hilang, bisa balik nama gak?",
+      "status": "MATCH",
+      "id": 82,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apakah bukti jual beli diperlukan untuk balik nama",
+      "score": 100
+    },
+    {
+      "no": 56,
+      "question": "Saya mau pindahin kendaraan dari luar kota ke Bandung gimana?",
+      "status": "MATCH",
+      "id": 98,
+      "category": "Mutasi",
+      "selectedQuestion": "Apakah kendaraan luar provinsi dapat dimutasi",
+      "score": 100
+    },
+    {
+      "no": 57,
+      "question": "Syarat mutasi masuk apa aja?",
+      "status": "MATCH",
+      "id": 90,
+      "category": "Mutasi",
+      "selectedQuestion": "Apa syarat mutasi kendaraan",
+      "score": 100
+    },
+    {
+      "no": 58,
+      "question": "Kalau mau mutasi keluar Jawa Barat gimana?",
+      "status": "MATCH",
+      "id": 90,
+      "category": "Mutasi",
+      "selectedQuestion": "Apa syarat mutasi kendaraan",
+      "score": 100
+    },
+    {
+      "no": 59,
+      "question": "Cabut berkas kendaraan prosesnya berapa lama?",
+      "status": "MATCH",
+      "id": 90,
+      "category": "Mutasi",
+      "selectedQuestion": "Apa syarat mutasi kendaraan",
+      "score": 100
+    },
+    {
+      "no": 60,
+      "question": "Mutasi kendaraan harus cek fisik?",
+      "status": "MATCH",
+      "id": 107,
+      "category": "Cek Fisik",
+      "selectedQuestion": "Apakah cek fisik wajib untuk mutasi kendaraan",
+      "score": 100
+    },
+    {
+      "no": 61,
+      "question": "Kendaraan harus dibawa ke Samsat asal untuk mutasi?",
+      "status": "MATCH",
+      "id": 92,
+      "category": "Mutasi",
+      "selectedQuestion": "Apakah kendaraan harus dibawa saat mutasi",
+      "score": 100
+    },
+    {
+      "no": 62,
+      "question": "Motor saya plat luar daerah tapi sekarang tinggal di Bandung, pajaknya bisa dibayar di sini?",
+      "status": "MATCH",
+      "id": 98,
+      "category": "Mutasi",
+      "selectedQuestion": "Apakah kendaraan luar provinsi dapat dimutasi",
+      "score": 100
+    },
+    {
+      "no": 63,
+      "question": "Saya beli motor plat Jakarta mau dijadikan plat Bandung, prosesnya gimana?",
+      "status": "MATCH",
+      "id": 98,
+      "category": "Mutasi",
+      "selectedQuestion": "Apakah kendaraan luar provinsi dapat dimutasi",
+      "score": 100
+    },
+    {
+      "no": 64,
+      "question": "Bisa cek fisik bantuan kalau kendaraan ada di luar daerah?",
+      "status": "FALLBACK",
+      "id": "",
+      "category": "",
+      "selectedQuestion": "",
+      "score": ""
+    },
+    {
+      "no": 65,
+      "question": "Mutasi sama balik nama bisa dilakukan sekaligus gak?",
+      "status": "MATCH",
+      "id": 73,
+      "category": "Balik Nama",
+      "selectedQuestion": "Apa syarat balik nama kendaraan",
+      "score": 84
+    },
+    {
+      "no": 66,
+      "question": "Saya sudah cabut berkas tapi belum daftar di daerah tujuan, ada batas waktunya gak?",
+      "status": "MATCH",
+      "id": 96,
+      "category": "Mutasi",
+      "selectedQuestion": "Berapa lama proses mutasi kendaraan",
+      "score": 100
+    },
+    {
+      "no": 67,
+      "question": "Samsat Keliling hari ini ada di mana?",
+      "status": "MATCH",
+      "id": 135,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Dimana lokasi Samsat Keliling hari ini",
+      "score": 100
+    },
+    {
+      "no": 68,
+      "question": "Jadwal Samsat Keliling Bandung Timur bisa dilihat di mana?",
+      "status": "MATCH",
+      "id": 134,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Bagaimana cara mengetahui jadwal Samsat Keliling",
+      "score": 100
+    },
+    {
+      "no": 69,
+      "question": "Samsat Keliling bisa buat pajak 5 tahunan?",
+      "status": "MATCH",
+      "id": 133,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Apakah Samsat Keliling melayani pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 70,
+      "question": "Kalau STNK hilang bisa diurus di Samsat Keliling?",
+      "status": "MATCH",
+      "id": 131,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Layanan apa saja yang tersedia di Samsat Keliling",
+      "score": 100
+    },
+    {
+      "no": 71,
+      "question": "Balik nama bisa lewat Samsat Keliling?",
+      "status": "MATCH",
+      "id": 131,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Layanan apa saja yang tersedia di Samsat Keliling",
+      "score": 100
+    },
+    {
+      "no": 72,
+      "question": "Di Samsat Keliling bisa bayar pakai cash atau harus non-tunai?",
+      "status": "MATCH",
+      "id": 132,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Apakah Samsat Keliling melayani pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 73,
+      "question": "Apa bedanya Samsat Keliling sama Samsat induk?",
+      "status": "MATCH",
+      "id": 131,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Layanan apa saja yang tersedia di Samsat Keliling",
+      "score": 100
+    },
+    {
+      "no": 74,
+      "question": "Drive Thru Samsat melayani apa aja?",
+      "status": "MATCH",
+      "id": 146,
+      "category": "Layanan",
+      "selectedQuestion": "Apa itu layanan Drive Thru Samsat",
+      "score": 100
+    },
+    {
+      "no": 75,
+      "question": "Kalau pajak telat bisa bayar di Samsat Keliling?",
+      "status": "MATCH",
+      "id": 132,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Apakah Samsat Keliling melayani pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 76,
+      "question": "Saya bukan warga Bandung tapi kebetulan lagi di Bandung, bisa bayar pajak di Samsat Keliling?",
+      "status": "MATCH",
+      "id": 132,
+      "category": "Samsat Keliling",
+      "selectedQuestion": "Apakah Samsat Keliling melayani pajak tahunan",
+      "score": 100
+    },
+    {
+      "no": 77,
+      "question": "Pajak kendaraan bisa dibayar online gak?",
+      "status": "MATCH",
+      "id": 35,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah pembayaran pajak bisa dilakukan secara online",
+      "score": 100
+    },
+    {
+      "no": 78,
+      "question": "Cara bayar pajak lewat SIGNAL gimana?",
+      "status": "MATCH",
+      "id": 45,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah pajak kendaraan bisa dibayar melalui SIGNAL",
+      "score": 100
+    },
+    {
+      "no": 79,
+      "question": "Saya gagal daftar aplikasi SIGNAL, harus gimana?",
+      "status": "MATCH",
+      "id": 126,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apa yang harus dilakukan jika verifikasi SIGNAL gagal",
+      "score": 100
+    },
+    {
+      "no": 80,
+      "question": "NIK saya tidak terbaca di SIGNAL kenapa ya?",
+      "status": "MATCH",
+      "id": 126,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apa yang harus dilakukan jika verifikasi SIGNAL gagal",
+      "score": 100
+    },
+    {
+      "no": 81,
+      "question": "Kendaraan saya gak muncul di SIGNAL padahal atas nama sendiri.",
+      "status": "MATCH",
+      "id": 123,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apakah SIGNAL dapat digunakan untuk kendaraan atas nama sendiri",
+      "score": 100
+    },
+    {
+      "no": 82,
+      "question": "Saya sudah bayar lewat SIGNAL tapi statusnya belum berubah.",
+      "status": "MATCH",
+      "id": 143,
+      "category": "Pengaduan",
+      "selectedQuestion": "Kemana melapor jika mengalami kendala pelayanan",
+      "score": 100
+    },
+    {
+      "no": 83,
+      "question": "Uang sudah terpotong tapi pembayaran pajak gagal, gimana?",
+      "status": "MATCH",
+      "id": 143,
+      "category": "Pengaduan",
+      "selectedQuestion": "Kemana melapor jika mengalami kendala pelayanan",
+      "score": 100
+    },
+    {
+      "no": 84,
+      "question": "Kalau bayar lewat SIGNAL masih harus datang ke Samsat?",
+      "status": "MATCH",
+      "id": 117,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apa itu SIGNAL",
+      "score": 100
+    },
+    {
+      "no": 85,
+      "question": "Bukti pengesahan STNK setelah bayar online dapat dari mana?",
+      "status": "MATCH",
+      "id": 43,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah pembayaran pajak mendapatkan bukti pembayaran",
+      "score": 100
+    },
+    {
+      "no": 86,
+      "question": "Pajak 5 tahunan bisa lewat SIGNAL gak?",
+      "status": "MATCH",
+      "id": 128,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apakah SIGNAL dapat digunakan untuk pajak lima tahunan",
+      "score": 100
+    },
+    {
+      "no": 87,
+      "question": "Kendaraan atas nama orang lain bisa saya bayar lewat SIGNAL?",
+      "status": "MATCH",
+      "id": 124,
+      "category": "SIGNAL",
+      "selectedQuestion": "Apakah SIGNAL dapat digunakan untuk kendaraan keluarga",
+      "score": 100
+    },
+    {
+      "no": 88,
+      "question": "Saya salah memasukkan nomor polisi di aplikasi, gimana?",
+      "status": "MATCH",
+      "id": 143,
+      "category": "Pengaduan",
+      "selectedQuestion": "Kemana melapor jika mengalami kendala pelayanan",
+      "score": 100
+    },
+    {
+      "no": 89,
+      "question": "Bayar pajak online sudah berhasil tapi bukti belum dikirim, harus bagaimana?",
+      "status": "MATCH",
+      "id": 43,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah pembayaran pajak mendapatkan bukti pembayaran",
+      "score": 100
+    },
+    {
+      "no": 90,
+      "question": "Total biaya pajak kendaraan saya berapa?",
+      "status": "MATCH",
+      "id": 27,
+      "category": "Pajak",
+      "selectedQuestion": "Bagaimana cara mengetahui besaran pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 91,
+      "question": "Cara cek tagihan pajak sebelum datang ke Samsat gimana?",
+      "status": "MATCH",
+      "id": 23,
+      "category": "Pajak",
+      "selectedQuestion": "Bagaimana cara cek pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 92,
+      "question": "Kenapa tagihan pajak saya lebih mahal dari tahun kemarin?",
+      "status": "MATCH",
+      "id": 27,
+      "category": "Pajak",
+      "selectedQuestion": "Bagaimana cara mengetahui besaran pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 93,
+      "question": "SWDKLLJ itu apa sih?",
+      "status": "MATCH",
+      "id": 37,
+      "category": "Pajak",
+      "selectedQuestion": "Apa itu SWDKLLJ",
+      "score": 100
+    },
+    {
+      "no": 94,
+      "question": "Kenapa bayar pajak ada biaya SWDKLLJ?",
+      "status": "MATCH",
+      "id": 27,
+      "category": "Pajak",
+      "selectedQuestion": "Bagaimana cara mengetahui besaran pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 95,
+      "question": "Denda pajak dihitung dari kapan?",
+      "status": "MATCH",
+      "id": 39,
+      "category": "Pajak",
+      "selectedQuestion": "Bagaimana cara mengetahui denda pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 96,
+      "question": "Kalau telat satu bulan dendanya berapa?",
+      "status": "MATCH",
+      "id": 39,
+      "category": "Pajak",
+      "selectedQuestion": "Bagaimana cara mengetahui denda pajak kendaraan",
+      "score": 96
+    },
+    {
+      "no": 97,
+      "question": "Ada pemutihan pajak kendaraan gak sekarang?",
+      "status": "MATCH",
+      "id": 40,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada program pemutihan pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 98,
+      "question": "Kalau ada program pemutihan, saya harus datang ke mana?",
+      "status": "MATCH",
+      "id": 40,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada program pemutihan pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 99,
+      "question": "Balik nama gratis itu maksudnya semua biaya gratis?",
+      "status": "MATCH",
+      "id": 40,
+      "category": "Pajak",
+      "selectedQuestion": "Apakah ada program pemutihan pajak kendaraan",
+      "score": 100
+    },
+    {
+      "no": 100,
+      "question": "Di Samsat Bandung Timur ada tempat parkir motor?",
+      "status": "MATCH",
+      "id": 136,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia area parkir di Samsat Bandung Timur",
+      "score": 100
+    },
+    {
+      "no": 101,
+      "question": "Ada parkir mobil gak?",
+      "status": "MATCH",
+      "id": 136,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia area parkir di Samsat Bandung Timur",
+      "score": 100
+    },
+    {
+      "no": 102,
+      "question": "Ada mushola di dalam Samsat?",
+      "status": "MATCH",
+      "id": 139,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia mushola",
+      "score": 100
+    },
+    {
+      "no": 103,
+      "question": "Kalau bawa anak ada ruang tunggu?",
+      "status": "MATCH",
+      "id": 137,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia ruang tunggu",
+      "score": 100
+    },
+    {
+      "no": 104,
+      "question": "Ada toilet untuk pengunjung?",
+      "status": "MATCH",
+      "id": 138,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia toilet",
+      "score": 100
+    },
+    {
+      "no": 105,
+      "question": "Saya pakai kursi roda, akses masuk Samsat mudah gak?",
+      "status": "FALLBACK",
+      "id": "",
+      "category": "",
+      "selectedQuestion": "",
+      "score": ""
+    },
+    {
+      "no": 106,
+      "question": "Ada jalur atau fasilitas untuk penyandang disabilitas?",
+      "status": "FALLBACK",
+      "id": "",
+      "category": "",
+      "selectedQuestion": "",
+      "score": ""
+    },
+    {
+      "no": 107,
+      "question": "Kalau bingung prosesnya saya harus tanya ke loket mana?",
+      "status": "MATCH",
+      "id": 140,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia loket informasi",
+      "score": 100
+    },
+    {
+      "no": 108,
+      "question": "Ada kantin atau tempat makan di sekitar Samsat?",
+      "status": "FALLBACK",
+      "id": "",
+      "category": "",
+      "selectedQuestion": "",
+      "score": ""
+    },
+    {
+      "no": 109,
+      "question": "Saya lansia, apakah ada pelayanan khusus atau antrean prioritas?",
+      "status": "FALLBACK",
+      "id": "",
+      "category": "",
+      "selectedQuestion": "",
+      "score": ""
+    },
+    {
+      "no": 110,
+      "question": "Kalau mau cek fisik kendaraan masuk lewat mana?",
+      "status": "MATCH",
+      "id": 141,
+      "category": "Fasilitas",
+      "selectedQuestion": "Apakah tersedia area cek fisik kendaraan",
+      "score": 100
+    },
+    {
+      "no": 111,
+      "question": "plat motor saya hilang",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 112,
+      "question": "plat nomer ilang min",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 113,
+      "question": "tnkb hilang gimana",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 114,
+      "question": "nopol saya hanyut kebawa banjir",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 115,
+      "question": "habis banjir plat depan motor ga ada",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 116,
+      "question": "mau bikin plat baru karena yang lama hilang",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    },
+    {
+      "no": 117,
+      "question": "min numpang tanya motor saya kena banjir terus platnya kebawa arus ngurusnya gimana ya",
+      "status": "MATCH",
+      "id": 66,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
+      "score": 100
+    }
+  ]
+}
