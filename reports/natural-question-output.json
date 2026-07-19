@@ -1,16 +1,16 @@
 {
   "total": 117,
-  "matched": 112,
-  "fallback": 5,
+  "matched": 113,
+  "fallback": 4,
   "categoryCounts": {
     "Layanan": 9,
     "Pajak": 30,
-    "Dokumen": 22,
-    "Balik Nama": 12,
+    "Dokumen": 24,
+    "Balik Nama": 11,
     "Mutasi": 9,
-    "Samsat Keliling": 11,
+    "Samsat Keliling": 10,
     "SIGNAL": 7,
-    "Cek Fisik": 2,
+    "Cek Fisik": 3,
     "Pengaduan": 3,
     "Fasilitas": 7
   },
@@ -154,10 +154,10 @@
       "no": 16,
       "question": "Pemilik lama susah dihubungi, gimana saya bayar pajak motor?",
       "status": "MATCH",
-      "id": 76,
+      "id": 73,
       "category": "Balik Nama",
-      "selectedQuestion": "Apakah balik nama dapat diwakilkan",
-      "score": 84
+      "selectedQuestion": "Apa syarat balik nama kendaraan",
+      "score": 100
     },
     {
       "no": 17,
@@ -301,7 +301,7 @@
       "id": 54,
       "category": "Dokumen",
       "selectedQuestion": "Bagaimana jika STNK hilang",
-      "score": 96
+      "score": 100
     },
     {
       "no": 33,
@@ -505,9 +505,9 @@
       "no": 55,
       "question": "Saya cuma punya STNK dan BPKB, kuitansi pembelian hilang, bisa balik nama gak?",
       "status": "MATCH",
-      "id": 82,
-      "category": "Balik Nama",
-      "selectedQuestion": "Apakah bukti jual beli diperlukan untuk balik nama",
+      "id": 54,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK hilang",
       "score": 100
     },
     {
@@ -585,11 +585,11 @@
     {
       "no": 64,
       "question": "Bisa cek fisik bantuan kalau kendaraan ada di luar daerah?",
-      "status": "FALLBACK",
-      "id": "",
-      "category": "",
-      "selectedQuestion": "",
-      "score": ""
+      "status": "MATCH",
+      "id": 103,
+      "category": "Cek Fisik",
+      "selectedQuestion": "Apa itu cek fisik kendaraan",
+      "score": 100
     },
     {
       "no": 65,
@@ -640,9 +640,9 @@
       "no": 70,
       "question": "Kalau STNK hilang bisa diurus di Samsat Keliling?",
       "status": "MATCH",
-      "id": 131,
-      "category": "Samsat Keliling",
-      "selectedQuestion": "Layanan apa saja yang tersedia di Samsat Keliling",
+      "id": 54,
+      "category": "Dokumen",
+      "selectedQuestion": "Bagaimana jika STNK hilang",
       "score": 100
     },
     {
@@ -766,9 +766,9 @@
       "no": 84,
       "question": "Kalau bayar lewat SIGNAL masih harus datang ke Samsat?",
       "status": "MATCH",
-      "id": 117,
+      "id": 127,
       "category": "SIGNAL",
-      "selectedQuestion": "Apa itu SIGNAL",
+      "selectedQuestion": "Apakah SIGNAL dapat digunakan untuk pajak tahunan",
       "score": 100
     },
     {

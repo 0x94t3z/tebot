@@ -1,22 +1,22 @@
 # Output Uji Pertanyaan Natural
 
 Total pertanyaan: 117
-MATCH: 112
-FALLBACK: 5
+MATCH: 113
+FALLBACK: 4
 
 ## Ringkasan Kategori
 
 | Kategori | Jumlah |
 |---|---:|
-| Balik Nama | 12 |
-| Cek Fisik | 2 |
-| Dokumen | 22 |
+| Balik Nama | 11 |
+| Cek Fisik | 3 |
+| Dokumen | 24 |
 | Fasilitas | 7 |
 | Layanan | 9 |
 | Mutasi | 9 |
 | Pajak | 30 |
 | Pengaduan | 3 |
-| Samsat Keliling | 11 |
+| Samsat Keliling | 10 |
 | SIGNAL | 7 |
 
 ## Detail Output
@@ -38,7 +38,7 @@ FALLBACK: 5
 | 13 | STNK atas nama istri, suami yang bayar bisa gak? | MATCH | 28 | Pajak | Apakah pembayaran pajak bisa diwakilkan | 100 |
 | 14 | KTP saya beda alamat dengan yang di STNK gimana? | MATCH | 63 | Dokumen | Apakah data pada STNK harus sesuai dengan kendaraan | 100 |
 | 15 | Motor bekas belum balik nama, saya masih bisa bayar pajaknya gak? | MATCH | 85 | Balik Nama | Apakah balik nama dapat dilakukan jika pajak menunggak | 100 |
-| 16 | Pemilik lama susah dihubungi, gimana saya bayar pajak motor? | MATCH | 76 | Balik Nama | Apakah balik nama dapat diwakilkan | 84 |
+| 16 | Pemilik lama susah dihubungi, gimana saya bayar pajak motor? | MATCH | 73 | Balik Nama | Apa syarat balik nama kendaraan | 100 |
 | 17 | KTP pemilik lama gak ada, pajak masih bisa diperpanjang? | MATCH | 47 | Pajak | Apa syarat membayar pajak tahunan | 100 |
 | 18 | Pajak mati sudah beberapa tahun, ngurusnya gimana? | MATCH | 33 | Pajak | Apakah kendaraan mati pajak bertahun tahun bisa dibayar | 100 |
 | 19 | Kalau telat bayar pajak kena denda berapa? | MATCH | 26 | Pajak | Apakah ada denda keterlambatan pajak | 100 |
@@ -54,7 +54,7 @@ FALLBACK: 5
 | 29 | Mobil masih kredit dan BPKB di leasing, kalau ganti plat gimana? | MATCH | 48 | Pajak | Apa syarat membayar pajak lima tahunan | 100 |
 | 30 | Kalau plat nomor rusak dan tulisannya sudah gak jelas bisa diganti? | MATCH | 66 | Dokumen | Bagaimana jika TNKB atau plat nomor hilang atau rusak | 100 |
 | 31 | STNK saya hilang, ngurusnya harus gimana? | MATCH | 54 | Dokumen | Bagaimana jika STNK hilang | 100 |
-| 32 | STNK hilang harus bikin surat kehilangan dari polisi dulu? | MATCH | 54 | Dokumen | Bagaimana jika STNK hilang | 96 |
+| 32 | STNK hilang harus bikin surat kehilangan dari polisi dulu? | MATCH | 54 | Dokumen | Bagaimana jika STNK hilang | 100 |
 | 33 | Plat nomor motor saya hilang, bisa bikin lagi di Samsat? | MATCH | 66 | Dokumen | Bagaimana jika TNKB atau plat nomor hilang atau rusak | 100 |
 | 34 | Motor saya kebanjiran dan platnya hanyut, apa harus bikin surat kehilangan? | MATCH | 66 | Dokumen | Bagaimana jika TNKB atau plat nomor hilang atau rusak | 100 |
 | 35 | Saya kena musibah banjir, STNK dan plat nomor hilang semua, pertama harus ke mana? | MATCH | 66 | Dokumen | Bagaimana jika TNKB atau plat nomor hilang atau rusak | 100 |
@@ -77,7 +77,7 @@ FALLBACK: 5
 | 52 | Saya beli motor dari luar Bandung, bisa balik nama di Samsat Bandung Timur? | MATCH | 69 | Balik Nama | Apa itu balik nama kendaraan | 95 |
 | 53 | Motor warisan orang tua yang sudah meninggal mau dibalik nama gimana? | MATCH | 73 | Balik Nama | Apa syarat balik nama kendaraan | 100 |
 | 54 | Kendaraan atas nama perusahaan mau dipindah ke perorangan gimana? | MATCH | 73 | Balik Nama | Apa syarat balik nama kendaraan | 100 |
-| 55 | Saya cuma punya STNK dan BPKB, kuitansi pembelian hilang, bisa balik nama gak? | MATCH | 82 | Balik Nama | Apakah bukti jual beli diperlukan untuk balik nama | 100 |
+| 55 | Saya cuma punya STNK dan BPKB, kuitansi pembelian hilang, bisa balik nama gak? | MATCH | 54 | Dokumen | Bagaimana jika STNK hilang | 100 |
 | 56 | Saya mau pindahin kendaraan dari luar kota ke Bandung gimana? | MATCH | 98 | Mutasi | Apakah kendaraan luar provinsi dapat dimutasi | 100 |
 | 57 | Syarat mutasi masuk apa aja? | MATCH | 90 | Mutasi | Apa syarat mutasi kendaraan | 100 |
 | 58 | Kalau mau mutasi keluar Jawa Barat gimana? | MATCH | 90 | Mutasi | Apa syarat mutasi kendaraan | 100 |
@@ -86,13 +86,13 @@ FALLBACK: 5
 | 61 | Kendaraan harus dibawa ke Samsat asal untuk mutasi? | MATCH | 92 | Mutasi | Apakah kendaraan harus dibawa saat mutasi | 100 |
 | 62 | Motor saya plat luar daerah tapi sekarang tinggal di Bandung, pajaknya bisa dibayar di sini? | MATCH | 98 | Mutasi | Apakah kendaraan luar provinsi dapat dimutasi | 100 |
 | 63 | Saya beli motor plat Jakarta mau dijadikan plat Bandung, prosesnya gimana? | MATCH | 98 | Mutasi | Apakah kendaraan luar provinsi dapat dimutasi | 100 |
-| 64 | Bisa cek fisik bantuan kalau kendaraan ada di luar daerah? | FALLBACK |  |  |  |  |
+| 64 | Bisa cek fisik bantuan kalau kendaraan ada di luar daerah? | MATCH | 103 | Cek Fisik | Apa itu cek fisik kendaraan | 100 |
 | 65 | Mutasi sama balik nama bisa dilakukan sekaligus gak? | MATCH | 73 | Balik Nama | Apa syarat balik nama kendaraan | 84 |
 | 66 | Saya sudah cabut berkas tapi belum daftar di daerah tujuan, ada batas waktunya gak? | MATCH | 96 | Mutasi | Berapa lama proses mutasi kendaraan | 100 |
 | 67 | Samsat Keliling hari ini ada di mana? | MATCH | 135 | Samsat Keliling | Dimana lokasi Samsat Keliling hari ini | 100 |
 | 68 | Jadwal Samsat Keliling Bandung Timur bisa dilihat di mana? | MATCH | 134 | Samsat Keliling | Bagaimana cara mengetahui jadwal Samsat Keliling | 100 |
 | 69 | Samsat Keliling bisa buat pajak 5 tahunan? | MATCH | 133 | Samsat Keliling | Apakah Samsat Keliling melayani pajak lima tahunan | 100 |
-| 70 | Kalau STNK hilang bisa diurus di Samsat Keliling? | MATCH | 131 | Samsat Keliling | Layanan apa saja yang tersedia di Samsat Keliling | 100 |
+| 70 | Kalau STNK hilang bisa diurus di Samsat Keliling? | MATCH | 54 | Dokumen | Bagaimana jika STNK hilang | 100 |
 | 71 | Balik nama bisa lewat Samsat Keliling? | MATCH | 131 | Samsat Keliling | Layanan apa saja yang tersedia di Samsat Keliling | 100 |
 | 72 | Di Samsat Keliling bisa bayar pakai cash atau harus non-tunai? | MATCH | 132 | Samsat Keliling | Apakah Samsat Keliling melayani pajak tahunan | 100 |
 | 73 | Apa bedanya Samsat Keliling sama Samsat induk? | MATCH | 131 | Samsat Keliling | Layanan apa saja yang tersedia di Samsat Keliling | 100 |
@@ -106,7 +106,7 @@ FALLBACK: 5
 | 81 | Kendaraan saya gak muncul di SIGNAL padahal atas nama sendiri. | MATCH | 123 | SIGNAL | Apakah SIGNAL dapat digunakan untuk kendaraan atas nama sendiri | 100 |
 | 82 | Saya sudah bayar lewat SIGNAL tapi statusnya belum berubah. | MATCH | 143 | Pengaduan | Kemana melapor jika mengalami kendala pelayanan | 100 |
 | 83 | Uang sudah terpotong tapi pembayaran pajak gagal, gimana? | MATCH | 143 | Pengaduan | Kemana melapor jika mengalami kendala pelayanan | 100 |
-| 84 | Kalau bayar lewat SIGNAL masih harus datang ke Samsat? | MATCH | 117 | SIGNAL | Apa itu SIGNAL | 100 |
+| 84 | Kalau bayar lewat SIGNAL masih harus datang ke Samsat? | MATCH | 127 | SIGNAL | Apakah SIGNAL dapat digunakan untuk pajak tahunan | 100 |
 | 85 | Bukti pengesahan STNK setelah bayar online dapat dari mana? | MATCH | 43 | Pajak | Apakah pembayaran pajak mendapatkan bukti pembayaran | 100 |
 | 86 | Pajak 5 tahunan bisa lewat SIGNAL gak? | MATCH | 128 | SIGNAL | Apakah SIGNAL dapat digunakan untuk pajak lima tahunan | 100 |
 | 87 | Kendaraan atas nama orang lain bisa saya bayar lewat SIGNAL? | MATCH | 124 | SIGNAL | Apakah SIGNAL dapat digunakan untuk kendaraan keluarga | 100 |

@@ -607,9 +607,6 @@ const domainAnchorPhrases = [
 ];
 
 const strongDomainPhrases = [
-  ...domainAnchorPhrases,
-  "pajak tahunan",
-  "pajak kendaraan",
   "pajak lima tahunan",
   "pajak mati",
   "mati pajak",
@@ -618,16 +615,53 @@ const strongDomainPhrases = [
   "stnk hilang",
   "bpkb hilang",
   "tnkb hilang",
+  "samsat asal",
+  "samsat terdekat",
+  "samsat bandung timur",
+  "uang terpotong"
+];
+
+const contextualStrongDomainPhrases = [
+  "pajak tahunan",
+  "pajak kendaraan",
+  "nomor polisi",
+  "pelat nomor",
+  "plat nomor",
   "pelat hilang",
   "pelat rusak",
   "pelat luar",
   "ganti pelat",
   "surat kehilangan",
-  "samsat asal",
-  "samsat terdekat",
-  "samsat bandung timur",
-  "status pembayaran",
-  "uang terpotong"
+  "status pembayaran"
+];
+
+const hardVehicleAdminTokens = new Set([
+  "samsat",
+  "pkb",
+  "swdkllj",
+  "stnk",
+  "bpkb",
+  "tnkb",
+  "mutasi",
+  "signal",
+  "sambara"
+]);
+
+const outOfScopeRegionTokens = [
+  "jakarta",
+  "dki",
+  "jepang",
+  "amerika",
+  "luar negeri"
+];
+
+const outOfScopeTopicPhrases = [
+  "pelat nama",
+  "sertifikat tanah",
+  "main game",
+  "aplikasi signal wifi",
+  "signal wifi",
+  "marketplace"
 ];
 
 const vehicleInspectionContextTokens = new Set([
@@ -738,6 +772,10 @@ function hasConflictingContext(
   const unknownTokenCount = baseQueryTokens.length - knownTokenCount;
   const hasStrongContext = hasStrongDomainContext(normalizedInput, queryTokens);
 
+  if (hasOutOfScopeContext(normalizedInput)) {
+    return true;
+  }
+
   // Satu istilah domain tidak boleh memaksa kecocokan ketika konteks lainnya
   // berasal dari topik berbeda (contoh: "mutasi genetik" atau "pajak cinta").
   if (!hasStrongContext && unknownTokenCount > 0 && knownTokenCount < unknownTokenCount + 3) {
@@ -765,7 +803,43 @@ function hasConflictingContext(
 
 function hasStrongDomainContext(normalizedInput: string, queryTokens: string[]) {
   const anchorCount = new Set(queryTokens.filter((token) => domainAnchorTokens.has(token))).size;
-  return anchorCount >= 2 || strongDomainPhrases.some((phrase) => normalizedInput.includes(phrase));
+  if (anchorCount >= 2 || strongDomainPhrases.some((phrase) => normalizedInput.includes(phrase))) {
+    return true;
+  }
+
+  const hasHardVehicleAdminToken = queryTokens.some((token) => hardVehicleAdminTokens.has(token));
+  return (
+    hasHardVehicleAdminToken &&
+    contextualStrongDomainPhrases.some((phrase) => normalizedInput.includes(phrase))
+  );
+}
+
+function hasOutOfScopeContext(normalizedInput: string) {
+  if (outOfScopeTopicPhrases.some((phrase) => normalizedInput.includes(phrase))) {
+    return true;
+  }
+
+  const mentionsUnsupportedRegion = outOfScopeRegionTokens.some((token) =>
+    normalizedInput.includes(token)
+  );
+  if (!mentionsUnsupportedRegion) {
+    return false;
+  }
+
+  return !isInboundMutationToBandungContext(normalizedInput);
+}
+
+function isInboundMutationToBandungContext(normalizedInput: string) {
+  return (
+    normalizedInput.includes("bandung") &&
+    (
+      normalizedInput.includes("mutasi") ||
+      normalizedInput.includes("jadi bandung") ||
+      normalizedInput.includes("pindah") ||
+      normalizedInput.includes("luar daerah") ||
+      normalizedInput.includes("pelat jakarta")
+    )
+  );
 }
 
 // Pertanyaan harus membawa konteks domain yang jelas. Pengecualian diberikan

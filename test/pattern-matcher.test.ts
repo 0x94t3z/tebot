@@ -290,7 +290,16 @@ describe("matchFaq", () => {
     "Apa itu mutasi genetik?",
     "Bagaimana cara membayar pajak cinta?",
     "Apakah SIGNAL wifi saya rusak?",
-    "STNK adalah singkatan sayang tanpa kenal?"
+    "STNK adalah singkatan sayang tanpa kenal?",
+    "pajak kendaraan di Jepang bagaimana cara menghitungnya?",
+    "pajak kendaraan listrik Tesla di Amerika berapa?",
+    "samsat jakarta timur buka jam berapa?",
+    "cara bayar pajak kendaraan di DKI Jakarta?",
+    "ganti pelat nama rumah yang rusak harus bagaimana?",
+    "status pembayaran marketplace belum berubah lewat aplikasi signal wifi",
+    "balik nama sertifikat tanah warisan bapak meninggal bagaimana?",
+    "pajak tahunan perusahaan saya di luar negeri bagaimana?",
+    "nomor polisi hilang saat main game, apa harus lapor?"
   ])("menolak pertanyaan di luar topik: %s", (input) => {
     expect(matchFaq(input)).toBeNull();
   });
