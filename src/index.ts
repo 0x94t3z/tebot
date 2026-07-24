@@ -11,7 +11,7 @@ import {
   type SatisfactionChoice,
   type SatisfactionStats
 } from "./replies";
-import { getCategory, getFaqById, matchFaq } from "./pattern-matcher";
+import { getCategory, getFaqById, matchMultipleFaq } from "./pattern-matcher";
 
 // Daftar environment variable yang dipakai oleh Cloudflare Worker.
 interface Env {
@@ -193,8 +193,9 @@ export async function handleUpdate(update: TelegramUpdate, env: Env, ctx?: Execu
   }
 
   // Pertanyaan bebas dicocokkan dengan dataset FAQ menggunakan pattern matching.
-  const result = matchFaq(text);
-  if (!result) {
+  // Jika satu pesan memuat beberapa pertanyaan, bot mengirim beberapa jawaban.
+  const results = matchMultipleFaq(text);
+  if (results.length === 0) {
     console.log(JSON.stringify({ event: "pattern_match", matched: false }));
     await sendMessage(env, chatId, buildUnknownMessage(), mainMenu);
     return;
@@ -204,13 +205,18 @@ export async function handleUpdate(update: TelegramUpdate, env: Env, ctx?: Execu
     JSON.stringify({
       event: "pattern_match",
       matched: true,
-      faq_id: result.entry.id,
-      category: result.entry.category,
-      score: result.score
+      match_count: results.length,
+      faq_ids: results.map((result) => result.entry.id),
+      categories: results.map((result) => result.entry.category),
+      scores: results.map((result) => result.score)
     })
   );
-  const stats = await getSatisfactionStats(env, result.entry.id);
-  await sendMessage(env, chatId, buildFaqMessage(result, stats), buildSatisfactionKeyboard(result.entry.id, stats));
+
+  for (const result of results) {
+    const stats = await getSatisfactionStats(env, result.entry.id);
+    await sendMessage(env, chatId, buildFaqMessage(result, stats), buildSatisfactionKeyboard(result.entry.id, stats));
+  }
+
   await sendMessage(env, chatId, buildStartMessage(), mainMenu);
 }
 

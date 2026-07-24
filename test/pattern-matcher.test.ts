@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { faqEntries } from "../src/faq-data";
-import { getCategory, getEntriesByCategory, matchFaq, normalize } from "../src/pattern-matcher";
+import { getCategory, getEntriesByCategory, matchFaq, matchMultipleFaq, normalize } from "../src/pattern-matcher";
 
 describe("FAQ dataset", () => {
   it("memiliki 150 baris FAQ terkurasi yang diimpor", () => {
@@ -330,6 +330,39 @@ describe("matchFaq", () => {
     ["cara komplain layanan samsat", "Pengaduan"]
   ] as const)("mengenali variasi kategori Samsat: %s", (input, category) => {
     expect(matchFaq(input)?.entry.category).toBe(category);
+  });
+});
+
+describe("matchMultipleFaq", () => {
+  it.each([
+    [
+      "STNK saya hilang dan pajak motor mati bertahun tahun gimana?",
+      [54, 33]
+    ],
+    [
+      "Saya mau balik nama motor bekas, terus ganti plat lima tahunan syaratnya apa?",
+      [73, 48]
+    ],
+    [
+      "Mutasi dan balik nama gimana?",
+      [90, 73]
+    ]
+  ] as const)("mendeteksi beberapa intent dalam satu pesan: %s", (input, expectedIds) => {
+    expect(matchMultipleFaq(input).map((result) => result.entry.id)).toEqual(expectedIds);
+  });
+
+  it("membatasi jumlah jawaban agar chat tidak terlalu panjang", () => {
+    const resultIds = matchMultipleFaq(
+      "STNK hilang, BPKB hilang, mutasi, balik nama, dan ganti plat lima tahunan",
+      2
+    ).map((result) => result.entry.id);
+
+    expect(resultIds).toHaveLength(2);
+    expect(new Set(resultIds).size).toBe(2);
+  });
+
+  it("tetap mengembalikan satu jawaban untuk pertanyaan tunggal", () => {
+    expect(matchMultipleFaq("Kalau stnk hilang bagaimana?").map((result) => result.entry.id)).toEqual([54]);
   });
 });
 

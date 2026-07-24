@@ -14,6 +14,8 @@ interface ScoredPatternMatchResult extends PatternMatchResult {
 // Regex dipakai sebagai pendukung preprocessing dan pendeteksian pola frasa,
 // bukan sebagai pengganti algoritma utama pencocokan FAQ.
 const minimumScore = 25;
+const minimumMultiIntentScore = 75;
+const defaultMaxMultiIntentResults = 3;
 
 interface RegexPatternSpec {
   pattern: RegExp;
@@ -731,6 +733,30 @@ const vehicleInspectionTokens = new Set([
   "tersedia", "area", "waktu", "lama", "gratis"
 ]);
 
+// Kata/frasa yang biasa menjadi awal pertanyaan kedua dalam satu pesan user.
+const multiIntentStartPattern =
+  "(?:pajak|pkb|stnk|bpkb|tnkb|pelat|nomor\\s+polisi|mutasi|balik\\s+nama|cek\\s+fisik|signal|samsat\\s+keliling|drive\\s+thru|ganti|denda|pemutihan|bayar|syarat|dokumen|lokasi|jadwal|komplain|pengaduan|toilet|mushola|parkir)";
+
+// Connector ini dipakai untuk memecah satu pesan menjadi beberapa intent.
+// Plain "dan" hanya dipakai jika setelahnya muncul kata/frasa domain, supaya
+// frasa benda seperti "STNK dan BPKB" tidak terlalu mudah dipecah.
+const multiIntentSeparatorPattern = new RegExp(
+  `[,]+(?=\\s*${multiIntentStartPattern}\\b)|\\b(?:lalu|terus|kemudian|sekaligus|sambil|sedangkan|sementara|tapi|tetapi|namun)\\b|\\bdan\\s+(?=${multiIntentStartPattern}\\b)`,
+  "gi"
+);
+
+const shortMultiIntentSegments = new Set([
+  "mutasi",
+  "signal",
+  "samsat keliling",
+  "drive thru",
+  "parkir",
+  "toilet",
+  "mushola",
+  "komplain",
+  "pengaduan"
+]);
+
 // Fungsi utama untuk mencari FAQ yang paling cocok dengan pertanyaan user.
 export function matchFaq(input: string): PatternMatchResult | null {
   const normalizedInput = normalize(input);
@@ -755,6 +781,78 @@ export function matchFaq(input: string): PatternMatchResult | null {
   }
 
   return best;
+}
+
+// Mendeteksi beberapa intent FAQ dalam satu pesan user. Contoh:
+// "STNK hilang dan pajak mati gimana?" dapat menghasilkan dua jawaban.
+export function matchMultipleFaq(
+  input: string,
+  maxResults = defaultMaxMultiIntentResults
+): PatternMatchResult[] {
+  const normalizedLimit = Math.max(1, Math.floor(maxResults));
+  const segments = getMultiIntentSegments(input);
+
+  if (segments.length <= 1) {
+    const result = matchFaq(input);
+    return result ? [result] : [];
+  }
+
+  const results: PatternMatchResult[] = [];
+  const seenFaqIds = new Set<number>();
+
+  for (const segment of segments) {
+    const result = matchFaq(segment);
+    if (!result || result.score < minimumMultiIntentScore || seenFaqIds.has(result.entry.id)) {
+      continue;
+    }
+
+    results.push(result);
+    seenFaqIds.add(result.entry.id);
+
+    if (results.length >= normalizedLimit) {
+      break;
+    }
+  }
+
+  if (results.length > 0) {
+    return results;
+  }
+
+  const fallbackResult = matchFaq(input);
+  return fallbackResult ? [fallbackResult] : [];
+}
+
+// Memecah pesan panjang menjadi potongan pertanyaan yang masih punya konteks.
+function getMultiIntentSegments(input: string) {
+  const preparedInput = prepareTextForSegmentation(input);
+  if (!preparedInput) {
+    return [];
+  }
+
+  const candidates = preparedInput
+    .split(/[?？;.\n]+/g)
+    .flatMap((part) => part.split(multiIntentSeparatorPattern))
+    .map((part) => normalize(part))
+    .filter((part) => hasMeaningfulSegment(part));
+
+  return [...new Set(candidates)];
+}
+
+// Normalisasi ringan untuk segmentasi tetap mempertahankan tanda tanya/koma.
+function prepareTextForSegmentation(value: string) {
+  const normalized = value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  return applyRegexNormalization(normalized)
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function hasMeaningfulSegment(segment: string) {
+  const tokens = tokenize(segment);
+  return tokens.length >= 2 || shortMultiIntentSegments.has(segment);
 }
 
 // Menolak wilayah Bandung selain Timur dan pemakaian istilah Samsat dalam

@@ -36,6 +36,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Telegram command support: `/start`, `/help`, and `/clear`
 - Inline category menu and FAQ buttons per category
 - Free-text FAQ matching using pattern matching
+- Multi-intent matching for one message that contains more than one FAQ question
 - Text-only input handling
 - 150 curated FAQ entries for SAMSAT Bandung Timur
 - Satisfaction voting UI on each FAQ response
@@ -141,7 +142,7 @@ Main Worker entry point. It receives HTTP requests from Telegram, validates the 
 src/pattern-matcher.ts
 ```
 
-Contains the pattern matching algorithm: normalization, stop-word removal, synonym expansion, custom patterns, scoring, and FAQ ranking.
+Contains the pattern matching algorithm: normalization, multi-intent segmentation, stop-word removal, synonym expansion, custom patterns, scoring, and FAQ ranking.
 
 ```text
 src/data/faq-samsat-bandung-timur.json
@@ -252,6 +253,8 @@ The chatbot is intentionally rule-based and used as the main implementation obje
 For academic writing, the core method should be described as **Pattern Matching**, with Regex as a supporting technique. This implementation uses pattern matching through exact phrase comparison, partial phrase comparison, token overlap, order-insensitive token matching for custom patterns, synonym expansion, custom patterns, regex-assisted patterns, and scoring.
 
 Regex is developed in two parts. First, regex is used in `normalize()` to clean punctuation, remove non-alphanumeric characters, normalize spacing, and standardize domain terms such as `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, and `gesek rangka`. Second, regex-assisted FAQ patterns are used to detect specific question forms such as `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, and `Drive Thru`. Regex is **not** the only matching method; it supports the rule-based pattern matching process.
+
+The matcher also supports **multi-intent input**. If one user message contains more than one FAQ question, the system splits the text using punctuation and connector patterns such as `dan`, `lalu`, `terus`, `tapi`, and `kemudian`, then runs pattern matching for each meaningful segment. Each accepted segment must still pass the domain-context validation and a higher multi-intent score threshold before the bot sends more than one answer. The bot limits multi-intent replies to avoid making the Telegram chat too long.
 
 Safe wording for the thesis:
 
@@ -639,6 +642,7 @@ https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
 - Navigasi berikutnya/sebelumnya untuk kategori yang memiliki lebih dari 7 pertanyaan
 - Navigasi tombol memperbarui pesan menu yang sama, bukan mengirim chat baru
 - Pencarian pertanyaan bebas dengan pattern matching
+- Pencarian multi-intent untuk satu pesan yang berisi lebih dari satu pertanyaan FAQ
 - Input hanya teks; media seperti foto, video, sticker, voice note, dan file ditolak dengan pesan instruksi singkat
 - 150 data FAQ terkurasi untuk SAMSAT Bandung Timur
 - Menu utama ditampilkan kembali setelah setiap jawaban FAQ
@@ -726,17 +730,19 @@ User Telegram
 3. Bot menampilkan pesan pembuka dan menu kategori FAQ.
 4. User dapat memilih kategori, memilih pertanyaan dari tombol, atau mengetik pertanyaan bebas.
 5. Jika user mengetik pertanyaan bebas, sistem menjalankan proses pattern matching.
-6. Sistem memilih FAQ dengan skor relevansi tertinggi jika melewati batas minimum.
-7. Bot mengirim jawaban, sumber referensi, dan tombol voting kepuasan.
-8. Bot menampilkan kembali menu utama agar user dapat melanjutkan pencarian.
-9. Jika user memilih voting, sistem menyimpan atau memperbarui vote user.
-10. Bot memperbarui tampilan hasil voting dalam bentuk persentase memuaskan dan tidak memuaskan.
+6. Jika satu pesan berisi beberapa pertanyaan, sistem memecah pesan menjadi beberapa segmen intent yang bermakna.
+7. Sistem memilih FAQ dengan skor relevansi tertinggi jika melewati batas minimum.
+8. Bot mengirim satu atau beberapa jawaban, sumber referensi, dan tombol voting kepuasan untuk masing-masing jawaban.
+9. Bot menampilkan kembali menu utama agar user dapat melanjutkan pencarian.
+10. Jika user memilih voting, sistem menyimpan atau memperbarui vote user.
+11. Bot memperbarui tampilan hasil voting dalam bentuk persentase memuaskan dan tidak memuaskan.
 
 #### Flow Pattern Matching
 
 ```text
 Input user
   -> normalisasi teks
+  -> segmentasi multi-intent jika pesan memuat lebih dari satu pertanyaan
   -> tokenisasi
   -> penghapusan stop word
   -> perluasan sinonim
@@ -748,6 +754,8 @@ Input user
 ```
 
 Regex dikembangkan untuk dua kebutuhan. Pertama, regex preprocessing di fungsi `normalize()` membersihkan tanda baca, karakter non-alfanumerik, spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern membantu mendeteksi bentuk pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex tetap berperan sebagai pendukung, sedangkan metode utama tetap pattern matching berbasis aturan melalui pencocokan frasa, token, pencocokan token tanpa bergantung urutan kata, sinonim, custom pattern, regex pattern, dan scoring.
+
+Matcher juga mendukung **input multi-intent**. Jika satu pesan user berisi lebih dari satu pertanyaan FAQ, sistem memecah teks dengan pola tanda baca dan connector seperti `dan`, `lalu`, `terus`, `tapi`, dan `kemudian`, lalu menjalankan pattern matching pada setiap segmen yang bermakna. Setiap segmen tetap harus lolos validasi konteks domain dan batas skor multi-intent yang lebih tinggi sebelum bot mengirim lebih dari satu jawaban. Jumlah jawaban multi-intent dibatasi agar chat Telegram tetap ringkas.
 
 #### Flow Voting Kepuasan Jawaban
 
@@ -1050,7 +1058,7 @@ File utama Cloudflare Worker. File ini menerima request dari Telegram, memvalida
 src/pattern-matcher.ts
 ```
 
-Berisi algoritma pattern matching: normalisasi teks, penghapusan stop word, perluasan sinonim, custom pattern, scoring, dan pemeringkatan FAQ.
+Berisi algoritma pattern matching: normalisasi teks, segmentasi multi-intent, penghapusan stop word, perluasan sinonim, custom pattern, scoring, dan pemeringkatan FAQ.
 
 ```text
 src/data/faq-samsat-bandung-timur.json
@@ -1140,6 +1148,8 @@ Untuk penulisan Tugas Akhir, metode utama sebaiknya disebut **Pattern Matching**
 
 Regex dikembangkan dalam dua bagian. Pertama, regex pada `normalize()` dipakai untuk membersihkan tanda baca, menghapus karakter non-alfanumerik, merapikan spasi, dan menyamakan variasi istilah seperti `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, dan `gesek rangka`. Kedua, regex pattern dipakai untuk mendeteksi pola pertanyaan spesifik seperti `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, dan `Drive Thru`. Regex **bukan satu-satunya metode pencocokan**, tetapi memperkuat proses pattern matching berbasis aturan.
 
+Matcher juga mendukung **input multi-intent**. Jika satu pesan user berisi lebih dari satu pertanyaan FAQ, sistem memecah teks memakai pola tanda baca dan connector seperti `dan`, `lalu`, `terus`, `tapi`, dan `kemudian`, lalu menjalankan pattern matching pada setiap segmen yang bermakna. Setiap segmen tetap harus lolos validasi konteks domain dan batas skor multi-intent yang lebih tinggi sebelum bot mengirim lebih dari satu jawaban.
+
 Kalimat aman untuk Tugas Akhir:
 
 ```text
@@ -1149,13 +1159,14 @@ Chatbot menerapkan metode pattern matching berbasis aturan. Input pengguna dinor
 Alur pencocokan:
 
 1. Input user dinormalisasi menjadi teks lowercase alphanumeric.
-2. Stop word umum dihapus.
-3. Sinonim sederhana diperluas, seperti `alamat/lokasi`, `jam/jadwal/operasional`, dan `bayar/pembayaran`.
-4. Input user dibandingkan dengan pertanyaan FAQ, kategori, custom pattern, dan regex pattern.
-5. Setiap kandidat FAQ diberi skor.
-6. Kandidat diurutkan berdasarkan skor.
-7. FAQ terbaik dikembalikan jika skornya melewati batas minimum.
-8. Skor dipakai secara internal untuk menentukan apakah jawaban FAQ cukup relevan.
+2. Jika pesan berisi beberapa pertanyaan, teks dipecah menjadi beberapa segmen intent.
+3. Stop word umum dihapus.
+4. Sinonim sederhana diperluas, seperti `alamat/lokasi`, `jam/jadwal/operasional`, dan `bayar/pembayaran`.
+5. Input user dibandingkan dengan pertanyaan FAQ, kategori, custom pattern, dan regex pattern.
+6. Setiap kandidat FAQ diberi skor.
+7. Kandidat diurutkan berdasarkan skor.
+8. FAQ terbaik dikembalikan jika skornya melewati batas minimum.
+9. Skor dipakai secara internal untuk menentukan apakah jawaban FAQ cukup relevan.
 
 Skor pattern matching adalah **skor relevansi internal**, bukan nilai akurasi statistik seperti pada evaluasi machine learning. Skor dihitung dari kecocokan frasa persis/sebagian, custom pattern tanpa bergantung urutan kata, regex pattern, overlap kata penting, cakupan token FAQ, cakupan token input yang dikenal dataset, perluasan sinonim, dan bonus kecil untuk istilah domain SAMSAT.
 
