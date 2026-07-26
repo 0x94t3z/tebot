@@ -360,7 +360,15 @@ describe("matchFaq", () => {
     "status pembayaran marketplace belum berubah lewat aplikasi signal wifi",
     "balik nama sertifikat tanah warisan bapak meninggal bagaimana?",
     "pajak tahunan perusahaan saya di luar negeri bagaimana?",
-    "nomor polisi hilang saat main game, apa harus lapor?"
+    "nomor polisi hilang saat main game, apa harus lapor?",
+    "Kalau motor saya mogok, apakah bisa diperbaiki di Samsat Bandung Timur?",
+    "Di Samsat Bandung Timur bisa bikin SIM baru sekalian bayar pajak motor nggak?",
+    "Saya kehilangan kartu ATM saat mau bayar pajak, apakah bisa dibuat ulang di Samsat?",
+    "BPKB saya ada, tapi kunci motor saya hilang. Apakah Samsat bisa membuatkan kunci baru?",
+    "Plat nomor motor saya Bandung, kalau mau ganti warna motor harus beli cat di Samsat?",
+    "Pajak motor saya sudah dibayar, apakah Samsat juga bisa membayar tagihan listrik rumah saya?",
+    "Saya mau bayar pajak motor sambil perpanjang paspor, bisa dilakukan di Samsat Bandung Timur?",
+    "Apakah bayar pajak kendaraan harus datang ke tempat gym?"
   ])("menolak pertanyaan di luar topik: %s", (input) => {
     expect(matchFaq(input)).toBeNull();
   });
