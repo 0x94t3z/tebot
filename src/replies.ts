@@ -114,7 +114,7 @@ export function buildFaqMessage(
     "",
     entry.answer,
     "",
-    `Sumber: ${entry.source}`,
+    buildSourceText(entry.source),
     "",
     buildSatisfactionText(stats, selectedChoice),
   ].join("\n");
@@ -131,10 +131,23 @@ export function buildDirectFaqMessage(
     "",
     entry.answer,
     "",
-    `Sumber: ${entry.source}`,
+    buildSourceText(entry.source),
     "",
     buildSatisfactionText(stats, selectedChoice),
   ].join("\n");
+}
+
+function buildSourceText(source: string) {
+  const sources = source
+    .split(";")
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  if (sources.length <= 1) {
+    return `Sumber: ${source}`;
+  }
+
+  return sources.map((value, index) => `Sumber ${index + 1}: ${value}`).join("\n");
 }
 
 // Membuat tombol voting kepuasan untuk satu jawaban FAQ.

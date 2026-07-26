@@ -97,6 +97,24 @@ describe("format jawaban FAQ", () => {
     expect(message).toContain("Pilihan Anda: Memuaskan");
   });
 
+  it("menampilkan beberapa sumber di baris terpisah", () => {
+    const message = buildFaqMessage({
+      entry: {
+        id: 996,
+        category: "Balik Nama",
+        question: "Bayar pajak tanpa KTP pemilik lama",
+        answer: "Pembayaran pajak tahunan dapat dilakukan tanpa KTP pemilik pertama.",
+        source: "https://contoh.test/sumber-1; https://contoh.test/sumber-2"
+      },
+      score: 100,
+      matchedTerms: ["pajak"]
+    });
+
+    expect(message).toContain("Sumber 1: https://contoh.test/sumber-1");
+    expect(message).toContain("Sumber 2: https://contoh.test/sumber-2");
+    expect(message).not.toContain("Sumber: https://contoh.test/sumber-1; https://contoh.test/sumber-2");
+  });
+
   it("menampilkan pertanyaan, jawaban, dan sumber pada pilihan tombol FAQ", () => {
     const message = buildDirectFaqMessage({
       id: 998,
