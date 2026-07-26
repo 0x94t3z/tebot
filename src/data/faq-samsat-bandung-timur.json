@@ -492,9 +492,9 @@
   {
     "id": 71,
     "category": "Balik Nama",
-    "question": "Apakah balik nama kendaraan wajib",
-    "answer": "Balik nama sangat disarankan setelah jual beli kendaraan karena data kepemilikan perlu sesuai dengan pemilik baru. Kendaraan yang belum balik nama dapat menyulitkan pembayaran dan administrasi berikutnya.",
-    "source": "https://bapenda.jabarprov.go.id/2019/01/20/persyaratan-pendaftaran-samsat/"
+    "question": "Apa syarat balik nama kendaraan warisan",
+    "answer": "Apabila pemilik kendaraan telah meninggal dunia dan kendaraan akan dialihkan melalui warisan, proses balik nama memerlukan dokumen pewarisan. Persyaratannya meliputi E-KTP asli pemilik baru, Surat Keterangan Kematian, dokumen ahli waris seperti Persetujuan Ahli Waris, Akta Notaris, Keputusan Pengadilan Negeri/Pengadilan Agama, atau Surat Keterangan Waris dari Kecamatan, Surat Keterangan Lunas Pajak, SKKPD atau notis pajak tahun terakhir, STNK, BPKB, dan cek fisik kendaraan.",
+    "source": "https://jabarprov.go.id/layanan/pembayaran-bea-balik-nama-kendaraan-bermotor-bbnkb-ii-alih-kepemilikan-atas-dasar-hibah-dan-warisan-1690539362"
   },
   {
     "id": 72,
@@ -548,16 +548,16 @@
   {
     "id": 79,
     "category": "Balik Nama",
-    "question": "Apakah kendaraan bekas perlu balik nama",
-    "answer": "Ya. Kendaraan bekas yang sudah berpindah kepemilikan sebaiknya segera dibalik nama agar pembayaran pajak dan administrasi kendaraan tercatat atas nama pemilik baru.",
-    "source": "https://bapenda.jabarprov.go.id/2019/01/20/persyaratan-pendaftaran-samsat/"
+    "question": "Bagaimana balik nama kendaraan bekas yang sudah beberapa kali pindah tangan",
+    "answer": "Kendaraan bekas yang telah beberapa kali berpindah tangan tetap dapat dilakukan balik nama untuk menyesuaikan data kepemilikan dengan pemilik saat ini. E-KTP pemilik lama tidak diperlukan dalam proses balik nama kendaraan bekas selama persyaratan yang berlaku dapat dipenuhi. Persyaratannya meliputi E-KTP asli pemilik baru, SKKP atau notis pajak tahun terakhir, kwitansi atau bukti alih kepemilikan, STNK asli, BPKB asli, serta bukti hasil pemeriksaan kendaraan bermotor atau cek fisik.",
+    "source": "https://bapenda.jabarprov.go.id/2025/03/24/segera-balik-namakan-kendaraan-anda-dan-manfaatkan-program-pemutihan-pajak-kendaraan/"
   },
   {
     "id": 80,
     "category": "Balik Nama",
-    "question": "Apakah balik nama mempengaruhi pajak kendaraan",
-    "answer": "Balik nama mempengaruhi data administrasi kendaraan karena nama pemilik pada dokumen kendaraan diperbarui. Jika ada tunggakan, kewajiban pajak dan denda tetap perlu diselesaikan.",
-    "source": "https://bapenda.jabarprov.go.id/2019/01/20/persyaratan-pendaftaran-samsat/"
+    "question": "Bagaimana jika pemilik kendaraan meninggal dan ingin membayar pajak",
+    "answer": "Untuk pembayaran Pajak Kendaraan Bermotor tahunan, pembayaran saat ini dapat dilakukan tanpa menggunakan E-KTP pemilik pertama. Apabila kendaraan milik orang yang telah meninggal akan dialihkan kepada ahli waris, data kepemilikan kendaraan dapat disesuaikan melalui proses balik nama atas dasar warisan. Proses balik nama warisan memerlukan dokumen pewarisan seperti Surat Keterangan Kematian dan dokumen ahli waris, serta dokumen kendaraan seperti SKKPD atau notis pajak terakhir, STNK, BPKB, dan cek fisik kendaraan.",
+    "source": "https://bapenda.jabarprov.go.id/2026/04/15/resmi-berlaku-nasional-bayar-pajak-kendaraan-tanpa-ktp-pemilik-pertama-kini-bisa-di-seluruh-indonesia/; https://jabarprov.go.id/layanan/pembayaran-bea-balik-nama-kendaraan-bermotor-bbnkb-ii-alih-kepemilikan-atas-dasar-hibah-dan-warisan-1690539362"
   },
   {
     "id": 81,
@@ -583,9 +583,9 @@
   {
     "id": 84,
     "category": "Balik Nama",
-    "question": "Apakah balik nama kendaraan bekas wajib segera dilakukan",
-    "answer": "Ya, sebaiknya segera dilakukan setelah jual beli kendaraan agar data STNK/BPKB sesuai dengan pemilik baru dan tidak menyulitkan layanan pajak atau administrasi berikutnya.",
-    "source": "https://bapenda.jabarprov.go.id/2019/01/20/persyaratan-pendaftaran-samsat/"
+    "question": "Apakah bisa bayar pajak kendaraan bekas tanpa KTP pemilik lama",
+    "answer": "Apabila kendaraan bekas belum dibalik nama dan E-KTP pemilik lama tidak tersedia, pemilik kendaraan tetap dapat melakukan pembayaran Pajak Kendaraan Bermotor tahunan tanpa harus melakukan balik nama terlebih dahulu. Pembayaran pajak tahunan saat ini dapat dilakukan tanpa menggunakan E-KTP pemilik pertama. Untuk menyesuaikan data kepemilikan kendaraan dengan pemilik saat ini, kendaraan bekas tetap disarankan untuk dilakukan balik nama. E-KTP pemilik lama tidak diperlukan dalam proses balik nama kendaraan bekas selama persyaratan balik nama yang berlaku dapat dipenuhi.",
+    "source": "https://bapenda.jabarprov.go.id/2026/04/15/resmi-berlaku-nasional-bayar-pajak-kendaraan-tanpa-ktp-pemilik-pertama-kini-bisa-di-seluruh-indonesia/; https://bapenda.jabarprov.go.id/2025/03/24/segera-balik-namakan-kendaraan-anda-dan-manfaatkan-program-pemutihan-pajak-kendaraan/"
   },
   {
     "id": 85,

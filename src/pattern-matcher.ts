@@ -272,29 +272,55 @@ const customPatterns: Record<number, string[]> = {
     "plat nomor tulisannya tidak jelas",
     "tnkb rusak"
   ],
+  71: [
+    "syarat balik nama warisan",
+    "balik nama kendaraan warisan",
+    "kendaraan warisan balik nama",
+    "ayah meninggal balik nama",
+    "bapak meninggal balik nama",
+    "pemilik meninggal balik nama",
+    "surat keterangan kematian balik nama",
+    "dokumen ahli waris kendaraan",
+    "kendaraan atas nama almarhum"
+  ],
   73: [
     "syarat balik nama",
     "dokumen balik nama",
     "balik nama",
+    "balik nama motor second",
+    "balik nama kendaraan seken",
+    "perusahaan perorangan"
+  ],
+  76: ["balik nama diwakilkan", "pemilik lama susah dihubungi", "pemilik lama tidak bisa dihubungi"],
+  79: [
     "motor bekas nama pemilik lama",
     "nama masih pemilik lama",
     "kendaraan bekas pemilik lama",
-    "balik nama motor second",
-    "balik nama kendaraan seken",
     "pindah tangan balik nama",
-    "motor warisan balik nama",
-    "perusahaan perorangan",
-    "ktp pemilik lama tidak ada balik nama",
-    "tidak punya ktp pemilik lama",
-    "orangnya tidak tahu dimana balik nama",
-    "ayah meninggal balik nama",
-    "bapak meninggal balik nama",
-    "pemilik meninggal balik nama",
-    "kendaraan warisan balik nama",
+    "beberapa kali pindah tangan",
+    "teman beli dari orang lain",
+    "nama stnk bukan nama teman",
+    "balik nama langsung ke nama saya",
     "membereskan kendaraan atas nama sendiri"
   ],
-  76: ["balik nama diwakilkan", "pemilik lama susah dihubungi", "pemilik lama tidak bisa dihubungi"],
+  80: [
+    "bayar pajak pemilik meninggal",
+    "bapak meninggal bayar pajak",
+    "ayah meninggal bayar pajak",
+    "stnk atas nama almarhum bayar pajak",
+    "kendaraan orang tua meninggal bayar pajak",
+    "pajak kendaraan warisan"
+  ],
   82: ["kuitansi pembelian hilang", "kwitansi pembelian hilang", "bukti jual beli hilang"],
+  84: [
+    "bayar pajak kendaraan bekas tanpa ktp pemilik lama",
+    "bayar pajak tanpa ktp pemilik lama",
+    "ktp pemilik lama tidak ada bayar pajak",
+    "tidak punya ktp pemilik lama pajak",
+    "orangnya tidak tahu dimana bayar pajak",
+    "pajak mau habis ktp pemilik lama tidak ada",
+    "pajak kendaraan bekas belum balik nama"
+  ],
   85: ["balik nama pajak menunggak", "belum balik nama pajak", "motor bekas belum balik nama pajak", "balik nama pajak nunggak", "balik nama tunggakan pajak"],
   90: [
     "mutasi",
@@ -443,12 +469,15 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
   62: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", score: 135 }],
   63: [{ pattern: /\b(ktp|alamat).*\b(beda|tidak\s+sesuai).*\b(stnk)\b|\b(stnk).*\b(alamat|ktp).*\b(beda|tidak\s+sesuai)\b/, label: "regex:data stnk sesuai", score: 130 }],
   66: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(hilang|rusak|patah|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|bengkok|terbaca)\b|\b(hilang|rusak|patah|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|bengkok|terbaca).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb hilang rusak", score: 280 }],
+  71: [{ pattern: /\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum).*\b(balik\s+nama|kendaraan|stnk|bpkb)\b|\b(balik\s+nama|kendaraan|stnk|bpkb).*\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum)\b|\b(ayah|bapak|pemilik).*\b(meninggal).*\b(balik\s+nama|warisan)\b/, label: "regex:balik nama warisan", score: 330 }],
   73: [
-    { pattern: /\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|pemilik\s+lama|pindah\s+tangan|warisan|perusahaan|perorangan).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|pemilik\s+lama|pindah\s+tangan|warisan|perusahaan|perorangan)\b|\b(perusahaan).*\b(perorangan)\b/, label: "regex:balik nama", score: 130 },
-    { pattern: /\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana).*\b(balik\s+nama|pajak)\b|\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(balik\s+nama|pajak)\b|\b(balik\s+nama|pajak).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana)\b|\b(meninggal|warisan|ayah|bapak).*\b(stnk|bpkb|kendaraan|pajak|balik\s+nama)\b/, label: "regex:balik nama kasus khusus", score: 280 }
+    { pattern: /\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan)\b|\b(perusahaan).*\b(perorangan)\b/, label: "regex:balik nama", score: 130 }
   ],
   76: [{ pattern: /\b(balik\s+nama).*\b(diwakilkan|pemilik\s+lama|dihubungi)\b|\b(pemilik\s+lama|dihubungi).*\b(balik\s+nama)\b/, label: "regex:balik nama diwakilkan", score: 130 }],
+  79: [{ pattern: /\b(pindah\s+tangan|pemilik\s+lama|nama\s+di\s+stnk|nama\s+stnk).*\b(balik\s+nama|nama\s+saya|pemilik\s+baru|harus|cara)\b|\b(balik\s+nama|nama\s+saya|pemilik\s+baru|harus|cara).*\b(pindah\s+tangan|pemilik\s+lama|nama\s+di\s+stnk|nama\s+stnk)\b|\b(teman).*\b(beli).*\b(orang\s+lain)\b/, label: "regex:balik nama pindah tangan", score: 300 }],
+  80: [{ pattern: /\b(ayah|bapak|pemilik|orang\s+tua).*\b(meninggal).*\b(pajak|bayar)\b|\b(pajak|bayar).*\b(ayah|bapak|pemilik|orang\s+tua).*\b(meninggal)\b|\b(stnk).*\b(atas\s+nama).*\b(beliau|almarhum).*\b(pajak|bayar)\b|\b(pajak|bayar).*\b(stnk).*\b(atas\s+nama).*\b(beliau|almarhum)\b/, label: "regex:pajak pemilik meninggal", score: 340 }],
   82: [{ pattern: /\b(kuitansi|kwitansi|bukti\s+jual\s+beli).*\b(hilang|tidak\s+ada)\b|\b(hilang|tidak\s+ada).*\b(kuitansi|kwitansi|bukti\s+jual\s+beli)\b/, label: "regex:bukti jual beli", score: 145 }],
+  84: [{ pattern: /\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada).*\b(pajak|bayar|habis)\b|\b(tidak\s+ada|tidak\s+punya|ga\s+ada|gak\s+ada).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(pajak|bayar|habis)\b|\b(pajak|bayar|habis).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada)\b|\b(tanpa).*\b(ktp\s+pemilik\s+lama|ktp\s+pemilik\s+pertama)\b/, label: "regex:pajak tanpa ktp pemilik lama", score: 340 }],
   85: [{ pattern: /\b(balik\s+nama).*\b(pajak|menunggak)\b|\b(pajak|menunggak).*\b(balik\s+nama)\b/, label: "regex:balik nama pajak", score: 135 }],
   90: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah)\b|\b(pindah|cabut).*\b(domisili|berkas)\b/, label: "regex:mutasi", score: 115 }],
   92: [{ pattern: /\b(kendaraan|motor|mobil).*\b(dibawa|bawa).*\b(mutasi)\b|\b(mutasi).*\b(kendaraan|motor|mobil).*\b(dibawa|bawa)\b/, label: "regex:kendaraan dibawa mutasi", score: 125 }],

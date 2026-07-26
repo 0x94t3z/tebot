@@ -132,7 +132,7 @@ describe("matchFaq", () => {
     ["motor mati pajak 3 tahun masih bisa dibayar?", 33, "Pajak"],
     ["telat pajak motor lama banget dendanya gimana", 26, "Pajak"],
     ["pajak motor mau bayar tapi stnk hilang duluan", 42, "Pajak"],
-    ["beli motor bekas tapi nama masih pemilik lama harus apa", 73, "Balik Nama"],
+    ["beli motor bekas tapi nama masih pemilik lama harus apa", 79, "Balik Nama"],
     ["motor bekas belum balik nama pajaknya gimana", 85, "Balik Nama"],
     ["plat luar kota mau pindah ke bandung timur gimana", 98, "Mutasi"],
     ["cabut berkas motor ke domisili baru apa aja", 90, "Mutasi"],
@@ -212,12 +212,27 @@ describe("matchFaq", () => {
     ],
     [
       "Min saya baru beli motor bekas dari orang, tapi ternyata nama di STNK masih pemilik yang sebelumnya lagi dan saya juga tidak punya fotokopi KTP orang yang namanya ada di STNK. Kalau pajaknya sebentar lagi habis saya masih bisa bayar pajak atau harus balik nama dulu?",
-      73,
+      84,
       "Balik Nama"
     ],
     [
       "Saya mau bayar pajak motor punya bapak saya, tapi bapak saya sudah meninggal beberapa waktu lalu dan STNK masih atas nama beliau. Kalau saya sebagai anak mau bayar pajaknya itu bisa langsung atau kendaraannya harus dibalik nama dulu?",
-      73,
+      80,
+      "Balik Nama"
+    ],
+    [
+      "Saya beli motor bekas dari teman, tapi teman saya ternyata beli juga dari orang lain dan belum pernah balik nama, jadi nama di STNK bukan nama teman saya. Kalau sekarang saya mau balik nama langsung ke nama saya sendiri itu prosesnya bagaimana?",
+      79,
+      "Balik Nama"
+    ],
+    [
+      "Ayah saya meninggal dan meninggalkan kendaraan yang sampai sekarang STNK dan BPKB-nya masih atas nama beliau. Keluarga berencana kendaraan tersebut mau saya gunakan dan dibalik nama ke nama saya. Kalau kasus kendaraan warisan seperti ini apa saja yang harus dipersiapkan?",
+      71,
+      "Balik Nama"
+    ],
+    [
+      "mau nanya min motor saya beli second udah lama cuma blm sempet balik nama sekarang pajaknya mau abis tapi ktp yang punya lama ga ada dan orangnya juga udah ga tau dimana, itu masih bisa bayar pajak ga ya atau saya harus balik nama dulu?",
+      84,
       "Balik Nama"
     ],
     [
@@ -247,7 +262,7 @@ describe("matchFaq", () => {
     ],
     [
       "Min saya beli motor bekas sekitar dua tahun lalu tapi sampai sekarang belum balik nama dan nama di STNK masih pemilik lama. Sekarang pajaknya sudah telat, sebentar lagi masuk waktu ganti plat lima tahunan, sementara saya sudah tidak punya kontak pemilik sebelumnya dan KTP-nya juga tidak ada. Kalau saya mau membereskan semuanya supaya kendaraan bisa atas nama saya sendiri, saya harus mulai dari proses apa dulu?",
-      73,
+      84,
       "Balik Nama"
     ]
   ] as const)("menangani pertanyaan random panjang hasil stress test: %s", (input, expectedId, expectedCategory) => {
