@@ -227,6 +227,11 @@ describe("matchFaq", () => {
       "Balik Nama"
     ],
     [
+      "Bapak saya sudah meninggal dan STNK motor masih atas nama beliau, saya mau bayar pajak tahunan apakah harus balik nama dulu?",
+      80,
+      "Balik Nama"
+    ],
+    [
       "Saya beli motor bekas dari teman, tapi teman saya ternyata beli juga dari orang lain dan belum pernah balik nama, jadi nama di STNK bukan nama teman saya. Kalau sekarang saya mau balik nama langsung ke nama saya sendiri itu prosesnya bagaimana?",
       79,
       "Balik Nama"

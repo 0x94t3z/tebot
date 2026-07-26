@@ -322,7 +322,11 @@ const customPatterns: Record<number, string[]> = {
     "pemilik meninggal balik nama",
     "surat keterangan kematian balik nama",
     "dokumen ahli waris kendaraan",
-    "kendaraan atas nama almarhum"
+    "kendaraan atas nama almarhum",
+    "stnk bpkb atas nama beliau balik nama warisan",
+    "kendaraan warisan dokumen dipersiapkan",
+    "kasus kendaraan warisan apa saja dipersiapkan",
+    "kendaraan ditinggalkan ayah meninggal balik nama"
   ],
   73: [
     "syarat balik nama",
@@ -350,7 +354,12 @@ const customPatterns: Record<number, string[]> = {
     "ayah meninggal bayar pajak",
     "stnk atas nama almarhum bayar pajak",
     "kendaraan orang tua meninggal bayar pajak",
-    "pajak kendaraan warisan"
+    "pajak kendaraan warisan",
+    "bayar pajak motor bapak meninggal",
+    "bapak sudah meninggal stnk masih atas nama beliau",
+    "stnk masih atas nama beliau bayar pajak",
+    "tanpa ktp pemilik pertama pajak tahunan",
+    "pajak tahunan pemilik pertama meninggal"
   ],
   82: ["kuitansi pembelian hilang", "kwitansi pembelian hilang", "bukti jual beli hilang"],
   84: [
