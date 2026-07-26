@@ -134,7 +134,7 @@ describe("matchFaq", () => {
     ["pajak motor mau bayar tapi stnk hilang duluan", 42, "Pajak"],
     ["beli motor bekas tapi nama masih pemilik lama harus apa", 79, "Balik Nama"],
     ["motor bekas belum balik nama pajaknya gimana", 85, "Balik Nama"],
-    ["plat luar kota mau pindah ke bandung timur gimana", 98, "Mutasi"],
+    ["plat luar kota mau pindah ke bandung timur gimana", 90, "Mutasi"],
     ["cabut berkas motor ke domisili baru apa aja", 90, "Mutasi"],
     ["gesek rangka mesin buat apa sih", 103, "Cek Fisik"],
     ["nomor rangka susah dicari gimana", 115, "Cek Fisik"],
@@ -162,7 +162,7 @@ describe("matchFaq", () => {
     ["bpkbnya ilang ngurus dimana", 55, "Dokumen"],
     ["dokumen apa bwt balik nama motor second", 73, "Balik Nama"],
     ["motor seken pajaknya nunggak bisa balik nama ga", 85, "Balik Nama"],
-    ["pelat luar daerah mau cabut berkas", 98, "Mutasi"],
+    ["pelat luar daerah mau cabut berkas", 90, "Mutasi"],
     ["motor wajib dibawa pas mutasi?", 92, "Mutasi"],
     ["mutasi perlu bpkb ori ga", 94, "Mutasi"],
     ["cek fisik itu buat gesek mesin doang?", 103, "Cek Fisik"],
@@ -188,6 +188,7 @@ describe("matchFaq", () => {
     ["Mobil masih kredit dan BPKB di leasing, kalau ganti plat gimana?", 48, "Pajak"],
     ["Kalau plat nomor rusak dan tulisannya sudah gak jelas bisa diganti?", 66, "Dokumen"],
     ["Saya sudah bayar lewat SIGNAL tapi statusnya belum berubah.", 143, "Pengaduan"],
+    ["Min saya kemarin sudah bayar pajak kendaraan lewat aplikasi SIGNAL dan saldo rekening juga sudah terpotong, tapi waktu saya cek status pembayarannya belum berubah. Kalau seperti ini saya harus bayar ulang atau menunggu dulu?", 143, "Pengaduan"],
     ["Uang sudah terpotong tapi pembayaran pajak gagal, gimana?", 143, "Pengaduan"],
     ["Saya salah memasukkan nomor polisi di aplikasi, gimana?", 143, "Pengaduan"],
     ["Katanya BBNKB kendaraan bekas gratis, kok masih ada biaya?", 40, "Pajak"],
@@ -202,12 +203,17 @@ describe("matchFaq", () => {
   it.each([
     [
       "Min saya kemarin kena musibah banjir, motor sempat terendam dan plat nomor depannya hilang kebawa air, tapi STNK sama BPKB masih ada. Kalau saya mau bikin plat nomor baru itu harus bikin surat kehilangan dari polisi dulu atau bisa langsung datang ke Samsat?",
-      66,
+      67,
       "Dokumen"
     ],
     [
       "Saya mau tanya, beberapa hari lalu motor saya kena banjir dan setelah air surut ternyata STNK yang disimpan di motor sama plat nomornya hilang. Kalau dua-duanya hilang seperti ini saya harus mengurus surat kehilangan dulu atau bagaimana alurnya?",
-      66,
+      67,
+      "Dokumen"
+    ],
+    [
+      "Min saya mau mengurus plat nomor yang hilang karena kemarin kebawa banjir. Saya sempat tanya katanya tidak perlu surat kehilangan, tapi pas cari informasi lain katanya harus pakai surat kehilangan dari kepolisian. Kalau mau mengurusnya di Samsat sebenarnya dokumen yang benar-benar harus saya siapkan apa saja?",
+      67,
       "Dokumen"
     ],
     [
@@ -236,7 +242,17 @@ describe("matchFaq", () => {
       "Balik Nama"
     ],
     [
+      "Min motor saya masih kredit dan BPKB masih di leasing, kebetulan tahun ini waktunya pajak lima tahunan sekaligus ganti plat. Kalau BPKB aslinya masih di leasing apakah saya tetap bisa mengurus pajak lima tahunan?",
+      48,
+      "Pajak"
+    ],
+    [
       "Saya sekarang kerja di luar kota dan motor saya ikut dibawa ke tempat saya kerja, tapi sebentar lagi sudah waktunya ganti plat lima tahunan. Apa motornya harus dibawa pulang ke Samsat asal atau bisa cek fisik di Samsat terdekat?",
+      48,
+      "Pajak"
+    ],
+    [
+      "Min saya rencana besok mau ke Samsat Bandung Timur karena kebetulan sedang libur kerja dan rumah saya lumayan jauh. Saya mau bayar pajak lima tahunan motor sekaligus ganti plat. Saya takut sudah jauh-jauh datang ternyata dokumennya kurang, jadi sebenarnya apa saja yang harus saya bawa dan apakah motornya juga wajib dibawa?",
       48,
       "Pajak"
     ],
@@ -246,12 +262,37 @@ describe("matchFaq", () => {
       "Mutasi"
     ],
     [
+      "Min saya beli motor bekas plat Jakarta dan sekarang saya tinggal di Bandung. Saya ingin platnya jadi Bandung sekaligus STNK-nya dibalik nama menjadi nama saya sendiri. Apakah mutasi dan balik nama bisa diurus sekaligus dan saya harus mulai mengurus dari Samsat mana?",
+      101,
+      "Mutasi"
+    ],
+    [
+      "Saya beli motor plat Jakarta mau mutasi dan balik nama ke nama saya sendiri, mulai dari mana?",
+      101,
+      "Mutasi"
+    ],
+    [
       "Saya punya motor lama yang sudah beberapa tahun tidak dipakai jadi pajaknya juga sudah mati cukup lama. Sekarang motornya mau saya pakai lagi dan saya ingin mengaktifkan surat-suratnya, kira-kira saya harus mulai mengurus dari mana?",
       33,
       "Pajak"
     ],
     [
+      "Saya kehilangan dompet dan kebetulan STNK motor ada di dalamnya, sedangkan BPKB motor masih disimpan pihak leasing karena motor belum lunas. Kalau saya mau mengurus STNK yang hilang itu bagaimana ya, apakah tetap bisa diproses?",
+      54,
+      "Dokumen"
+    ],
+    [
+      "Saya mau bayar pajak motor tahunan yang sudah telat beberapa bulan, tapi saya juga baru sadar STNK saya hilang. Kalau kondisinya seperti ini apakah saya harus mengurus STNK yang hilang terlebih dahulu atau bisa sekalian membayar pajaknya?",
+      42,
+      "Pajak"
+    ],
+    [
       "Saya baru pertama kali bayar pajak kendaraan secara online lewat SIGNAL dan pembayarannya sudah berhasil. Tapi saya bingung setelah itu apakah masih harus datang ke Samsat untuk pengesahan STNK atau semuanya sudah selesai secara online?",
+      127,
+      "SIGNAL"
+    ],
+    [
+      "Kalau pembayaran SIGNAL sudah berhasil, QR Code E-Pengesahan dan E-TBPKP itu sudah cukup atau STNK fisik tetap harus disimpan?",
       127,
       "SIGNAL"
     ],

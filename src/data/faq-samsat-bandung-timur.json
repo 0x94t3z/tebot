@@ -227,8 +227,8 @@
     "id": 33,
     "category": "Pajak",
     "question": "Apakah kendaraan mati pajak bertahun tahun bisa dibayar",
-    "answer": "Ya. Kendaraan yang menunggak pajak tetap dapat dibayar, tetapi tagihan dapat mencakup pokok pajak dan denda. Cek nominalnya melalui Info PKB atau petugas Samsat.",
-    "source": "https://bapenda.jabarprov.go.id/pajak-kendaraan-bermotor/"
+    "answer": "Kendaraan yang telah menunggak pajak selama beberapa tahun tetap dapat dilakukan pembayaran pajaknya. Pemilik kendaraan dapat terlebih dahulu mengecek informasi dan besaran pajak kendaraan, kemudian melakukan pembayaran melalui layanan Samsat sesuai jenis layanan yang diperlukan.\n\nApabila pembayaran Pajak Kendaraan Bermotor (PKB) terlambat dari tanggal jatuh tempo, terdapat sanksi administratif berupa bunga sebesar 1% per bulan dari pajak yang terutang dan belum atau kurang dibayar, dihitung sejak tanggal jatuh tempo sampai dengan tanggal pembayaran, dengan jangka waktu paling lama 24 bulan.\n\nApabila masa berlaku STNK lima tahunan juga telah habis, pengurusannya tidak hanya berupa pembayaran pajak tahunan karena diperlukan proses penggantian STNK lima tahunan dan TNKB atau plat nomor serta pemeriksaan fisik kendaraan. Untuk kondisi tersebut, pemilik dapat mengurusnya melalui Samsat Induk dengan mempersiapkan persyaratan pelayanan lima tahunan yang berlaku.",
+    "source": "https://bapenda.jabarprov.go.id/pajak-kendaraan-bermotor/; https://jabarprov.go.id/layanan/pembayaran-pajak-kendaraan-bermotor-pkb-5-tahunan-1690535168"
   },
   {
     "id": 34,
@@ -290,8 +290,8 @@
     "id": 42,
     "category": "Pajak",
     "question": "Bagaimana jika STNK hilang saat ingin membayar pajak",
-    "answer": "Jika STNK hilang, pemilik kendaraan perlu mengurus penerbitan STNK pengganti sesuai prosedur Regident, biasanya dengan laporan kehilangan, identitas pemilik, dokumen kendaraan, dan proses verifikasi di layanan terkait.",
-    "source": "https://korlantas.polri.go.id/wp-content/uploads/2021/05/PERATURAN-POLRI-NOMOR-7-TAHUN-2021-TENTANG-REGISTRASI-DAN-IDENTIFIKASI-KENDARAAN-BERMOTOR.pdf"
+    "answer": "Apabila STNK hilang saat kendaraan juga memiliki tunggakan pajak, pemilik kendaraan perlu mengurus penerbitan STNK pengganti dan menyelesaikan kewajiban pajak kendaraan sesuai ketentuan yang berlaku. Karena STNK merupakan dokumen yang digunakan dalam administrasi registrasi kendaraan, kehilangan STNK perlu terlebih dahulu dilaporkan dan diproses melalui layanan Regident kendaraan bermotor.\n\nUntuk penggantian STNK karena hilang, pemilik kendaraan perlu mempersiapkan formulir permohonan, identitas pemilik, BPKB asli dan fotokopi, surat pernyataan pemilik mengenai STNK yang hilang, surat keterangan kehilangan sesuai ketentuan Regident, serta hasil pemeriksaan cek fisik kendaraan.\n\nApabila pajak kendaraan juga telah terlambat, sampaikan kondisi tunggakan tersebut saat melakukan pengurusan di Samsat agar kewajiban Pajak Kendaraan Bermotor dapat diperiksa dan diselesaikan bersamaan dengan proses administrasi kendaraan sesuai ketentuan yang berlaku.",
+    "source": "https://korlantas.polri.go.id/panduan-stnk/; https://peraturan.bpk.go.id/Details/225016; https://bapenda.jabarprov.go.id/pajak-kendaraan-bermotor/"
   },
   {
     "id": 43,
@@ -332,8 +332,8 @@
     "id": 48,
     "category": "Pajak",
     "question": "Apa syarat membayar pajak lima tahunan",
-    "answer": "Syarat pajak lima tahunan/ganti STNK adalah KTP asli atau identitas badan/perusahaan, SKPD terakhir, STNK asli, BPKB asli, dan bukti hasil pemeriksaan kendaraan bermotor atau cek fisik.",
-    "source": "https://bapenda.jabarprov.go.id/2019/01/20/persyaratan-pendaftaran-samsat/"
+    "answer": "Untuk pembayaran Pajak Kendaraan Bermotor (PKB) lima tahunan atau penggantian STNK dan TNKB (plat nomor), dokumen yang perlu dipersiapkan meliputi E-KTP atau Surat Keterangan Badan Usaha, STNK, SKKP atau notis pajak tahun terakhir, BPKB atau Surat Keterangan Leasing apabila BPKB masih dalam jaminan, serta hasil cek fisik kendaraan.\n\nApabila BPKB kendaraan masih berada di leasing karena masih dalam jaminan, pembayaran PKB lima tahunan tetap dapat diproses dengan menggunakan Surat Keterangan Leasing sebagai dokumen pengganti BPKB yang masih dijaminkan.\n\nCek fisik merupakan bagian dari proses pajak lima tahunan. Apabila proses dilakukan langsung di Samsat Induk asal kendaraan, kendaraan perlu dihadirkan untuk menjalani pemeriksaan fisik. Setelah cek fisik dan pemeriksaan data dilakukan, proses dilanjutkan ke pendaftaran, pembayaran, pencetakan STNK dan SKKP atau notis pajak, kemudian pengambilan TNKB atau plat nomor.\n\nApabila kendaraan sedang berada di luar kota, proses pembayaran pajak lima tahunan tetap dilakukan di Samsat Induk asal kendaraan. Namun, pemilik kendaraan dapat melakukan cek fisik bantuan di Samsat Induk terdekat. Hasil cek fisik bantuan yang telah divalidasi kemudian dapat dibawa ke Samsat Induk asal kendaraan untuk melanjutkan proses pembayaran pajak lima tahunan.",
+    "source": "https://jabarprov.go.id/layanan/pembayaran-pajak-kendaraan-bermotor-pkb-5-tahunan-1690535168"
   },
   {
     "id": 49,
@@ -374,8 +374,8 @@
     "id": 54,
     "category": "Dokumen",
     "question": "Bagaimana jika STNK hilang",
-    "answer": "Jika STNK hilang, pemilik kendaraan perlu mengajukan penerbitan STNK pengganti. Siapkan identitas pemilik, dokumen kendaraan yang relevan, laporan kehilangan dari Polri, dan ikuti proses verifikasi sesuai ketentuan.",
-    "source": "https://korlantas.polri.go.id/wp-content/uploads/2021/05/PERATURAN-POLRI-NOMOR-7-TAHUN-2021-TENTANG-REGISTRASI-DAN-IDENTIFIKASI-KENDARAAN-BERMOTOR.pdf"
+    "answer": "STNK yang hilang tetap dapat diurus meskipun BPKB asli kendaraan masih berada di pihak leasing. Pemilik kendaraan perlu terlebih dahulu membuat laporan kehilangan STNK kepada pihak Kepolisian sebagai salah satu dokumen yang diperlukan dalam proses pengurusan STNK yang hilang.\n\nApabila BPKB masih berada di leasing, pemilik dapat mempersiapkan fotokopi BPKB yang telah dilegalisir oleh pihak leasing serta surat keterangan dari leasing. Selain itu, persiapkan formulir permohonan, identitas pemilik, laporan Polisi kehilangan STNK, dan hasil cek fisik kendaraan yang telah dilegalisir.",
+    "source": "https://polri.go.id/layanan/bpkb-stnk; https://korlantas.polri.go.id/panduan-bpkb/; https://korlantas.polri.go.id/wp-content/uploads/2021/05/PERATURAN-POLRI-NOMOR-7-TAHUN-2021-TENTANG-REGISTRASI-DAN-IDENTIFIKASI-KENDARAAN-BERMOTOR.pdf"
   },
   {
     "id": 55,
@@ -457,16 +457,16 @@
   {
     "id": 66,
     "category": "Dokumen",
-    "question": "Bagaimana jika TNKB atau plat nomor hilang atau rusak",
-    "answer": "Jika TNKB atau pelat nomor hilang/rusak, pemilik kendaraan perlu mengurus penggantian sesuai prosedur Regident kendaraan bermotor. Siapkan identitas pemilik, dokumen kendaraan seperti STNK/BPKB, laporan kehilangan dari Polri jika hilang, dan ikuti verifikasi kendaraan. Jika STNK ikut hilang, urus juga penerbitan STNK pengganti sesuai ketentuan layanan.",
-    "source": "https://korlantas.polri.go.id/wp-content/uploads/2021/05/PERATURAN-POLRI-NOMOR-7-TAHUN-2021-TENTANG-REGISTRASI-DAN-IDENTIFIKASI-KENDARAAN-BERMOTOR.pdf"
+    "question": "Bagaimana jika TNKB atau plat nomor rusak",
+    "answer": "Apabila TNKB atau plat nomor kendaraan rusak, misalnya akibat kecelakaan hingga bengkok atau tidak dapat terbaca dengan jelas, pemilik kendaraan dapat mengajukan penggantian TNKB karena rusak tanpa harus menunggu masa penggantian TNKB lima tahunan.\n\nUntuk penggantian TNKB karena rusak, persyaratan yang perlu dipersiapkan meliputi formulir permohonan, identitas pemilik, STNK, TNKB atau plat nomor yang rusak, serta bukti pembayaran Penerimaan Negara Bukan Pajak (PNBP). Apabila pengurusan diwakilkan, diperlukan surat kuasa bermeterai dan fotokopi KTP pihak yang diberi kuasa.",
+    "source": "https://peraturan.bpk.go.id/Details/225016"
   },
   {
     "id": 67,
     "category": "Dokumen",
-    "question": "Apakah data pemilik kendaraan dapat diubah",
-    "answer": "Ya. Data pemilik kendaraan dapat berubah melalui proses administrasi seperti balik nama. Proses ini memerlukan dokumen kepemilikan, identitas pemilik baru, STNK, BPKB, dan cek fisik.",
-    "source": "https://korlantas.polri.go.id/wp-content/uploads/2021/05/PERATURAN-POLRI-NOMOR-7-TAHUN-2021-TENTANG-REGISTRASI-DAN-IDENTIFIKASI-KENDARAAN-BERMOTOR.pdf"
+    "question": "Bagaimana jika TNKB atau plat nomor hilang",
+    "answer": "Apabila TNKB atau plat nomor hilang, pemilik kendaraan perlu melaporkan kehilangan tersebut kepada Polri.\n\nPersyaratan penggantian TNKB karena hilang meliputi formulir permohonan, identitas pemilik, STNK, Surat Tanda Penerimaan Laporan dari Polri, serta bukti pembayaran Penerimaan Negara Bukan Pajak (PNBP). Apabila pengurusan diwakilkan, diperlukan surat kuasa bermeterai dan fotokopi KTP pihak yang diberi kuasa.\n\nDengan demikian, Surat Tanda Penerimaan Laporan dari Polri diperlukan apabila TNKB hilang. Sementara untuk TNKB yang rusak dan masih tersedia, dokumen yang disertakan adalah TNKB yang rusak.",
+    "source": "https://peraturan.bpk.go.id/Details/225016"
   },
   {
     "id": 68,
@@ -681,9 +681,9 @@
   {
     "id": 98,
     "category": "Mutasi",
-    "question": "Apakah kendaraan luar provinsi dapat dimutasi",
-    "answer": "Ya. Kendaraan luar provinsi dapat dimutasi dengan proses cabut berkas dari Samsat asal, cek fisik, pengurusan fiskal, lalu pendaftaran kembali di Samsat tujuan.",
-    "source": "https://bapenda.jabarprov.go.id/2016/06/14/pemberian-pembebasan-bea-balik-nama-kendaraan-luar-provinsi/"
+    "question": "Apakah kendaraan plat luar daerah dapat membayar pajak tahunan di Bandung",
+    "answer": "Kendaraan dengan registrasi atau plat nomor dari luar Jawa Barat tidak secara otomatis berubah wilayah registrasinya hanya karena pemilik saat ini tinggal di Bandung. Untuk pembayaran Pajak Kendaraan Bermotor (PKB) tahunan, ketersediaan layanan bagi kendaraan luar wilayah perlu disesuaikan dengan cakupan layanan Samsat yang digunakan.\n\nBeberapa layanan Samsat di Jawa Barat memiliki cakupan wilayah pelayanan yang berbeda. Oleh karena itu, untuk kendaraan yang masih terdaftar di luar Jawa Barat, pemilik disarankan memastikan terlebih dahulu kepada Samsat tujuan apakah kendaraan tersebut dapat dilayani sebelum datang untuk melakukan pembayaran pajak tahunan.",
+    "source": "https://bapenda.jabarprov.go.id/samsat-outlet/; https://bapenda.jabarprov.go.id/samsat-digital-leuwipanjang/"
   },
   {
     "id": 99,
@@ -702,9 +702,9 @@
   {
     "id": 101,
     "category": "Mutasi",
-    "question": "Apakah mutasi kendaraan bekas wajib dilakukan",
-    "answer": "Mutasi kendaraan bekas diperlukan jika kendaraan berpindah wilayah registrasi atau domisili pemilik. Jika hanya berpindah kepemilikan dalam satu wilayah, proses yang dibutuhkan biasanya balik nama.",
-    "source": "https://bapenda.jabarprov.go.id/2019/01/20/persyaratan-pendaftaran-samsat/"
+    "question": "Apakah mutasi kendaraan luar provinsi dapat sekaligus balik nama",
+    "answer": "Kendaraan bekas dari luar daerah dapat dilakukan mutasi sekaligus balik nama agar registrasi kendaraan berpindah ke daerah tujuan dan data kepemilikannya berubah menjadi atas nama pemilik baru.\n\nProses dimulai dari Samsat asal tempat kendaraan terdaftar untuk melakukan mutasi keluar atau cabut berkas. Setelah proses mutasi keluar selesai dan berkas kendaraan diperoleh, proses dilanjutkan di Samsat tujuan sesuai domisili pemilik baru untuk melakukan mutasi masuk dan perubahan data kepemilikan kendaraan.\n\nUntuk mutasi masuk kendaraan ke Kota Bandung, dokumen yang perlu dipersiapkan antara lain E-KTP sesuai tujuan mutasi masuk Kota Bandung, berkas arsip mutasi keluar dari daerah asal, fiskal antar daerah, dan hasil cek fisik kendaraan untuk mutasi masuk. Setelah persyaratan terpenuhi, proses dilanjutkan melalui pelayanan mutasi masuk hingga penerbitan dokumen kendaraan sesuai wilayah dan pemilik baru.",
+    "source": "https://bapenda.jabarprov.go.id/wp-content/uploads/2022/10/BUKU-AGENDA-PROSEDUR-PELAYANAN-SOETTA.pdf; https://bapenda.jabarprov.go.id/2016/06/14/pemberian-pembebasan-bea-balik-nama-kendaraan-luar-provinsi/"
   },
   {
     "id": 102,
@@ -885,8 +885,8 @@
     "id": 127,
     "category": "SIGNAL",
     "question": "Apakah SIGNAL dapat digunakan untuk pajak tahunan",
-    "answer": "Ya. SIGNAL digunakan untuk pengesahan STNK tahunan dan pembayaran pajak kendaraan tahunan secara digital pada kendaraan yang memenuhi syarat.",
-    "source": "https://samsatdigital.id/artikel/260325-balik-ke-rutinitas-pengesahan-stnk-pakai-signal-jadi-prioritas"
+    "answer": "Apabila pembayaran pajak kendaraan tahunan melalui aplikasi SIGNAL telah berhasil dan proses pengesahan STNK telah selesai, pengguna tidak perlu datang ke kantor Samsat hanya untuk mendapatkan cap atau stempel pengesahan STNK. Pengesahan STNK tahunan melalui SIGNAL dilakukan secara elektronik, dan QR Code pada E-Pengesahan berfungsi sebagai bukti pengesahan digital yang sah.\n\nSetelah pembayaran dan pengesahan berhasil, pengguna juga dapat mengakses E-TBPKP sebagai bukti digital pelunasan kewajiban pembayaran. Untuk dokumen fisik TBPKP, pengguna dapat memilih pengiriman ke alamat tujuan atau pengambilan sesuai pilihan layanan yang tersedia. STNK fisik yang dimiliki tetap perlu disimpan karena layanan pengesahan tahunan secara digital tidak menggantikan STNK fisik.",
+    "source": "https://samsatdigital.id/artikel/260325-balik-ke-rutinitas-pengesahan-stnk-pakai-signal-jadi-prioritas; https://samsatdigital.id/artikel/250826-yuk-cek-fungsi-qr-code-pada-aplikasi-signal; https://samsatdigital.id/artikel/251027-bukan-sekedar-bukti-bayar-yuk-kenalan-dengan-dokumen-resmi-dari-signal; https://samsatdigital.id/faq/lainnya"
   },
   {
     "id": 128,
@@ -996,9 +996,9 @@
   {
     "id": 143,
     "category": "Pengaduan",
-    "question": "Kemana melapor jika mengalami kendala pelayanan",
-    "answer": "Jika mengalami kendala pelayanan, laporkan kepada petugas di lokasi atau gunakan kanal resmi pengaduan/Samsat Information Center agar laporan tercatat dan dapat ditindaklanjuti.",
-    "source": "https://bapenda.jabarprov.go.id/samsat-information-center/"
+    "question": "Bagaimana jika pembayaran SIGNAL berhasil tetapi status belum berubah",
+    "answer": "Apabila pembayaran pajak kendaraan melalui aplikasi SIGNAL sudah dilakukan dan saldo rekening telah terpotong, tetapi status pembayaran pada aplikasi masih menunjukkan belum terbayarkan, jangan langsung melakukan pembayaran ulang. Periksa terlebih dahulu status transaksi dan bukti pembayaran yang dimiliki untuk menghindari kemungkinan pembayaran ganda.\n\nJika pembayaran sudah dilakukan tetapi status pada aplikasi SIGNAL masih belum berubah menjadi terbayarkan, pengguna dapat menyampaikan kendala tersebut kepada Customer Service resmi SIGNAL melalui layanan pengaduan agar transaksi dapat diperiksa lebih lanjut.\n\nPengaduan resmi SIGNAL dapat dilakukan melalui Live Chat pada situs Samsat Digital Nasional atau melalui email Customer Service SIGNAL. Hindari menggunakan layanan pengaduan tidak resmi yang mengatasnamakan SIGNAL.",
+    "source": "https://samsatdigital.id/faq/pembayaran.php; https://samsatdigital.id/artikel/250619-dos-and-donts-saat-menggunakan-aplikasi-signal"
   },
   {
     "id": 144,

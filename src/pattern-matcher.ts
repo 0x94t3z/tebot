@@ -198,9 +198,31 @@ const customPatterns: Record<number, string[]> = {
   27: ["total biaya pajak", "besaran pajak kendaraan", "tagihan pajak mahal", "tagihan lebih mahal"],
   30: ["pajak lima tahunan", "pajak 5 tahun"],
   28: ["pajak diwakilkan", "bayar pajak diwakilkan", "bayarin pajak orang tua", "stnk atas nama istri", "suami bayar pajak", "pajak atas nama orang lain"],
-  33: ["mati pajak", "pajak mati lama", "pajak sudah mati lama", "pajak bertahun tahun", "pajak menunggak bertahun tahun", "pajak mati beberapa tahun"],
+  33: [
+    "mati pajak",
+    "pajak mati lama",
+    "pajak sudah mati lama",
+    "pajak bertahun tahun",
+    "pajak menunggak bertahun tahun",
+    "pajak mati beberapa tahun",
+    "motor lama tidak dipakai pajak mati",
+    "mengaktifkan surat surat kendaraan",
+    "aktifkan surat surat pajak mati",
+    "stnk lima tahunan habis pajak menunggak",
+    "kendaraan lama mau dipakai lagi"
+  ],
   35: ["bayar pajak online", "pajak online", "bayar pkb online", "bayar e samsat"],
-  42: ["pajak stnk hilang", "bayar pajak stnk hilang", "stnk hilang bayar pajak"],
+  42: [
+    "pajak stnk hilang",
+    "bayar pajak stnk hilang",
+    "stnk hilang bayar pajak",
+    "stnk hilang pajak telat",
+    "stnk hilang pajak terlambat",
+    "stnk hilang pajak menunggak",
+    "pajak menunggak stnk hilang",
+    "pajak telat stnk hilang",
+    "urus stnk hilang sekalian bayar pajak"
+  ],
   45: ["pajak aplikasi hp", "bayar pajak hp", "pajak pakai aplikasi", "bayar pajak signal", "pajak lewat signal"],
   39: ["denda dihitung", "denda satu bulan", "telat satu bulan", "besaran denda pajak", "denda pajak dihitung"],
   40: [
@@ -232,9 +254,18 @@ const customPatterns: Record<number, string[]> = {
     "plat mati pajak menunggak",
     "ganti plat harus cek fisik",
     "bpkb leasing ganti plat",
+    "pajak lima tahunan bpkb leasing",
+    "pajak lima tahunan bpkb masih leasing",
+    "pajak lima tahunan motor masih kredit",
+    "surat keterangan leasing pajak lima tahunan",
+    "ganti plat bpkb masih leasing",
     "motor luar kota ganti plat",
     "pajak lima tahunan cek fisik samsat terdekat",
-    "dokumen ganti plat bawa motor"
+    "cek fisik bantuan pajak lima tahunan",
+    "ganti plat luar kota cek fisik bantuan",
+    "dokumen ganti plat bawa motor",
+    "pajak lima tahunan dokumen kurang",
+    "ganti plat motor wajib dibawa"
   ],
   54: [
     "stnk hilang",
@@ -246,6 +277,10 @@ const customPatterns: Record<number, string[]> = {
     "stnk sama bpkb hilang",
     "stnk hilang bpkb leasing",
     "stnk hilang bpkb masih leasing",
+    "bpkb masih leasing stnk hilang",
+    "stnk hilang motor belum lunas",
+    "stnk hilang bpkb disimpan leasing",
+    "fotokopi bpkb legalisir leasing",
     "kehilangan dompet stnk hilang"
   ],
   55: ["bpkb hilang", "kehilangan bpkb", "bpkb hilang cara", "urus bpkb hilang"],
@@ -253,24 +288,30 @@ const customPatterns: Record<number, string[]> = {
   62: ["bpkb pajak lima tahunan", "bpkb diperlukan pajak lima tahunan"],
   63: ["ktp beda alamat stnk", "alamat ktp beda stnk", "data stnk sesuai"],
   66: [
+    "plat nomor rusak",
+    "plat patah",
+    "plat rusak",
+    "plat motor patah",
+    "plat nomor tulisannya tidak jelas",
+    "plat bengkok",
+    "plat tidak terbaca",
+    "tnkb rusak"
+  ],
+  67: [
     "tnkb hilang",
     "plat hilang",
     "pelat hilang",
     "plat nomor hilang",
-    "plat nomor rusak",
     "nopol hilang",
     "plat hanyut",
     "plat kebawa banjir",
-    "plat patah",
-    "plat rusak",
     "plat dicuri",
-    "plat motor patah",
     "habis banjir plat",
     "plat depan tidak ada",
     "plat kebawa arus",
     "bikin plat baru",
-    "plat nomor tulisannya tidak jelas",
-    "tnkb rusak"
+    "surat kehilangan plat",
+    "laporan polisi plat hilang"
   ],
   71: [
     "syarat balik nama warisan",
@@ -333,6 +374,11 @@ const customPatterns: Record<number, string[]> = {
     "alur mutasi",
     "plat luar pindah",
     "pelat luar pindah",
+    "plat luar daerah mau cabut berkas",
+    "pelat luar daerah mau cabut berkas",
+    "kendaraan luar provinsi mutasi",
+    "motor plat jakarta mutasi",
+    "plat jakarta mutasi",
     "pindah domisili",
     "cabut berkas"
   ],
@@ -340,14 +386,28 @@ const customPatterns: Record<number, string[]> = {
   94: ["mutasi bpkb asli", "mutasi bpkb ori", "bpkb asli mutasi"],
   96: ["cabut berkas berapa lama", "proses cabut berkas", "batas waktu cabut berkas", "daftar daerah tujuan batas waktu"],
   98: [
-    "kendaraan luar kota ke bandung",
-    "plat jakarta jadi bandung",
     "plat luar daerah tinggal bandung",
     "plat luar jawa barat tinggal bandung",
     "bayar pajak plat luar daerah di bandung",
-    "kendaraan luar provinsi mutasi",
-    "pindah kendaraan luar kota bandung",
-    "motor plat jakarta jadi bandung"
+    "bayar pajak tahunan plat luar jawa barat",
+    "pajak tahunan plat luar daerah",
+    "plat luar jawa barat bayar pajak",
+    "plat luar daerah samsat bandung timur",
+    "motor plat luar jawa barat bayar pajak tahunan"
+  ],
+  101: [
+    "mutasi sekaligus balik nama",
+    "mutasi dan balik nama",
+    "plat jakarta mutasi balik nama",
+    "motor plat jakarta mutasi balik nama",
+    "plat jakarta balik nama bandung",
+    "motor bekas plat jakarta balik nama",
+    "plat luar daerah balik nama",
+    "plat luar provinsi balik nama",
+    "platnya jadi bandung stnk balik nama",
+    "mulai dari samsat mana mutasi balik nama",
+    "mutasi masuk sekaligus balik nama",
+    "cabut berkas lalu balik nama"
   ],
   102: ["mutasi online", "mutasi dapat online"],
   105: ["kapan cek fisik", "kendaraan harus cek fisik", "cek fisik diperlukan"],
@@ -358,7 +418,18 @@ const customPatterns: Record<number, string[]> = {
   123: ["kendaraan tidak muncul signal", "kendaraan atas nama sendiri signal"],
   124: ["kendaraan atas nama orang lain signal", "kendaraan keluarga signal"],
   126: ["verifikasi signal gagal", "signal gagal wajah", "signal wajah buram", "signal gagal selfie", "nik tidak terbaca signal"],
-  127: ["signal pajak tahunan", "pajak tahunan lewat signal", "setelah bayar signal pengesahan stnk", "bayar signal masih datang samsat", "pengesahan stnk lewat signal"],
+  127: [
+    "signal pajak tahunan",
+    "pajak tahunan lewat signal",
+    "setelah bayar signal pengesahan stnk",
+    "bayar signal masih datang samsat",
+    "pengesahan stnk lewat signal",
+    "pembayaran signal berhasil pengesahan stnk",
+    "signal selesai online",
+    "qr code e pengesahan signal",
+    "e tbpkp signal",
+    "stnk fisik signal"
+  ],
   128: ["signal pajak lima tahunan", "pajak lima tahunan lewat signal", "pajak 5 tahunan signal"],
   129: ["samsat keliling", "layanan keliling"],
   131: ["layanan samsat keliling", "beda samsat keliling samsat induk", "samsat keliling samsat induk", "stnk hilang samsat keliling", "balik nama samsat keliling"],
@@ -372,7 +443,20 @@ const customPatterns: Record<number, string[]> = {
   139: ["mushola samsat", "ada mushola", "tersedia mushola", "mushola dalam samsat"],
   140: ["loket informasi", "cs samsat", "customer service samsat", "tanya informasi samsat", "bingung proses loket"],
   141: ["area cek fisik", "cek fisik masuk lewat mana", "tempat cek fisik"],
-  143: ["kendala pembayaran signal", "status belum berubah signal", "uang terpotong pembayaran gagal", "salah nomor polisi aplikasi", "pembayaran pajak gagal", "status signal belum berubah"],
+  143: [
+    "kendala pembayaran signal",
+    "status belum berubah signal",
+    "uang terpotong pembayaran gagal",
+    "saldo terpotong status belum berubah",
+    "pembayaran signal berhasil status belum berubah",
+    "status belum terbayarkan signal",
+    "jangan bayar ulang signal",
+    "customer service signal",
+    "live chat signal",
+    "salah nomor polisi aplikasi",
+    "pembayaran pajak gagal",
+    "status signal belum berubah"
+  ],
   142: [
     "pengaduan",
     "komplain",
@@ -462,13 +546,14 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
   40: [{ pattern: /\b(pemutihan|keringanan|diskon).*\b(pajak)?\b|\b(program).*\b(pemutihan)\b|\b(bbnkb|bea\s+balik\s+nama|balik\s+nama|biaya).*\b(gratis|bebas|pembebasan)\b|\b(gratis|bebas|pembebasan).*\b(bbnkb|bea\s+balik\s+nama|balik\s+nama|biaya)\b/, label: "regex:pemutihan pajak", score: 260 }],
   43: [{ pattern: /\b(bukti|struk|resi).*\b(pembayaran|bayar|online|pengesahan)\b|\b(pembayaran|bayar|online|pengesahan).*\b(bukti|struk|resi)\b/, label: "regex:bukti pembayaran", score: 130 }],
   47: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|ktp|fotokopi).*\b(pajak|tahunan)\b|\b(pajak|tahunan).*\b(syarat|dokumen|persyaratan|bawa|ktp|fotokopi)\b/, label: "regex:syarat pajak tahunan", score: 155 }],
-  48: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|ganti\s+pelat|pelat|leasing).*\b(pajak)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan|ganti\s+pelat).*\b(pajak)?.*\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|leasing)\b|\b(ganti\s+pelat).*\b(syarat|cek\s+fisik|habis|mati|menunggak|leasing|bpkb)?\b|\b(waktu|waktunya).*\b(ganti\s+pelat)\b|\b(lima\s+tahunan).*\b(ganti\s+pelat|cek\s+fisik|samsat\s+terdekat|dokumen|bawa)\b/, label: "regex:syarat pajak lima tahunan", score: 250 }],
+  48: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|cek\s+fisik\s+bantuan|ganti\s+pelat|pelat|leasing|kredit|jaminan|samsat\s+terdekat).*\b(pajak)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan|ganti\s+pelat).*\b(pajak)?.*\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|cek\s+fisik\s+bantuan|leasing|kredit|jaminan|samsat\s+terdekat)\b|\b(ganti\s+pelat).*\b(syarat|cek\s+fisik|cek\s+fisik\s+bantuan|habis|mati|menunggak|leasing|kredit|bpkb|luar\s+kota|samsat\s+terdekat)?\b|\b(waktu|waktunya).*\b(ganti\s+pelat)\b|\b(lima\s+tahunan).*\b(ganti\s+pelat|cek\s+fisik|cek\s+fisik\s+bantuan|samsat\s+terdekat|dokumen|bawa|leasing|kredit)\b/, label: "regex:syarat pajak lima tahunan", score: 250 }],
   54: [{ pattern: /\b(stnk).*\b(hilang|kehilangan|dompet|leasing)\b|\b(hilang|kehilangan|dompet|leasing).*\b(stnk)\b/, label: "regex:stnk hilang", score: 170 }],
   55: [{ pattern: /\b(bpkb).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(bpkb)\b/, label: "regex:bpkb hilang", score: 95 }],
   56: [{ pattern: /\b(stnk).*\b(rusak|kebakar|air|banjir|terbaca)\b|\b(rusak|kebakar|air|banjir|terbaca).*\b(stnk)\b/, label: "regex:stnk rusak", score: 145 }],
   62: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", score: 135 }],
   63: [{ pattern: /\b(ktp|alamat).*\b(beda|tidak\s+sesuai).*\b(stnk)\b|\b(stnk).*\b(alamat|ktp).*\b(beda|tidak\s+sesuai)\b/, label: "regex:data stnk sesuai", score: 130 }],
-  66: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(hilang|rusak|patah|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|bengkok|terbaca)\b|\b(hilang|rusak|patah|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|bengkok|terbaca).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb hilang rusak", score: 280 }],
+  66: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(rusak|patah|bengkok|terbaca)\b|\b(rusak|patah|bengkok|terbaca).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb rusak", score: 280 }],
+  67: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(hilang|kehilangan|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|laporan|polri)\b|\b(hilang|kehilangan|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|laporan|polri).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb hilang", score: 280 }],
   71: [{ pattern: /\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum).*\b(balik\s+nama|kendaraan|stnk|bpkb)\b|\b(balik\s+nama|kendaraan|stnk|bpkb).*\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum)\b|\b(ayah|bapak|pemilik).*\b(meninggal).*\b(balik\s+nama|warisan)\b/, label: "regex:balik nama warisan", score: 330 }],
   73: [
     { pattern: /\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan)\b|\b(perusahaan).*\b(perorangan)\b/, label: "regex:balik nama", score: 130 }
@@ -479,11 +564,12 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
   82: [{ pattern: /\b(kuitansi|kwitansi|bukti\s+jual\s+beli).*\b(hilang|tidak\s+ada)\b|\b(hilang|tidak\s+ada).*\b(kuitansi|kwitansi|bukti\s+jual\s+beli)\b/, label: "regex:bukti jual beli", score: 145 }],
   84: [{ pattern: /\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada).*\b(pajak|bayar|habis)\b|\b(tidak\s+ada|tidak\s+punya|ga\s+ada|gak\s+ada).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(pajak|bayar|habis)\b|\b(pajak|bayar|habis).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada)\b|\b(tanpa).*\b(ktp\s+pemilik\s+lama|ktp\s+pemilik\s+pertama)\b/, label: "regex:pajak tanpa ktp pemilik lama", score: 340 }],
   85: [{ pattern: /\b(balik\s+nama).*\b(pajak|menunggak)\b|\b(pajak|menunggak).*\b(balik\s+nama)\b/, label: "regex:balik nama pajak", score: 135 }],
-  90: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah)\b|\b(pindah|cabut).*\b(domisili|berkas)\b/, label: "regex:mutasi", score: 115 }],
+  90: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah|jakarta).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah|jakarta)\b|\b(pindah|cabut).*\b(domisili|berkas)\b|\b(pelat\s+luar|luar\s+daerah|jakarta).*\b(cabut\s+berkas)\b/, label: "regex:mutasi", score: 145 }],
   92: [{ pattern: /\b(kendaraan|motor|mobil).*\b(dibawa|bawa).*\b(mutasi)\b|\b(mutasi).*\b(kendaraan|motor|mobil).*\b(dibawa|bawa)\b/, label: "regex:kendaraan dibawa mutasi", score: 125 }],
   94: [{ pattern: /\b(mutasi).*\b(bpkb).*\b(asli|ori|original)\b|\b(bpkb).*\b(asli|ori|original).*\b(mutasi)\b/, label: "regex:bpkb asli mutasi", score: 130 }],
   96: [{ pattern: /\b(cabut\s+berkas|berkas|daerah\s+tujuan).*\b(lama|batas|waktu|proses|daftar)\b|\b(proses|lama|batas|waktu|daftar).*\b(cabut\s+berkas|berkas|daerah\s+tujuan)\b/, label: "regex:lama mutasi", score: 175 }],
-  98: [{ pattern: /\b(luar\s+daerah|luar\s+kota|jakarta|jawa\s+barat).*\b(bandung|mutasi|pelat|pindah|jadi|pajak|daerah\s+asal)\b|\b(pindah|pelat|pajak).*\b(jakarta|luar\s+daerah|luar\s+kota|jawa\s+barat).*\b(bandung|daerah\s+asal)\b/, label: "regex:kendaraan luar daerah", score: 230 }],
+  98: [{ pattern: /\b(luar\s+daerah|luar\s+kota|jakarta|jawa\s+barat).*\b(pajak\s+tahunan|bayar\s+pajak|pajak|samsat\s+bandung\s+timur)\b|\b(pajak\s+tahunan|bayar\s+pajak|pajak).*\b(jakarta|luar\s+daerah|luar\s+kota|jawa\s+barat).*\b(bandung|samsat\s+bandung\s+timur|daerah\s+asal)?\b/, label: "regex:pajak tahunan plat luar daerah", score: 230 }],
+  101: [{ pattern: /\b(mutasi|cabut\s+berkas|plat|pelat|jakarta|luar\s+daerah|luar\s+provinsi).*\b(balik\s+nama|nama\s+saya|stnk.*nama|kepemilikan)\b|\b(balik\s+nama|nama\s+saya|stnk.*nama|kepemilikan).*\b(mutasi|cabut\s+berkas|plat|pelat|jakarta|luar\s+daerah|luar\s+provinsi)\b/, label: "regex:mutasi balik nama luar daerah", score: 340 }],
   102: [{ pattern: /\b(mutasi).*\b(online|luar\s+daerah)\b|\b(online).*\b(mutasi)\b/, label: "regex:mutasi online", score: 120 }],
   103: [{ pattern: /\b(apa|pengertian).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kendaraan|rangka|mesin|cek\s+fisik)\b/, label: "regex:apa cek fisik", score: 145 }],
   105: [{ pattern: /\b(kapan|perlu|wajib|harus|diperlukan).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kapan|perlu|wajib|harus|diperlukan)\b/, label: "regex:kapan cek fisik", score: 115 }],
@@ -495,7 +581,7 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
   123: [{ pattern: /\b(kendaraan).*\b(tidak\s+muncul|atas\s+nama\s+sendiri).*\b(signal)\b|\b(signal).*\b(kendaraan).*\b(tidak\s+muncul|atas\s+nama\s+sendiri)\b/, label: "regex:signal kendaraan sendiri", score: 130 }],
   124: [{ pattern: /\b(kendaraan).*\b(orang\s+lain|keluarga).*\b(signal)\b|\b(signal).*\b(kendaraan).*\b(orang\s+lain|keluarga)\b/, label: "regex:signal kendaraan keluarga", score: 130 }],
   126: [{ pattern: /\b(signal).*\b(gagal|verifikasi|wajah|buram|nik|terbaca)\b|\b(gagal|verifikasi|wajah|buram|nik|terbaca).*\b(signal)\b/, label: "regex:verifikasi signal gagal", score: 190 }],
-  127: [{ pattern: /\b(signal).*\b(pajak\s+tahunan|pengesahan|datang\s+ke\s+samsat|selesai\s+online)\b|\b(pajak\s+tahunan|pengesahan|datang\s+ke\s+samsat|selesai\s+online).*\b(signal)\b/, label: "regex:signal pajak tahunan", score: 215 }],
+  127: [{ pattern: /\b(signal).*\b(pajak\s+tahunan|pembayaran\s+berhasil|pengesahan|datang\s+ke\s+samsat|selesai\s+online|qr\s+code|e\s+pengesahan|e\s+tbpkp|stnk\s+fisik)\b|\b(pajak\s+tahunan|pembayaran\s+berhasil|pengesahan|datang\s+ke\s+samsat|selesai\s+online|qr\s+code|e\s+pengesahan|e\s+tbpkp|stnk\s+fisik).*\b(signal)\b/, label: "regex:signal pajak tahunan", score: 215 }],
   128: [{ pattern: /\b(signal|online).*\b(pajak|pkb)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(signal|online)\b/, label: "regex:signal pajak lima tahunan", score: 170 }],
   129: [{ pattern: /\b(samsat\s+keliling|layanan\s+keliling)\b/, label: "regex:samsat keliling", score: 95 }],
   131: [{ pattern: /\b(samsat\s+keliling).*\b(layanan|beda|induk|stnk\s+hilang|balik\s+nama)\b|\b(stnk\s+hilang|balik\s+nama|beda).*\b(samsat\s+keliling)\b/, label: "regex:layanan samsat keliling", score: 170 }],
@@ -509,7 +595,7 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
   139: [{ pattern: /\b(mushola|musala).*\b(samsat|dalam)?\b|\b(samsat|dalam).*\b(mushola|musala)\b/, label: "regex:mushola", score: 130 }],
   140: [{ pattern: /\b(loket|cs|informasi|customer\s+service|tanya).*\b(samsat|proses)?\b|\b(samsat|proses).*\b(loket|cs|informasi|customer\s+service|tanya)\b/, label: "regex:loket informasi", score: 130 }],
   141: [{ pattern: /\b(cek\s+fisik).*\b(area|tempat|masuk|lewat)\b|\b(area|tempat|masuk|lewat).*\b(cek\s+fisik)\b/, label: "regex:area cek fisik", score: 220 }],
-  143: [{ pattern: /\b(pembayaran|uang).*\b(gagal|terpotong|kendala)\b|\b(gagal|terpotong|kendala).*\b(pembayaran|uang)\b|\b(signal|aplikasi).*\b(status|belum\s+berubah)\b|\b(status|belum\s+berubah).*\b(signal|aplikasi)\b|\b(nomor\s+polisi|aplikasi).*\b(salah)\b|\b(salah).*\b(nomor\s+polisi|aplikasi)\b/, label: "regex:kendala layanan", score: 220 }],
+  143: [{ pattern: /\b(pembayaran|uang|saldo|rekening).*\b(gagal|terpotong|kendala|belum\s+berubah|belum\s+terbayarkan)\b|\b(gagal|terpotong|kendala|belum\s+berubah|belum\s+terbayarkan).*\b(pembayaran|uang|saldo|rekening)\b|\b(signal|aplikasi).*\b(status|belum\s+berubah|belum\s+terbayarkan|bayar\s+ulang|customer\s+service|live\s+chat)\b|\b(status|belum\s+berubah|belum\s+terbayarkan|bayar\s+ulang|customer\s+service|live\s+chat).*\b(signal|aplikasi)\b|\b(nomor\s+polisi|aplikasi).*\b(salah)\b|\b(salah).*\b(nomor\s+polisi|aplikasi)\b/, label: "regex:kendala layanan", score: 220 }],
   142: [{ pattern: /\b(pengaduan|keluhan|komplain|lapor|petugas|jutek).*\b(samsat|layanan|petugas)?\b/, label: "regex:pengaduan", score: 110 }],
   146: [{ pattern: /\b(drive\s+thru|drivethru)\b/, label: "regex:drive thru", score: 80 }],
   147: [{ pattern: /\b(memiliki|tersedia|ada|punya).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(memiliki|tersedia|ada|punya)\b/, label: "regex:ketersediaan drive thru", score: 130 }],
@@ -958,13 +1044,17 @@ function hasOutOfScopeContext(normalizedInput: string) {
 
 function isInboundMutationToBandungContext(normalizedInput: string) {
   return (
-    normalizedInput.includes("bandung") &&
+    normalizedInput.includes("mutasi") ||
+    normalizedInput.includes("balik nama") ||
+    normalizedInput.includes("cabut berkas") ||
+    normalizedInput.includes("jadi bandung") ||
+    normalizedInput.includes("pelat jakarta") ||
     (
-      normalizedInput.includes("mutasi") ||
-      normalizedInput.includes("jadi bandung") ||
-      normalizedInput.includes("pindah") ||
-      normalizedInput.includes("luar daerah") ||
-      normalizedInput.includes("pelat jakarta")
+      normalizedInput.includes("bandung") &&
+      (
+        normalizedInput.includes("pindah") ||
+        normalizedInput.includes("luar daerah")
+      )
     )
   );
 }
