@@ -433,6 +433,14 @@ describe("matchMultipleFaq", () => {
   it("tetap mengembalikan satu jawaban untuk pertanyaan tunggal", () => {
     expect(matchMultipleFaq("Kalau stnk hilang bagaimana?").map((result) => result.entry.id)).toEqual([54]);
   });
+
+  it("menolak pesan multi-intent jika mengandung layanan di luar Samsat", () => {
+    expect(
+      matchMultipleFaq(
+        "Saya mau bayar pajak motor sambil perpanjang paspor, bisa dilakukan di Samsat Bandung Timur?"
+      )
+    ).toEqual([]);
+  });
 });
 
 describe("getCategory", () => {

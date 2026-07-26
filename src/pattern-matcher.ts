@@ -932,6 +932,11 @@ export function matchMultipleFaq(
   input: string,
   maxResults = defaultMaxMultiIntentResults
 ): PatternMatchResult[] {
+  const normalizedInput = normalize(input);
+  if (hasOutOfScopeContext(normalizedInput)) {
+    return [];
+  }
+
   const normalizedLimit = Math.max(1, Math.floor(maxResults));
   const segments = getMultiIntentSegments(input);
 
