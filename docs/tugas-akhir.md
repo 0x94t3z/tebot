@@ -6,7 +6,11 @@ Dokumen ini berisi penjelasan pendukung untuk Tugas Akhir berjudul:
 Implementasi Metode Pattern Matching pada Chatbot Frequently Asked Questions: SAMSAT Bandung Timur
 ```
 
-Fokus dokumen ini adalah membantu menjawab pertanyaan dosen saat bimbingan atau sidang, terutama tentang dataset, pengujian, pertanyaan random, dan cara maintenance sistem.
+Dokumen ini disiapkan untuk menjawab pertanyaan yang kemungkinan muncul saat bimbingan atau sidang: dataset, pengujian, pertanyaan random, dan cara merawat pattern ketika ada input baru yang belum dikenali.
+
+Dokumen pendukung:
+
+- [Saran Penyusunan Bab 4 dan Bab 5](saran-bab-4-5.md)
 
 ## Ringkasan Sistem
 
@@ -35,14 +39,14 @@ Proses pencocokan:
 1. Input user dinormalisasi menjadi huruf kecil dan bentuk teks yang lebih seragam.
 2. Tanda baca, variasi ejaan, dan istilah tertentu disamakan.
 3. Input dipecah menjadi token.
-4. Stop word umum diabaikan agar pencocokan fokus pada kata penting.
+4. Stop word umum diabaikan agar pencocokan fokus pada kata yang membawa makna.
 5. Beberapa sinonim sederhana diperluas.
 6. Input dibandingkan dengan pertanyaan FAQ, kategori, custom pattern, dan regex pendukung.
 7. Setiap kandidat FAQ diberi skor relevansi.
 8. FAQ dengan skor tertinggi dipilih jika melewati ambang batas.
 9. Jika tidak ada kandidat yang cukup relevan, bot mengirim fallback.
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
 Chatbot menerapkan metode pattern matching berbasis aturan. Input pengguna dinormalisasi, ditokenisasi, diperluas dengan aturan sinonim sederhana, lalu dibandingkan dengan pola FAQ. Regex digunakan sebagai teknik pendukung untuk normalisasi teks dan deteksi frasa spesifik, sedangkan pemilihan jawaban akhir dilakukan menggunakan pattern matching dan scoring.
@@ -73,10 +77,10 @@ Regex digunakan dalam dua bagian:
    - pembayaran SIGNAL status belum berubah
    - TNKB/plat hilang atau rusak
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
-Regex tidak menggantikan metode pattern matching, tetapi memperkuat proses pencocokan. Regex membantu sistem mengenali variasi penulisan dan pola frasa tertentu, sementara keputusan akhir tetap menggunakan scoring pattern matching.
+Regex tidak menggantikan pattern matching. Regex membantu sistem mengenali variasi penulisan dan pola frasa tertentu. Keputusan akhir tetap memakai scoring pattern matching.
 ```
 
 ## Dataset 150 dan Test Case 209
@@ -111,7 +115,7 @@ Contoh skenario test:
 - pesan multi-intent
 - format balasan Telegram
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
 Dataset FAQ berjumlah 150 data, sedangkan 209 adalah jumlah test case otomatis. Jumlah test tidak dihitung dari perkalian dataset dengan seluruh variasi pertanyaan. Test case ditentukan berdasarkan skenario black box, seperti input FAQ valid, urutan kata dibalik, pertanyaan natural, multi-intent, dan fallback untuk pertanyaan di luar konteks.
@@ -141,7 +145,7 @@ Output yang diharapkan:
 Fallback, karena paspor bukan layanan SAMSAT
 ```
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
 Pengujian dilakukan dengan metode black box karena sistem diuji berdasarkan input dan output. Penguji memberikan pertanyaan kepada chatbot, lalu hasilnya dibandingkan dengan output yang diharapkan, yaitu FAQ yang benar atau fallback jika pertanyaan berada di luar konteks.
@@ -149,7 +153,7 @@ Pengujian dilakukan dengan metode black box karena sistem diuji berdasarkan inpu
 
 ## Uji Coba Melalui Telegram Bot
 
-Test otomatis dengan Vitest dipakai untuk memastikan fungsi sistem berjalan benar sebelum deploy. Namun uji coba kepada responden tetap dilakukan melalui **Telegram bot**, karena Telegram adalah media implementasi chatbot.
+Test otomatis dengan Vitest dipakai untuk memastikan fungsi sistem berjalan benar sebelum deploy. Uji coba kepada responden tetap dilakukan melalui **Telegram bot**, karena Telegram adalah media implementasi chatbot.
 
 Perbedaan pengujian:
 
@@ -158,22 +162,22 @@ Perbedaan pengujian:
 | Test otomatis | Vitest | Memvalidasi fungsi pattern matching, fallback, multi-intent, dan format balasan |
 | Uji coba responden | Telegram bot | Menguji pengalaman user dan mengumpulkan voting kepuasan jawaban |
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
-Pengujian sistem dilakukan dengan dua pendekatan. Pertama, pengujian otomatis menggunakan Vitest untuk memvalidasi fungsi pattern matching. Kedua, pengujian kepada responden dilakukan melalui Telegram bot karena Telegram merupakan media implementasi chatbot dalam penelitian ini.
+Pengujian sistem dilakukan lewat dua jalur. Vitest dipakai untuk memeriksa fungsi pattern matching. Uji coba responden dilakukan lewat Telegram bot karena Telegram adalah media tempat chatbot dipakai.
 ```
 
 ## Batasan Pertanyaan Random
 
 Pertanyaan random atau pertanyaan tidak biasa digunakan sebagai skenario uji yang mewakili kemungkinan input user. Pertanyaan random tidak perlu ditambahkan tanpa batas, karena variasi bahasa user sangat banyak dan terus berubah.
 
-Karena sistem menggunakan pattern matching dan regex, sistem tidak dapat memahami semua variasi bahasa seperti LLM atau AI generatif. Jika ada pola pertanyaan baru yang belum dikenali, sistem perlu diperbarui.
+Karena sistem memakai pattern matching dan regex, sistem tidak memahami semua variasi bahasa seperti LLM. Kalau ada pola pertanyaan baru yang valid dan belum dikenali, pattern perlu diperbarui.
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
-Pertanyaan random diuji sebagai skenario yang mewakili kemungkinan input user, bukan sebagai daftar tidak terbatas. Karena chatbot menggunakan metode pattern matching berbasis aturan dengan dukungan regex, sistem tidak dapat memahami semua variasi bahasa seperti LLM. Jika ditemukan pola pertanyaan valid yang baru, sistem perlu diperbarui melalui penambahan data FAQ, custom pattern, regex pendukung, dan regression test.
+Pertanyaan random diuji sebagai sampel input user, bukan sebagai daftar tanpa batas. Chatbot ini memakai pattern matching berbasis aturan dengan dukungan regex, jadi sistem tidak memahami semua variasi bahasa seperti LLM. Jika ditemukan pola pertanyaan valid yang baru, sistem diperbarui lewat data FAQ, custom pattern, regex pendukung, dan regression test.
 ```
 
 ## Jika Dosen Menguji Pertanyaan Baru
@@ -283,7 +287,7 @@ Contoh:
 ]
 ```
 
-Tujuannya agar pertanyaan yang pernah gagal tidak gagal lagi setelah update berikutnya.
+Tujuannya sederhana: pertanyaan yang pernah gagal tidak gagal lagi setelah update berikutnya.
 
 ### 5. Jalankan Pengecekan
 
@@ -299,10 +303,10 @@ Jika semua aman, baru deploy:
 npx wrangler deploy --secrets-file .env
 ```
 
-Penjelasan aman:
+Kalimat yang bisa dipakai:
 
 ```text
-Jika ditemukan pola pertanyaan valid baru saat pengujian, sistem diperbarui secara sistematis. Pertama, dataset FAQ dicek untuk menentukan apakah perlu jawaban baru. Jika jawaban sudah ada, custom pattern atau regex pendukung ditambahkan agar variasi pertanyaan tersebut dapat dikenali. Setelah itu, test case regresi ditambahkan menggunakan pertanyaan yang sebelumnya gagal, sehingga perubahan berikutnya tidak merusak skenario yang sama.
+Jika ditemukan pola pertanyaan valid baru saat pengujian, dataset FAQ dicek dulu. Jika perlu jawaban baru, data FAQ diperbarui. Jika jawabannya sudah ada, tambahkan custom pattern atau regex pendukung agar variasi kalimat tersebut dikenali. Setelah itu, buat regression test dari pertanyaan yang sebelumnya gagal.
 ```
 
 ## Jawaban Singkat untuk Presentasi
@@ -317,7 +321,7 @@ Tidak. Chatbot tidak menggunakan AI generatif. Sistem mencocokkan pertanyaan use
 
 ### Mengapa dataset disimpan di JSON?
 
-Dataset disimpan di JSON agar data FAQ terpisah dari logic algoritma. Dengan begitu data lebih mudah diperbarui tanpa mengubah struktur utama program.
+Dataset disimpan di JSON agar data FAQ terpisah dari logic algoritma. Data jadi lebih mudah diperbarui tanpa mengubah struktur utama program.
 
 ### Mengapa test case 209, bukan 300?
 
@@ -330,4 +334,3 @@ Tidak. Pertanyaan random digunakan sebagai sampel skenario. Jika ditemukan pola 
 ### Kenapa perlu Telegram untuk uji coba?
 
 Karena Telegram adalah media implementasi chatbot. Test otomatis memvalidasi fungsi sistem, sedangkan uji coba Telegram memvalidasi pengalaman user dan voting kepuasan jawaban.
-
