@@ -22,13 +22,13 @@ The bot runs on Cloudflare Workers, so it does not need to run on your Mac after
 Current live Worker URL:
 
 ```text
-https://samsat-bandung-timur-bot.uniframe.workers.dev
+https://samsat-bandung-timur-bot.samsat.workers.dev
 ```
 
 Webhook endpoint:
 
 ```text
-https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
+https://samsat-bandung-timur-bot.samsat.workers.dev/webhook
 ```
 
 ### Features
@@ -88,21 +88,21 @@ last_seen_at
 Export CSV through the protected endpoint:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/research.csv" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.csv" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
 ```
 
 For a readable terminal table, use:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/research.txt" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.txt" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
 ```
 
 For a browser-readable HTML table, download it first:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/research.html" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.html" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN" \
   -o research.html
 open research.html
@@ -113,7 +113,7 @@ The research export endpoints require `ADMIN_EXPORT_TOKEN`. Do not share this to
 Export FAQ satisfaction recap:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/satisfaction.csv" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/satisfaction.csv" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
 ```
 
@@ -255,6 +255,39 @@ For academic writing, the core method should be described as **Pattern Matching*
 Regex is developed in two parts. First, regex is used in `normalize()` to clean punctuation, remove non-alphanumeric characters, normalize spacing, and standardize domain terms such as `drive-thru/drivethru`, `nopol/nomor polisi`, `5 tahun/lima tahunan`, `cabut berkas`, and `gesek rangka`. Second, regex-assisted FAQ patterns are used to detect specific question forms such as `STNK hilang`, `pajak lima tahunan`, `syarat mutasi`, `cek fisik untuk mutasi`, `jadwal Samsat Keliling`, and `Drive Thru`. Regex is **not** the only matching method; it supports the rule-based pattern matching process.
 
 The matcher also supports **multi-intent input**. If one user message contains more than one FAQ question, the system splits the text using punctuation and connector patterns such as `dan`, `lalu`, `terus`, `tapi`, and `kemudian`, then runs pattern matching for each meaningful segment. Each accepted segment must still pass the domain-context validation and a higher multi-intent score threshold before the bot sends more than one answer. The bot limits multi-intent replies to avoid making the Telegram chat too long.
+
+### Overall Working Pattern
+
+At a high level, the chatbot works as a Telegram-based request-response system:
+
+1. The user sends `/start`, presses a menu button, or types a question in Telegram.
+2. Telegram forwards the update to the Cloudflare Worker through the registered webhook URL.
+3. The Worker validates the webhook secret to make sure the request really comes from Telegram.
+4. The Worker identifies the input type:
+   - command, such as `/start`, `/help`, or `/clear`
+   - callback button, such as category, FAQ, pagination, or voting
+   - free-text question from the user
+   - unsupported media input
+5. If the input is `/start`, the bot stores basic Telegram profile data for research and shows the main menu.
+6. If the input is a menu or FAQ button, the bot returns the selected category page or selected FAQ answer.
+7. If the input is a free-text question, the bot runs the pattern matching process against the 150-row FAQ dataset.
+8. Before selecting an answer, the bot checks whether the question is still within the SAMSAT/vehicle-administration domain. Questions about passport, ATM, SIM, electricity bills, gym, or other unrelated services are rejected with fallback.
+9. If the message contains more than one valid FAQ intent, the bot can return more than one answer, but the number is limited so the chat stays readable.
+10. For each matched FAQ, the bot sends the selected question, answer, source, satisfaction voting buttons, and then shows the main menu again.
+11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates the vote in Cloudflare KV and recalculates the satisfaction percentage.
+12. If the user sends `/clear`, the bot deletes tracked messages according to Telegram Bot API limits and sends a fresh main menu.
+
+In simple terms:
+
+```text
+Telegram user input
+  -> Telegram webhook
+  -> Cloudflare Worker
+  -> command/callback/text routing
+  -> pattern matching or fallback
+  -> Telegram reply
+  -> satisfaction voting and research storage
+```
 
 Safe wording for the thesis:
 
@@ -498,7 +531,7 @@ set -a
 source .env
 set +a
 
-export WORKER_URL="https://samsat-bandung-timur-bot.uniframe.workers.dev"
+export WORKER_URL="https://samsat-bandung-timur-bot.samsat.workers.dev"
 
 curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/setWebhook" \
   -d "url=$WORKER_URL/webhook" \
@@ -521,6 +554,103 @@ src/data/faq-samsat-bandung-timur.json
 
 This is the active 150-row dataset used by the bot. Keep `id` values sequential from `1` to `150` when replacing the dataset.
 
+If a lecturer or tester asks a new valid question and the bot does not answer correctly, update the system in this order:
+
+1. **Update dataset**
+
+   Edit `src/data/faq-samsat-bandung-timur.json`.
+
+   Use this option when the question needs a new FAQ answer or the existing answer is incomplete. Add or update:
+
+   - `question`
+   - `answer`
+   - `source`
+   - `category`
+
+   If adding a new row, keep the `id` value sequential and make sure the total dataset count is updated intentionally. If the new question is only a different wording of an existing FAQ, prefer updating patterns instead of adding a duplicate FAQ row.
+
+2. **Add custom pattern**
+
+   Edit `src/pattern-matcher.ts`, in:
+
+   ```ts
+   const customPatterns: Record<number, string[]> = {
+   ```
+
+   Add natural wording variations to the FAQ ID that should answer the question.
+
+   Example:
+
+   ```ts
+   80: [
+     "bayar pajak pemilik meninggal",
+     "bapak meninggal bayar pajak",
+     "stnk masih atas nama beliau bayar pajak"
+   ]
+   ```
+
+   Use custom patterns when the answer already exists, but the user's wording is different from the official FAQ question.
+
+3. **Add supporting regex**
+
+   Edit `src/pattern-matcher.ts`, in:
+
+   ```ts
+   const regexPatterns: Record<number, RegexPatternSpec[]> = {
+   ```
+
+   Add regex only when the question has a reusable phrase structure that may appear in many forms.
+
+   Example:
+
+   ```ts
+   80: [{
+     pattern: /\b(ayah|bapak|pemilik).*\b(meninggal).*\b(pajak|bayar)\b/,
+     label: "regex:pajak pemilik meninggal",
+     score: 340
+   }]
+   ```
+
+   Regex is used as a supporting technique, not as the whole method. Keep regex specific enough so it does not capture unrelated questions.
+
+4. **Add test case**
+
+   Edit `test/pattern-matcher.test.ts`.
+
+   Add a regression test using the exact question that failed during testing.
+
+   Example:
+
+   ```ts
+   [
+     "Bapak saya sudah meninggal dan STNK motor masih atas nama beliau, saya mau bayar pajak tahunan apakah harus balik nama dulu?",
+     80,
+     "Balik Nama"
+   ]
+   ```
+
+   This proves that the same question will keep returning the correct FAQ after future changes.
+
+5. **Run checks**
+
+   ```sh
+   npm test
+   npm run typecheck
+   git diff --check
+   ```
+
+6. **Deploy after validation**
+
+   ```sh
+   npx wrangler deploy --secrets-file .env
+   ```
+
+Safe explanation for presentation:
+
+```text
+If a new valid question pattern is found during testing, the system is updated systematically. First, the FAQ dataset is checked to decide whether a new answer is needed. If the answer already exists, custom patterns or supporting regex are added to improve matching. Then a regression test case is added using the failed question, so future changes do not break the same scenario. This shows that the system can be maintained according to the rule-based pattern matching method.
+```
+
 Then run:
 
 ```sh
@@ -529,12 +659,58 @@ npm test
 npx wrangler deploy --secrets-file .env
 ```
 
+### Testing and Research Trial
+
+The active FAQ dataset contains **150 FAQ rows**. This number is the amount of knowledge-base data used by the chatbot.
+
+The number shown by Vitest, for example:
+
+```text
+Tests  209 passed (209)
+```
+
+is **not** the number of FAQ rows and is **not** the number of answered user questions. It is the number of automated test cases used to validate system behavior. Therefore, it does not have to be `150 x 2 = 300` even though some tests check reversed word order or conversational variations.
+
+The automated tests are scenario-based. They cover dataset validation, original FAQ questions, reversed word order, conversational question forms, natural user questions, out-of-scope fallback, multi-intent messages, category handling, and Telegram reply formatting.
+
+This is suitable for **black box testing** because each test checks whether a given input produces the expected output without requiring the tester to inspect the internal scoring process. The input is the user question, and the expected output is either the correct FAQ answer or fallback.
+
+#### Random Question Limitation
+
+Random or unusual questions are used as representative test scenarios, not as an unlimited list that must all be added to the system. This is important because user language can vary endlessly. A rule-based pattern matching system cannot guarantee that every possible random sentence will be recognized.
+
+Unlike an LLM or generative AI system, this chatbot does not infer answers from open-ended language understanding. It only matches user input against the FAQ dataset, custom patterns, synonym rules, regex-assisted patterns, and scoring rules that have been defined. Because of that, a new question pattern that has never been represented in the dataset or pattern rules may fail to match or may be sent to fallback.
+
+If a new valid question pattern is found during testing or user trials, the correct maintenance process is:
+
+1. Identify whether the question is still within the SAMSAT/vehicle-administration domain.
+2. If it is valid, map it to the most appropriate FAQ entry or add a new FAQ row if needed.
+3. Add or refine custom patterns, synonym rules, or regex-assisted patterns.
+4. Add a regression test so the same problem does not happen again.
+5. Run `npm test` and `npm run typecheck` before deployment.
+
+Therefore, the goal of random-question testing is not to prove that the chatbot can answer every possible random sentence. The goal is to prove that the chatbot can answer representative valid variations, reject out-of-scope questions, and document the limitation of the rule-based method.
+
+Safe explanation for presentation:
+
+```text
+Random questions are tested as representative scenarios, not as an unlimited list. Because the chatbot uses rule-based pattern matching and regex support, it cannot understand every possible language variation like an LLM. If a new valid pattern appears, the system must be updated by adding FAQ data, custom patterns, regex support, and regression tests. This is a limitation of the rule-based method and is documented as part of the system evaluation.
+```
+
+For research with respondents, testing should still be performed through the **Telegram bot** because Telegram is the implementation medium of the chatbot. The automated Vitest tests validate the system before deployment, while Telegram-based trials validate the user experience and collect satisfaction voting data.
+
+Safe explanation for presentation:
+
+```text
+The FAQ dataset contains 150 rows, while 209 refers to automated test cases. The test count is not calculated by multiplying the dataset by every possible question variation. The test cases are selected based on black box scenarios, including valid FAQ input, reversed word order, natural user input, multi-intent input, and out-of-scope fallback. User trials are still conducted through the Telegram bot because Telegram is the chatbot implementation medium.
+```
+
 ### Troubleshooting
 
 Check Worker health:
 
 ```sh
-curl https://samsat-bandung-timur-bot.uniframe.workers.dev/health
+curl https://samsat-bandung-timur-bot.samsat.workers.dev/health
 ```
 
 Check bot identity:
@@ -625,13 +801,13 @@ Bot berjalan di Cloudflare Workers, jadi setelah deploy bot tidak berjalan di Ma
 URL Worker saat ini:
 
 ```text
-https://samsat-bandung-timur-bot.uniframe.workers.dev
+https://samsat-bandung-timur-bot.samsat.workers.dev
 ```
 
 Endpoint webhook:
 
 ```text
-https://samsat-bandung-timur-bot.uniframe.workers.dev/webhook
+https://samsat-bandung-timur-bot.samsat.workers.dev/webhook
 ```
 
 ### Fitur
@@ -736,6 +912,39 @@ User Telegram
 9. Bot menampilkan kembali menu utama agar user dapat melanjutkan pencarian.
 10. Jika user memilih voting, sistem menyimpan atau memperbarui vote user.
 11. Bot memperbarui tampilan hasil voting dalam bentuk persentase memuaskan dan tidak memuaskan.
+
+#### Pola Cara Kerja Keseluruhan
+
+Secara umum, chatbot bekerja sebagai sistem tanya jawab berbasis Telegram:
+
+1. User mengirim `/start`, menekan tombol menu, atau mengetik pertanyaan di Telegram.
+2. Telegram meneruskan update tersebut ke Cloudflare Worker melalui URL webhook yang sudah didaftarkan.
+3. Cloudflare Worker memvalidasi webhook secret untuk memastikan request berasal dari Telegram.
+4. Worker mengidentifikasi jenis input:
+   - command seperti `/start`, `/help`, atau `/clear`
+   - callback button seperti kategori, FAQ, pagination, atau voting
+   - pertanyaan bebas dalam bentuk teks
+   - input media yang tidak didukung
+5. Jika input berupa `/start`, bot menyimpan profil dasar Telegram user untuk kebutuhan riset dan menampilkan menu utama.
+6. Jika input berasal dari tombol menu atau tombol FAQ, bot menampilkan halaman kategori atau jawaban FAQ yang dipilih.
+7. Jika input berupa pertanyaan bebas, bot menjalankan proses pattern matching terhadap 150 data FAQ aktif.
+8. Sebelum memilih jawaban, bot memeriksa apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan. Pertanyaan tentang paspor, ATM, SIM, tagihan listrik, gym, atau layanan lain di luar SAMSAT akan diarahkan ke fallback.
+9. Jika satu pesan berisi lebih dari satu intent FAQ yang valid, bot dapat mengirim lebih dari satu jawaban, tetapi jumlahnya dibatasi agar chat tetap mudah dibaca.
+10. Untuk setiap FAQ yang cocok, bot mengirim pertanyaan terpilih, jawaban, sumber, tombol voting kepuasan, lalu menampilkan kembali menu utama.
+11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui voting di Cloudflare KV dan menghitung ulang persentase kepuasan.
+12. Jika user mengirim `/clear`, bot menghapus pesan yang terlacak sesuai batasan Telegram Bot API dan mengirim menu utama baru.
+
+Ringkasnya:
+
+```text
+Input user di Telegram
+  -> webhook Telegram
+  -> Cloudflare Worker
+  -> routing command/callback/teks
+  -> pattern matching atau fallback
+  -> balasan Telegram
+  -> voting kepuasan dan penyimpanan data riset
+```
 
 #### Flow Pattern Matching
 
@@ -1004,7 +1213,7 @@ last_seen_at
 Export rekap kepuasan FAQ:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/satisfaction.csv" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/satisfaction.csv" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
 ```
 
@@ -1018,21 +1227,21 @@ Versi yang mudah dibaca juga tersedia:
 Export CSV melalui endpoint terproteksi:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/research.csv" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.csv" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
 ```
 
 Untuk tabel yang lebih mudah dibaca di terminal, gunakan:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/research.txt" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.txt" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
 ```
 
 Untuk tabel HTML yang bisa dibuka di browser, download dulu filenya:
 
 ```sh
-curl "https://samsat-bandung-timur-bot.uniframe.workers.dev/research.html" \
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.html" \
   -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN" \
   -o research.html
 open research.html
@@ -1393,7 +1602,7 @@ set -a
 source .env
 set +a
 
-export WORKER_URL="https://samsat-bandung-timur-bot.uniframe.workers.dev"
+export WORKER_URL="https://samsat-bandung-timur-bot.samsat.workers.dev"
 
 curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/setWebhook" \
   -d "url=$WORKER_URL/webhook" \
@@ -1416,6 +1625,103 @@ src/data/faq-samsat-bandung-timur.json
 
 File ini adalah dataset aktif 150 data yang dipakai bot. Pastikan field `id` tetap berurutan dari `1` sampai `150` jika dataset diganti.
 
+Jika dosen atau penguji mencoba pertanyaan valid baru dan bot belum menjawab dengan benar, update sistem dengan urutan berikut:
+
+1. **Update dataset**
+
+   Edit `src/data/faq-samsat-bandung-timur.json`.
+
+   Langkah ini dipakai jika pertanyaan membutuhkan jawaban FAQ baru atau jawaban lama masih kurang lengkap. Data yang diperbarui meliputi:
+
+   - `question`
+   - `answer`
+   - `source`
+   - `category`
+
+   Jika menambahkan baris baru, pastikan `id` tetap berurutan dan jumlah dataset berubah secara sengaja. Jika pertanyaan baru hanya variasi kalimat dari FAQ yang sudah ada, lebih baik menambah pattern daripada membuat FAQ duplikat.
+
+2. **Tambah custom pattern**
+
+   Edit `src/pattern-matcher.ts`, pada bagian:
+
+   ```ts
+   const customPatterns: Record<number, string[]> = {
+   ```
+
+   Tambahkan variasi kalimat natural ke ID FAQ yang seharusnya menjawab pertanyaan tersebut.
+
+   Contoh:
+
+   ```ts
+   80: [
+     "bayar pajak pemilik meninggal",
+     "bapak meninggal bayar pajak",
+     "stnk masih atas nama beliau bayar pajak"
+   ]
+   ```
+
+   Custom pattern dipakai jika jawabannya sudah ada, tetapi cara user bertanya berbeda dari pertanyaan resmi di dataset.
+
+3. **Tambah regex pendukung**
+
+   Edit `src/pattern-matcher.ts`, pada bagian:
+
+   ```ts
+   const regexPatterns: Record<number, RegexPatternSpec[]> = {
+   ```
+
+   Regex ditambahkan jika bentuk pertanyaannya punya struktur frasa yang bisa muncul dalam banyak variasi.
+
+   Contoh:
+
+   ```ts
+   80: [{
+     pattern: /\b(ayah|bapak|pemilik).*\b(meninggal).*\b(pajak|bayar)\b/,
+     label: "regex:pajak pemilik meninggal",
+     score: 340
+   }]
+   ```
+
+   Regex hanya menjadi teknik pendukung, bukan keseluruhan metode. Regex harus dibuat spesifik agar tidak menangkap pertanyaan yang tidak relevan.
+
+4. **Tambah test case**
+
+   Edit `test/pattern-matcher.test.ts`.
+
+   Tambahkan regression test memakai pertanyaan asli yang gagal saat diuji.
+
+   Contoh:
+
+   ```ts
+   [
+     "Bapak saya sudah meninggal dan STNK motor masih atas nama beliau, saya mau bayar pajak tahunan apakah harus balik nama dulu?",
+     80,
+     "Balik Nama"
+   ]
+   ```
+
+   Test ini membuktikan bahwa pertanyaan tersebut akan tetap mengarah ke FAQ yang benar setelah perubahan berikutnya.
+
+5. **Jalankan pengecekan**
+
+   ```sh
+   npm test
+   npm run typecheck
+   git diff --check
+   ```
+
+6. **Deploy setelah validasi**
+
+   ```sh
+   npx wrangler deploy --secrets-file .env
+   ```
+
+Penjelasan aman untuk presentasi:
+
+```text
+Jika ditemukan pola pertanyaan valid baru saat pengujian, sistem diperbarui secara sistematis. Pertama, dataset FAQ dicek untuk menentukan apakah perlu jawaban baru. Jika jawaban sudah ada, custom pattern atau regex pendukung ditambahkan agar variasi pertanyaan tersebut dapat dikenali. Setelah itu, test case regresi ditambahkan menggunakan pertanyaan yang sebelumnya gagal, sehingga perubahan berikutnya tidak merusak skenario yang sama. Hal ini menunjukkan bahwa sistem dapat dipelihara sesuai metode pattern matching berbasis aturan.
+```
+
 Lalu jalankan:
 
 ```sh
@@ -1424,12 +1730,58 @@ npm test
 npx wrangler deploy --secrets-file .env
 ```
 
+### Pengujian dan Uji Coba Penelitian
+
+Dataset FAQ aktif berisi **150 data FAQ**. Angka ini adalah jumlah data knowledge base yang digunakan chatbot.
+
+Angka yang muncul pada output Vitest, misalnya:
+
+```text
+Tests  209 passed (209)
+```
+
+bukan jumlah data FAQ dan bukan jumlah pertanyaan user yang terjawab. Angka tersebut adalah jumlah test case otomatis yang dipakai untuk memvalidasi perilaku sistem. Karena itu, jumlah test tidak harus menjadi `150 x 2 = 300` walaupun ada pengujian urutan kata dibalik atau variasi pertanyaan percakapan.
+
+Test otomatis dibuat berdasarkan skenario. Cakupannya meliputi validasi dataset, pertanyaan asli FAQ, urutan kata yang dibalik, bentuk pertanyaan percakapan, pertanyaan natural user, fallback untuk pertanyaan di luar konteks, pesan multi-intent, validasi kategori, dan format balasan Telegram.
+
+Pengujian ini sesuai dengan metode **black box testing** karena test memeriksa apakah input tertentu menghasilkan output yang diharapkan tanpa mengharuskan penguji melihat proses scoring di dalam algoritma. Input berupa pertanyaan user, sedangkan output yang diharapkan berupa FAQ yang benar atau fallback.
+
+#### Batasan Pertanyaan Random
+
+Pertanyaan random atau pertanyaan yang tidak biasa digunakan sebagai contoh skenario uji yang mewakili kemungkinan input user, bukan sebagai daftar tidak terbatas yang semuanya harus dimasukkan ke sistem. Hal ini penting karena variasi bahasa user dapat sangat banyak dan terus berubah. Sistem pattern matching berbasis aturan tidak dapat menjamin seluruh kemungkinan kalimat random akan selalu dikenali.
+
+Berbeda dengan LLM atau AI generatif, chatbot ini tidak menyimpulkan jawaban dari pemahaman bahasa bebas. Sistem hanya mencocokkan input user dengan dataset FAQ, custom pattern, aturan sinonim, regex-assisted pattern, dan aturan scoring yang sudah didefinisikan. Karena itu, pola pertanyaan baru yang belum pernah terwakili di dataset atau aturan pattern dapat gagal dikenali atau diarahkan ke fallback.
+
+Jika saat testing atau uji coba user ditemukan pola pertanyaan valid yang belum dikenali, proses maintenance yang benar adalah:
+
+1. Identifikasi apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan.
+2. Jika valid, arahkan ke FAQ yang paling sesuai atau tambahkan data FAQ baru jika diperlukan.
+3. Tambahkan atau perbaiki custom pattern, aturan sinonim, atau regex-assisted pattern.
+4. Tambahkan regression test agar masalah yang sama tidak muncul kembali.
+5. Jalankan `npm test` dan `npm run typecheck` sebelum deploy.
+
+Dengan demikian, tujuan pengujian pertanyaan random bukan untuk membuktikan bahwa chatbot dapat menjawab semua kemungkinan kalimat random. Tujuannya adalah membuktikan bahwa chatbot mampu menjawab variasi valid yang representatif, menolak pertanyaan di luar konteks, dan mendokumentasikan batasan metode rule-based.
+
+Penjelasan aman untuk presentasi:
+
+```text
+Pertanyaan random diuji sebagai skenario yang mewakili kemungkinan input user, bukan sebagai daftar tidak terbatas. Karena chatbot menggunakan metode pattern matching berbasis aturan dengan dukungan regex, sistem tidak dapat memahami semua variasi bahasa seperti LLM. Jika ditemukan pola pertanyaan valid yang baru, sistem perlu diperbarui melalui penambahan data FAQ, custom pattern, regex pendukung, dan regression test. Hal ini merupakan batasan metode rule-based dan dicatat dalam evaluasi sistem.
+```
+
+Untuk pengujian kepada responden, uji coba tetap dilakukan melalui **Telegram bot** karena Telegram adalah media implementasi chatbot pada penelitian ini. Test otomatis dengan Vitest digunakan untuk memvalidasi sistem sebelum deploy, sedangkan uji coba melalui Telegram digunakan untuk melihat pengalaman pengguna dan mengumpulkan data voting kepuasan jawaban.
+
+Penjelasan singkat untuk presentasi:
+
+```text
+Dataset FAQ berjumlah 150 data, sedangkan 209 adalah jumlah test case otomatis. Jumlah test tidak dihitung dari perkalian dataset dengan seluruh variasi pertanyaan. Test case ditentukan berdasarkan skenario black box, seperti input FAQ valid, urutan kata dibalik, pertanyaan natural, multi-intent, dan fallback untuk pertanyaan di luar konteks. Uji coba responden tetap dilakukan melalui Telegram bot karena Telegram merupakan media implementasi chatbot.
+```
+
 ### Troubleshooting
 
 Cek health Worker:
 
 ```sh
-curl https://samsat-bandung-timur-bot.uniframe.workers.dev/health
+curl https://samsat-bandung-timur-bot.samsat.workers.dev/health
 ```
 
 Cek identitas bot:
