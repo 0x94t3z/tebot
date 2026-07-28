@@ -1314,7 +1314,7 @@ function measureEntryRelevance(
     entry,
     relevance: Math.min(100, Math.round(relevanceValue)),
     rankingRelevance: relevanceValue,
-    matchedTerms: [...matchedTerms].slice(0, 6)
+    matchedTerms: [...matchedTerms]
   };
 }
 

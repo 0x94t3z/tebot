@@ -19,6 +19,10 @@ function formatList(values: string[]) {
   return values.length > 0 ? values.join(", ") : "-";
 }
 
+function unique(values: string[]) {
+  return [...new Set(values)];
+}
+
 console.log("=== Input Analysis ===");
 console.log(`Input                 : ${analysis.input}`);
 console.log(`Normalized            : ${analysis.normalizedInput}`);
@@ -46,11 +50,17 @@ if (results.length === 0) {
 console.log("");
 console.log("=== Match Result ===");
 for (const [index, result] of results.entries()) {
+  const regexMatches = unique(result.matchedTerms.filter((term) => term.startsWith("regex:")));
+  const unorderedPatterns = unique(result.matchedTerms.filter((term) => term.startsWith("unordered:")));
+  const otherTerms = unique(result.matchedTerms.filter((term) => !term.startsWith("regex:") && !term.startsWith("unordered:")));
+
   console.log("");
   console.log(`Match #${index + 1}`);
   console.log(`FAQ ID     : ${result.entry.id}`);
   console.log(`Category   : ${result.entry.category}`);
   console.log(`Question   : ${result.entry.question}`);
   console.log(`Relevance  : ${result.relevance}/100`);
-  console.log(`Terms      : ${result.matchedTerms.length > 0 ? result.matchedTerms.join(", ") : "-"}`);
+  console.log(`Regex      : ${formatList(regexMatches)}`);
+  console.log(`Patterns   : ${formatList(unorderedPatterns)}`);
+  console.log(`Terms      : ${formatList(otherTerms)}`);
 }
