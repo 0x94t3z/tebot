@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Draft Bab 4 dan Bab 5</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 4cm 3cm 3cm 4cm;
+    }
+
+    body {
+      color: #000;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      margin: 0;
+      text-align: justify;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: "Times New Roman", Times, serif;
+      font-weight: bold;
+      line-height: 1.5;
+      margin: 0 0 12pt;
+      page-break-after: avoid;
+      text-align: left;
+    }
+
+    h1 {
+      font-size: 12pt;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    h2,
+    h3,
+    h4 {
+      font-size: 12pt;
+    }
+
+    p {
+      margin: 0 0 12pt;
+      text-indent: 1.27cm;
+    }
+
+    .no-indent {
+      text-indent: 0;
+    }
+
+    .center {
+      text-align: center;
+      text-indent: 0;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 0 0 12pt;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #000;
+      font-size: 11pt;
+      padding: 5pt;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    pre {
+      border: 1px solid #777;
+      font-family: "Courier New", monospace;
+      font-size: 10pt;
+      line-height: 1.3;
+      margin: 0 0 12pt;
+      padding: 8pt;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+
+    ol,
+    ul {
+      margin: 0 0 12pt 1.27cm;
+      padding: 0;
+    }
+
+    li {
+      margin: 0 0 6pt;
+      text-align: justify;
+    }
+
+    .caption {
+      font-size: 11pt;
+      margin: 0 0 12pt;
+      text-align: center;
+      text-indent: 0;
+    }
+
+    .placeholder {
+      border: 1px dashed #777;
+      margin: 0 0 6pt;
+      padding: 18pt;
+      text-align: center;
+      text-indent: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>BAB IV<br>IMPLEMENTASI DAN PENGUJIAN</h1>
+
+  <h2>4.1 Implementasi Sistem</h2>
+  <p>Sistem yang dibuat pada penelitian ini berbentuk chatbot Telegram untuk layanan FAQ SAMSAT Bandung Timur. Chatbot dipakai sebagai media tanya jawab antara pengguna dan sistem. Pengguna bisa memilih kategori melalui tombol menu atau langsung mengetik pertanyaan dalam bentuk teks.</p>
+  <p>Backend chatbot dijalankan menggunakan Cloudflare Workers. Telegram mengirim pesan pengguna ke Worker melalui webhook. Setelah request masuk, Worker membaca jenis input yang dikirim pengguna. Input tersebut bisa berupa command, pilihan tombol, pertanyaan bebas, voting kepuasan, atau input yang tidak didukung seperti foto dan voice note.</p>
+  <p>Bot ini tidak memakai AI generatif. Jawaban yang dikirim berasal dari dataset FAQ yang sudah disiapkan. Pencocokan antara pertanyaan pengguna dan dataset dilakukan dengan metode pattern matching berbasis aturan. Regex dipakai sebagai teknik pendukung untuk normalisasi istilah dan pendeteksian pola pertanyaan tertentu.</p>
+
+  <h3>4.1.1 Lingkungan Implementasi</h3>
+  <p>Lingkungan implementasi sistem terdiri dari Telegram Bot API, Cloudflare Workers, TypeScript, Cloudflare KV, dan Vitest. Telegram Bot API dipakai untuk menerima dan mengirim pesan. Cloudflare Workers menjalankan logika backend. TypeScript dipakai untuk menulis program. Cloudflare KV menyimpan data yang berubah, misalnya profil responden, voting kepuasan, dan daftar message ID untuk command <em>/clear</em>. Vitest dipakai untuk pengujian otomatis.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Komponen</th>
+        <th>Teknologi</th>
+        <th>Fungsi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Media chatbot</td>
+        <td>Telegram Bot API</td>
+        <td>Menerima pesan pengguna dan mengirim balasan chatbot.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Backend</td>
+        <td>Cloudflare Workers</td>
+        <td>Menjalankan proses webhook, routing pesan, pattern matching, dan pengiriman balasan.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Bahasa pemrograman</td>
+        <td>TypeScript</td>
+        <td>Menulis logika sistem dengan tipe data yang jelas.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Penyimpanan dinamis</td>
+        <td>Cloudflare KV</td>
+        <td>Menyimpan profil responden, voting, dan daftar pesan yang dilacak bot.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Dataset FAQ</td>
+        <td>JSON</td>
+        <td>Menyimpan pertanyaan, jawaban, kategori, dan sumber rujukan.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Pengujian</td>
+        <td>Vitest</td>
+        <td>Memeriksa fungsi pattern matching, fallback, multi-intent, dan format balasan.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="caption">Tabel 4.1 Lingkungan implementasi sistem</p>
+
+  <h3>4.1.2 Alur Kerja Sistem</h3>
+  <p>Alur sistem dimulai dari pesan yang dikirim pengguna di Telegram. Telegram meneruskan pesan tersebut ke endpoint webhook yang sudah didaftarkan pada server Telegram. Cloudflare Workers menerima request tersebut dan memvalidasi secret webhook. Jika request valid, sistem melanjutkan proses sesuai jenis input.</p>
+  <p>Jika input berupa command <em>/start</em>, bot menyimpan data dasar pengguna dan menampilkan menu utama. Jika input berasal dari tombol kategori, bot menampilkan daftar pertanyaan pada kategori tersebut. Jika input berupa pertanyaan bebas, sistem menjalankan proses pattern matching terhadap dataset FAQ. Jika input berada di luar konteks SAMSAT, bot mengirim fallback.</p>
+
+  <pre>User Telegram
+  -> Telegram Bot API
+  -> Webhook Cloudflare Workers
+  -> Validasi secret webhook
+  -> Routing input
+  -> Pattern matching atau fallback
+  -> Balasan Telegram
+  -> Penyimpanan data riset dan voting</pre>
+
+  <p class="placeholder">Tempat Gambar 4.1 Alur kerja chatbot Telegram</p>
+  <p class="caption">Gambar 4.1 Alur kerja sistem chatbot</p>
+
+  <h2>4.2 Implementasi Dataset FAQ</h2>
+  <p>Dataset FAQ menjadi sumber jawaban utama pada chatbot. Dataset aktif berisi 150 data FAQ yang disimpan dalam file <em>src/data/faq-samsat-bandung-timur.json</em>. Data disimpan dalam format JSON agar pertanyaan dan jawaban tidak bercampur dengan kode algoritma. Pemisahan ini membuat perubahan dataset lebih mudah dilakukan ketika ada jawaban yang perlu diperbaiki atau pola pertanyaan baru yang perlu ditambahkan.</p>
+  <p>Setiap data FAQ memiliki lima field, yaitu <em>id</em>, <em>category</em>, <em>question</em>, <em>answer</em>, dan <em>source</em>. Field <em>id</em> dipakai sebagai identitas data. Field <em>category</em> dipakai untuk mengelompokkan FAQ ke dalam menu. Field <em>question</em> berisi pertanyaan utama. Field <em>answer</em> berisi jawaban yang dikirim bot. Field <em>source</em> berisi sumber rujukan jawaban.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><em>id</em></td>
+        <td>Nomor unik FAQ.</td>
+      </tr>
+      <tr>
+        <td><em>category</em></td>
+        <td>Kategori pertanyaan FAQ.</td>
+      </tr>
+      <tr>
+        <td><em>question</em></td>
+        <td>Pertanyaan utama pada dataset.</td>
+      </tr>
+      <tr>
+        <td><em>answer</em></td>
+        <td>Jawaban yang dikirim kepada pengguna.</td>
+      </tr>
+      <tr>
+        <td><em>source</em></td>
+        <td>Sumber rujukan jawaban.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="caption">Tabel 4.2 Struktur dataset FAQ</p>
+
+  <p>Dataset dikelompokkan ke dalam sepuluh kategori aktif. Kategori tersebut dipakai pada menu bot dan juga dipakai sebagai salah satu komponen pencocokan saat pengguna mengetik pertanyaan bebas.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Kategori</th>
+        <th>Jumlah Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Layanan</td><td>25</td></tr>
+      <tr><td>2</td><td>Pajak</td><td>28</td></tr>
+      <tr><td>3</td><td>Dokumen</td><td>20</td></tr>
+      <tr><td>4</td><td>Balik Nama</td><td>17</td></tr>
+      <tr><td>5</td><td>Mutasi</td><td>17</td></tr>
+      <tr><td>6</td><td>Cek Fisik</td><td>14</td></tr>
+      <tr><td>7</td><td>SIGNAL</td><td>12</td></tr>
+      <tr><td>8</td><td>Samsat Keliling</td><td>7</td></tr>
+      <tr><td>9</td><td>Fasilitas</td><td>6</td></tr>
+      <tr><td>10</td><td>Pengaduan</td><td>4</td></tr>
+    </tbody>
+  </table>
+  <p class="caption">Tabel 4.3 Distribusi dataset FAQ</p>
+
+  <h2>4.3 Implementasi Metode Pattern Matching</h2>
+  <p>Metode pattern matching diterapkan untuk mencocokkan pertanyaan pengguna dengan dataset FAQ. Sistem tidak membuat jawaban baru. Sistem hanya memilih jawaban yang sudah tersedia pada dataset. Karena itu, kualitas jawaban sangat bergantung pada kualitas dataset dan pola pencocokan yang dibuat.</p>
+  <p>Proses pencocokan dimulai dari normalisasi input. Teks pengguna diubah menjadi huruf kecil, tanda baca dibersihkan, variasi istilah disamakan, lalu teks dipecah menjadi token. Setelah itu sistem menghapus stop word, memperluas beberapa sinonim sederhana, dan membandingkan token input dengan pertanyaan FAQ, kategori, custom pattern, dan regex pendukung.</p>
+
+  <pre>Input pengguna
+  -> normalisasi teks
+  -> segmentasi multi-intent
+  -> tokenisasi
+  -> penghapusan stop word
+  -> perluasan sinonim
+  -> pencocokan pattern
+  -> scoring kandidat FAQ
+  -> jawaban terbaik atau fallback</pre>
+
+  <p class="caption">Gambar 4.2 Alur pattern matching</p>
+
+  <h3>4.3.1 Normalisasi Teks</h3>
+  <p>Normalisasi teks dipakai agar variasi penulisan pengguna menjadi lebih seragam. Contohnya, kata <em>drivethru</em>, <em>drive-thru</em>, dan <em>drive through</em> disamakan menjadi <em>drive thru</em>. Istilah <em>nopol</em>, <em>no polisi</em>, dan <em>nomor polisi</em> juga disamakan. Dengan cara ini, sistem tidak perlu membuat data FAQ baru hanya karena pengguna menulis istilah dengan bentuk berbeda.</p>
+  <p>Normalisasi juga menangani beberapa kata tidak baku yang sering muncul pada chat, seperti <em>ilang</em> menjadi <em>hilang</em>, <em>belom</em> menjadi <em>belum</em>, dan <em>ngurus</em> menjadi <em>cara</em>. Aturan seperti ini membuat input informal tetap punya peluang cocok dengan dataset.</p>
+
+  <h3>4.3.2 Tokenisasi, Stop Word, dan Sinonim</h3>
+  <p>Setelah dinormalisasi, input dipecah menjadi token. Token yang terlalu umum dibuang agar pencocokan fokus pada kata yang membawa makna. Kata seperti <em>apa</em>, <em>bagaimana</em>, <em>kalau</em>, <em>saya</em>, dan <em>min</em> tidak cukup kuat untuk menentukan jawaban, sehingga tidak dijadikan dasar utama pencocokan.</p>
+  <p>Sistem juga memakai kelompok sinonim sederhana. Misalnya, <em>alamat</em>, <em>lokasi</em>, <em>tempat</em>, dan <em>dimana</em> dianggap saling dekat. Kelompok <em>bayar</em>, <em>pembayaran</em>, dan <em>dibayar</em> juga dianggap dekat. Sinonim ini tidak membuat bot memahami bahasa bebas seperti LLM, tetapi cukup membantu untuk variasi pertanyaan yang masih berada dalam domain SAMSAT.</p>
+
+  <h3>4.3.3 Custom Pattern</h3>
+  <p>Custom pattern dipakai untuk mengarahkan variasi pertanyaan ke FAQ tertentu. Misalnya FAQ tentang STNK hilang tidak hanya cocok dengan pertanyaan utama pada dataset, tetapi juga dengan variasi seperti <em>stnk saya hilang</em>, <em>stnk ilang harus ngapain</em>, atau <em>kalau stnk hilang bagaimana</em>.</p>
+  <p>Custom pattern berguna saat jawaban sudah ada, tetapi cara pengguna bertanya berbeda dari pertanyaan utama. Dengan custom pattern, dataset tidak perlu diisi banyak baris duplikat untuk jawaban yang sama.</p>
+
+  <h3>4.3.4 Regex Pendukung</h3>
+  <p>Regex dipakai sebagai pendukung pattern matching. Regex membantu sistem mengenali pola frasa yang punya banyak bentuk. Contohnya pola <em>STNK hilang</em>, <em>pajak lima tahunan</em>, <em>TNKB rusak</em>, <em>pembayaran SIGNAL belum berubah</em>, dan <em>cek fisik untuk mutasi</em>.</p>
+  <p>Regex tidak menggantikan pattern matching. Keputusan akhir tetap memakai scoring. Regex hanya memberi sinyal tambahan bahwa input pengguna memiliki pola yang kuat terhadap FAQ tertentu.</p>
+
+  <h3>4.3.5 Scoring dan Pemilihan Jawaban</h3>
+  <p>Setiap FAQ diberi skor berdasarkan kecocokan dengan input pengguna. Komponen skor berasal dari kecocokan frasa, custom pattern, regex, overlap token, cakupan token, dan token domain. Kandidat FAQ dengan skor tertinggi dipilih jika nilainya melewati batas minimum. Jika tidak ada kandidat yang cukup kuat, bot mengirim fallback.</p>
+  <p>Skor ini disebut skor relevansi internal. Skor tersebut bukan akurasi machine learning karena sistem tidak melakukan proses training model statistik. Skor dipakai untuk memilih jawaban yang paling dekat dengan input pengguna.</p>
+
+  <h3>4.3.6 Multi-Intent dan Fallback</h3>
+  <p>Sistem juga menangani input yang berisi lebih dari satu pertanyaan. Misalnya pengguna menulis, <em>STNK saya hilang dan pajak motor mati bertahun-tahun gimana?</em>. Sistem memecah pertanyaan tersebut menjadi beberapa segmen, lalu menjalankan pattern matching pada setiap segmen yang bermakna.</p>
+  <p>Fallback dipakai ketika pertanyaan tidak berada dalam domain SAMSAT atau tidak cukup cocok dengan dataset. Contohnya pertanyaan tentang paspor, ATM, listrik, SIM, atau gym tidak dijawab dengan FAQ SAMSAT. Bot mengirim pesan bahwa pertanyaan belum tersedia atau berada di luar topik layanan.</p>
+
+  <h2>4.4 Implementasi Tampilan Chatbot</h2>
+  <p>Tampilan chatbot dibuat langsung di Telegram. Setelah pengguna menjalankan command <em>/start</em>, bot menampilkan pesan pembuka dan menu kategori. Pengguna bisa memilih kategori, membuka daftar pertanyaan, menekan pertanyaan tertentu, atau mengetik pertanyaan bebas.</p>
+  <p>Jawaban FAQ menampilkan pertanyaan yang dipilih sistem, isi jawaban, dan sumber rujukan. Setelah jawaban dikirim, bot menampilkan tombol voting <em>Memuaskan</em> dan <em>Tidak Memuaskan</em>. Menu utama juga ditampilkan kembali agar pengguna bisa melanjutkan pencarian tanpa mengetik <em>/start</em> lagi.</p>
+
+  <p class="placeholder">Tempat Screenshot 4.3 Tampilan awal chatbot setelah /start</p>
+  <p class="caption">Gambar 4.3 Tampilan awal chatbot</p>
+
+  <p class="placeholder">Tempat Screenshot 4.4 Tampilan menu kategori FAQ</p>
+  <p class="caption">Gambar 4.4 Tampilan menu kategori</p>
+
+  <p class="placeholder">Tempat Screenshot 4.5 Tampilan jawaban FAQ dan voting</p>
+  <p class="caption">Gambar 4.5 Tampilan jawaban FAQ</p>
+
+  <h2>4.5 Implementasi Penyimpanan Data Riset</h2>
+  <p>Data riset disimpan menggunakan Cloudflare KV. Data yang disimpan terdiri dari profil dasar pengguna Telegram dan data voting kepuasan. Profil dasar disimpan setelah pengguna menjalankan <em>/start</em>. Data yang dicatat meliputi Telegram ID, username, nama depan, nama belakang, kode bahasa, waktu mulai, dan waktu terakhir aktif.</p>
+  <p>Voting kepuasan disimpan per FAQ. Satu pengguna hanya memiliki satu vote aktif untuk satu FAQ. Jika pengguna mengganti pilihan, sistem memperbarui pilihan lama, bukan menambah suara baru. Cara ini mencegah satu pengguna memberi suara ganda pada FAQ yang sama.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Profil responden</td>
+        <td>Telegram ID, username, nama, bahasa, waktu mulai, dan waktu terakhir aktif.</td>
+      </tr>
+      <tr>
+        <td>Voting kepuasan</td>
+        <td>Pilihan Memuaskan atau Tidak Memuaskan pada setiap FAQ.</td>
+      </tr>
+      <tr>
+        <td>Message ID</td>
+        <td>Daftar pesan yang dilacak bot untuk command <em>/clear</em>.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="caption">Tabel 4.4 Data yang disimpan sistem</p>
+
+  <p>Endpoint export data riset dilindungi dengan token admin. Dengan begitu, file CSV atau HTML tidak terbuka untuk umum. Data export dipakai untuk melihat responden yang mencoba chatbot dan hasil penilaian mereka terhadap jawaban FAQ.</p>
+
+  <h2>4.6 Pengujian Sistem</h2>
+  <p>Pengujian sistem dilakukan lewat dua jalur. Jalur pertama adalah pengujian otomatis menggunakan Vitest. Jalur kedua adalah uji coba langsung melalui Telegram bot. Pengujian otomatis memeriksa fungsi program, sedangkan uji coba Telegram memeriksa pengalaman pengguna pada media implementasi yang sebenarnya.</p>
+
+  <h3>4.6.1 Black Box Testing</h3>
+  <p>Pengujian black box dilakukan dengan memberi input kepada chatbot dan membandingkan output dengan hasil yang diharapkan. Penguji tidak perlu melihat detail scoring di dalam fungsi matcher. Yang diperiksa adalah apakah input tertentu menghasilkan FAQ yang benar atau fallback.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Skenario</th>
+        <th>Input</th>
+        <th>Output yang Diharapkan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Pertanyaan sesuai dataset</td>
+        <td>Apa syarat bayar pajak tahunan?</td>
+        <td>FAQ syarat pajak tahunan.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Urutan kata berubah</td>
+        <td>Kalau STNK hilang bagaimana?</td>
+        <td>FAQ STNK hilang.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Pertanyaan natural</td>
+        <td>Plat motor saya rusak karena kecelakaan.</td>
+        <td>FAQ TNKB rusak.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Dua intent dalam satu pesan</td>
+        <td>Syarat balik nama dan mutasi apa saja?</td>
+        <td>Jawaban balik nama dan mutasi.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Di luar konteks</td>
+        <td>Bisa perpanjang paspor di Samsat?</td>
+        <td>Fallback.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="caption">Tabel 4.5 Contoh skenario black box testing</p>
+
+  <h3>4.6.2 Pengujian Otomatis</h3>
+  <p>Pengujian otomatis dijalankan dengan perintah <em>npm test</em>. Test memeriksa dataset, kategori, pencocokan pertanyaan resmi, variasi urutan kata, pertanyaan natural, pertanyaan di luar konteks, multi-intent, dan format balasan Telegram.</p>
+  <p>Dataset FAQ berjumlah 150 data. Angka 209 pada hasil test bukan jumlah dataset, melainkan jumlah skenario pengujian otomatis. Test case dibuat berdasarkan kelas input yang mewakili kemungkinan penggunaan bot.</p>
+
+  <pre>Test Files  2 passed (2)
+Tests       209 passed (209)</pre>
+
+  <p class="caption">Gambar 4.6 Ringkasan hasil pengujian otomatis</p>
+
+  <h3>4.6.3 Uji Coba Melalui Telegram</h3>
+  <p>Uji coba melalui Telegram dilakukan karena Telegram adalah media implementasi chatbot. Pada uji coba ini, pengguna menjalankan bot, memilih menu, mengetik pertanyaan bebas, dan memberi voting kepuasan setelah menerima jawaban. Hasil uji coba dipakai untuk melihat apakah alur penggunaan bot mudah diikuti dan apakah jawaban yang diberikan dianggap memuaskan oleh pengguna.</p>
+
+  <h2>4.7 Hasil Pengujian</h2>
+  <p>Hasil pengujian otomatis menunjukkan bahwa seluruh test case berhasil dijalankan. Dua file test berhasil diproses, yaitu test untuk pattern matcher dan test untuk format balasan Telegram. Total test case yang dijalankan adalah 209.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Jenis Pengujian</th>
+        <th>Jumlah</th>
+        <th>Hasil</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>File test</td>
+        <td>2</td>
+        <td>Passed</td>
+      </tr>
+      <tr>
+        <td>Test case</td>
+        <td>209</td>
+        <td>Passed</td>
+      </tr>
+      <tr>
+        <td>Dataset FAQ</td>
+        <td>150</td>
+        <td>Valid</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="caption">Tabel 4.6 Hasil pengujian otomatis</p>
+
+  <p>Pengujian pertanyaan resmi memastikan bahwa pertanyaan utama pada dataset tetap mengarah ke FAQ asalnya. Pengujian variasi kalimat memastikan bahwa pertanyaan dengan susunan kata berbeda tetap dikenali. Pengujian fallback memastikan bot tidak menjawab pertanyaan di luar konteks SAMSAT, seperti paspor, ATM, listrik, atau layanan lain yang tidak termasuk administrasi kendaraan.</p>
+  <p>Hasil uji coba Telegram dapat ditambahkan setelah responden mencoba bot. Data yang perlu dimasukkan antara lain jumlah responden, contoh pertanyaan yang diajukan, dan rekap voting Memuaskan atau Tidak Memuaskan.</p>
+
+  <h2>4.8 Analisis Hasil</h2>
+  <p>Berdasarkan hasil pengujian, sistem mampu mencocokkan pertanyaan pengguna dengan FAQ yang relevan jika input masih memiliki kata kunci, pola frasa, atau konteks yang sudah diwakili dalam dataset. Pertanyaan seperti <em>Kalau STNK hilang bagaimana?</em> tetap dikenali karena pola STNK hilang sudah diwakili oleh custom pattern dan regex pendukung.</p>
+  <p>Regex membantu sistem pada istilah yang memiliki banyak variasi penulisan. Contohnya, <em>5 tahunan</em>, <em>lima tahun</em>, dan <em>ganti plat</em> dapat diarahkan ke konteks pajak lima tahunan. Custom pattern membantu pertanyaan yang lebih natural, misalnya pertanyaan tentang pemilik kendaraan yang sudah meninggal atau kendaraan luar daerah yang ingin dimutasi ke Bandung.</p>
+  <p>Fallback juga bekerja sebagai pembatas domain. Saat pengguna bertanya tentang paspor, ATM, listrik, SIM, atau perbaikan motor, bot tidak memaksakan jawaban dari dataset SAMSAT. Ini penting karena pattern matching berbasis aturan bisa salah memilih jawaban jika tidak diberi pembatas konteks.</p>
+  <p>Keterbatasan sistem tetap ada. Bot tidak memahami semua variasi bahasa seperti AI generatif. Jika pengguna menulis pertanyaan dengan pola yang belum pernah diwakili oleh dataset, custom pattern, atau regex, bot bisa mengirim fallback. Kondisi tersebut menjadi dasar untuk memperbarui dataset dan menambah regression test pada pengembangan berikutnya.</p>
+
+  <h1 class="page-break">BAB V<br>KESIMPULAN DAN SARAN</h1>
+
+  <h2>5.1 Kesimpulan</h2>
+  <p>Berdasarkan implementasi dan pengujian yang telah dilakukan, beberapa kesimpulan yang diperoleh adalah sebagai berikut.</p>
+  <ol>
+    <li>Chatbot FAQ SAMSAT Bandung Timur berhasil dibuat dalam bentuk bot Telegram dengan backend Cloudflare Workers. Bot menerima pesan melalui webhook dan mengirim balasan menggunakan Telegram Bot API.</li>
+    <li>Metode pattern matching berhasil diterapkan untuk mencocokkan pertanyaan pengguna dengan dataset FAQ. Proses pencocokan dilakukan melalui normalisasi teks, tokenisasi, penghapusan stop word, perluasan sinonim sederhana, custom pattern, regex pendukung, dan scoring.</li>
+    <li>Dataset FAQ berjumlah 150 data dan disimpan dalam format JSON. Dataset tersebut memuat kategori, pertanyaan, jawaban, dan sumber rujukan.</li>
+    <li>Regex berperan sebagai teknik pendukung. Regex dipakai untuk menyamakan variasi penulisan dan mengenali pola frasa tertentu, sedangkan pemilihan jawaban akhir tetap memakai scoring pattern matching.</li>
+    <li>Sistem dapat menangani pertanyaan bebas, pilihan menu, dan pesan multi-intent selama input masih berada dalam cakupan dataset dan pattern yang dibuat.</li>
+    <li>Pertanyaan di luar konteks SAMSAT diarahkan ke fallback. Hal ini mencegah bot memberikan jawaban administrasi kendaraan untuk topik yang tidak sesuai.</li>
+    <li>Pengujian otomatis menunjukkan 2 file test berhasil dijalankan dengan total 209 test case. Hasil tersebut menunjukkan bahwa fungsi dataset, pattern matching, fallback, multi-intent, dan format balasan Telegram berjalan sesuai skenario pengujian.</li>
+  </ol>
+
+  <h2>5.2 Keterbatasan Sistem</h2>
+  <p>Sistem masih memiliki beberapa batasan. Pertama, chatbot tidak menggunakan AI generatif, sehingga jawaban hanya berasal dari dataset FAQ. Bot tidak membuat jawaban baru di luar data yang tersedia.</p>
+  <p>Kedua, kemampuan pencocokan sangat bergantung pada kualitas dataset, custom pattern, dan regex pendukung. Jika pengguna menulis pertanyaan dengan pola yang belum diwakili, bot bisa memberikan fallback.</p>
+  <p>Ketiga, perubahan dataset atau pattern masih dilakukan melalui repository. Setelah perubahan dilakukan, sistem perlu diuji dan dideploy ulang agar perubahan aktif pada bot.</p>
+  <p>Keempat, command <em>/clear</em> mengikuti batasan Telegram Bot API. Bot hanya dapat menghapus pesan yang message ID-nya dilacak dan diizinkan untuk dihapus oleh Telegram.</p>
+
+  <h2>5.3 Saran</h2>
+  <p>Beberapa saran untuk pengembangan berikutnya adalah sebagai berikut.</p>
+  <ol>
+    <li>Menambahkan dashboard admin untuk mengelola dataset FAQ, sehingga perubahan data tidak harus dilakukan langsung melalui file JSON.</li>
+    <li>Menambahkan fitur import dataset dari CSV atau spreadsheet. Fitur ini akan membantu ketika data FAQ bertambah atau perlu diperbarui dari sumber eksternal.</li>
+    <li>Mencatat pertanyaan yang masuk ke fallback. Data fallback dapat dipakai untuk mengetahui pola pertanyaan yang belum dikenali sistem.</li>
+    <li>Menambahkan evaluasi kuantitatif seperti precision dan recall apabila data uji sudah diberi label jawaban yang benar.</li>
+    <li>Mengembangkan rekomendasi beberapa jawaban ketika skor kandidat FAQ berdekatan, agar pengguna bisa memilih jawaban yang paling sesuai.</li>
+    <li>Mengembangkan pendekatan hybrid dengan similarity matching, tetapi jawaban tetap dibatasi pada dataset yang sudah divalidasi.</li>
+  </ol>
+  <p>Pengembangan tersebut dapat dilakukan tanpa mengubah tujuan utama sistem, yaitu menyediakan chatbot FAQ SAMSAT Bandung Timur berbasis pattern matching. Perubahan yang paling dekat untuk dilakukan adalah pencatatan fallback dan dashboard pengelolaan dataset, karena dua hal tersebut langsung membantu proses perawatan data setelah bot diuji oleh pengguna.</p>
+</body>
+</html>

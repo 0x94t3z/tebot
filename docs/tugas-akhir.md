@@ -11,6 +11,7 @@ Dokumen ini disiapkan untuk menjawab pertanyaan yang kemungkinan muncul saat bim
 Dokumen pendukung:
 
 - [Saran Penyusunan Bab 4 dan Bab 5](saran-bab-4-5.md)
+- [Draft Full Bab 4 dan Bab 5](bab-4-5-full.html)
 
 ## Ringkasan Sistem
 
