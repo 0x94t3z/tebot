@@ -8,10 +8,9 @@ Implementasi Metode Pattern Matching pada Chatbot Frequently Asked Questions: SA
 
 Dokumen ini disiapkan untuk menjawab pertanyaan yang kemungkinan muncul saat bimbingan atau sidang: dataset, pengujian, pertanyaan random, dan cara merawat pattern ketika ada input baru yang belum dikenali.
 
-Dokumen pendukung:
+Laporan akademik utama:
 
-- [Saran Penyusunan Bab 4 dan Bab 5](saran-bab-4-5.md)
-- [Draft Full Bab 4 dan Bab 5](bab-4-5-full.html)
+- [Laporan Akademik Bab 4 dan Bab 5](laporan-akademik.md)
 
 ## Ringkasan Sistem
 
