@@ -573,6 +573,14 @@ npm test
 
 The test suite validates the FAQ dataset, pattern matching behavior, fallback behavior, multi-intent handling, and Telegram reply formatting. Respondent trials should still be performed through the Telegram bot because Telegram is the implementation medium.
 
+Check pattern matching score for one question:
+
+```sh
+npm run score -- "Kalau STNK hilang bagaimana?"
+```
+
+This command prints normalization, removed stop words, base tokens, expanded synonym tokens, multi-intent segments, context checks, matched FAQ ID, category, internal relevance score, and matched terms. The score is for debugging/research explanation only; it is not shown to Telegram users.
+
 For thesis-focused explanations about 150 FAQ rows versus 209 test cases, black box testing, random-question limitations, and respondent trials, see [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md).
 
 ### Troubleshooting
@@ -1481,6 +1489,14 @@ npm test
 ```
 
 Test suite memvalidasi dataset FAQ, perilaku pattern matching, fallback, multi-intent, dan format balasan Telegram. Uji coba responden tetap dilakukan melalui Telegram bot karena Telegram adalah media implementasi chatbot.
+
+Cek skor pattern matching untuk satu pertanyaan:
+
+```sh
+npm run score -- "Kalau STNK hilang bagaimana?"
+```
+
+Command ini menampilkan normalisasi, stop word yang dibuang, base token, token hasil sinonim, segmentasi multi-intent, pengecekan konteks, ID FAQ yang cocok, kategori, skor relevansi internal, dan matched terms. Skor ini hanya untuk debug dan penjelasan penelitian; skor tidak ditampilkan kepada user Telegram.
 
 Untuk penjelasan Tugas Akhir tentang 150 data FAQ vs 209 test case, black box testing, batasan pertanyaan random, dan uji coba responden, lihat [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md).
 

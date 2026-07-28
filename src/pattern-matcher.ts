@@ -6,6 +6,21 @@ export interface PatternMatchResult {
   matchedTerms: string[];
 }
 
+export interface PatternInputAnalysis {
+  input: string;
+  normalizedInput: string;
+  tokensBeforeStopWords: string[];
+  removedStopWords: string[];
+  baseTokens: string[];
+  expandedTokens: string[];
+  segments: string[];
+  hasDomainContext: boolean;
+  hasConflictingContext: boolean;
+  hasOutOfScopeContext: boolean;
+  minimumScore: number;
+  minimumMultiIntentScore: number;
+}
+
 interface ScoredPatternMatchResult extends PatternMatchResult {
   rankingScore: number;
 }
@@ -968,6 +983,34 @@ export function matchMultipleFaq(
 
   const fallbackResult = matchFaq(input);
   return fallbackResult ? [fallbackResult] : [];
+}
+
+// Mengurai input user untuk kebutuhan debug/penjelasan penelitian.
+// Fungsi ini tidak dipakai untuk membalas Telegram; hanya untuk command lokal.
+export function analyzePatternInput(input: string): PatternInputAnalysis {
+  const normalizedInput = normalize(input);
+  const tokensBeforeStopWords = normalizedInput
+    .split(" ")
+    .filter(Boolean)
+    .map((token) => toCanonicalToken(token));
+  const removedStopWords = tokensBeforeStopWords.filter((token) => token.length <= 1 || stopWords.has(token));
+  const baseTokens = tokensBeforeStopWords.filter((token) => token.length > 1 && !stopWords.has(token));
+  const expandedTokens = expandTokens(baseTokens);
+
+  return {
+    input,
+    normalizedInput,
+    tokensBeforeStopWords,
+    removedStopWords,
+    baseTokens,
+    expandedTokens,
+    segments: getMultiIntentSegments(input),
+    hasDomainContext: hasDomainContext(normalizedInput, expandedTokens),
+    hasConflictingContext: hasConflictingContext(normalizedInput, expandedTokens, baseTokens),
+    hasOutOfScopeContext: hasOutOfScopeContext(normalizedInput),
+    minimumScore,
+    minimumMultiIntentScore
+  };
 }
 
 // Memecah pesan panjang menjadi potongan pertanyaan yang masih punya konteks.
