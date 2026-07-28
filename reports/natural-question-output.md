@@ -21,7 +21,7 @@ FALLBACK: 4
 
 ## Detail Output
 
-| No | Pertanyaan User | Status | ID | Kategori | FAQ Terpilih | Skor |
+| No | Pertanyaan User | Status | ID | Kategori | FAQ Terpilih | Nilai Relevansi |
 |---:|---|---|---:|---|---|---:|
 | 1 | Samsat Bandung Timur buka jam berapa ya? | MATCH | 4 | Layanan | Jam operasional Samsat Bandung Timur | 100 |
 | 2 | Hari Sabtu Samsat buka gak? | MATCH | 7 | Layanan | Apakah Samsat buka hari Sabtu | 100 |

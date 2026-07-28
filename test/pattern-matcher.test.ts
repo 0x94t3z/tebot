@@ -322,14 +322,14 @@ describe("matchFaq", () => {
     expect(matchFaq("halo admin selamat pagi")).toBeNull();
   });
 
-  it("menjaga skor pertanyaan panjang yang relevan tetap aman", () => {
+  it("menjaga nilai relevansi pertanyaan panjang yang relevan tetap aman", () => {
     const shortQuestion = matchFaq("mutasi");
     const longQuestion = matchFaq("Kalau begitu mobil saya Toyota, kalau mau di mutasi apa syaratnya?");
 
     expect(shortQuestion?.entry.id).toBe(90);
     expect(longQuestion?.entry.id).toBe(90);
-    expect(shortQuestion?.score).toBeGreaterThanOrEqual(75);
-    expect(longQuestion?.score).toBeGreaterThanOrEqual(75);
+    expect(shortQuestion?.relevance).toBeGreaterThanOrEqual(75);
+    expect(longQuestion?.relevance).toBeGreaterThanOrEqual(75);
   });
 
   it.each([

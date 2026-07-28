@@ -208,7 +208,7 @@ export async function handleUpdate(update: TelegramUpdate, env: Env, ctx?: Execu
       match_count: results.length,
       faq_ids: results.map((result) => result.entry.id),
       categories: results.map((result) => result.entry.category),
-      scores: results.map((result) => result.score)
+      relevance_values: results.map((result) => result.relevance)
     })
   );
 

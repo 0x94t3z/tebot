@@ -74,17 +74,17 @@ Input pengguna
   -> penghapusan stop word
   -> perluasan sinonim sederhana
   -> pencocokan dengan FAQ, custom pattern, dan regex pendukung
-  -> perhitungan skor relevansi
+  -> perhitungan nilai relevansi
   -> pemilihan FAQ terbaik atau fallback
 ```
 
 Penjelasan singkatnya:
 
 ```text
-Pattern matching pada sistem ini bekerja dengan membandingkan input pengguna terhadap data FAQ dan pola tambahan yang sudah ditentukan. Input pengguna lebih dulu dinormalisasi agar variasi penulisan menjadi lebih seragam. Setelah itu, sistem memberi skor pada kandidat FAQ dan memilih jawaban dengan skor tertinggi jika melewati batas minimum.
+Pattern matching pada sistem ini bekerja dengan membandingkan input pengguna terhadap data FAQ dan pola tambahan yang sudah ditentukan. Input pengguna lebih dulu dinormalisasi agar variasi penulisan menjadi lebih seragam. Setelah itu, sistem menghitung nilai relevansi pada kandidat FAQ dan memilih jawaban dengan nilai relevansi tertinggi jika melewati batas minimum.
 ```
 
-Gunakan istilah “skor relevansi internal”. Jangan menyebutnya akurasi machine learning, karena sistem ini tidak melatih model statistik.
+Gunakan istilah “nilai relevansi internal”. Jangan menyebutnya akurasi machine learning, karena sistem ini tidak melatih model statistik.
 
 ### 4.4 Regex Pendukung
 
@@ -98,7 +98,7 @@ Regex di proyek ini dipakai untuk dua hal:
 Contoh narasi:
 
 ```text
-Regex dipakai untuk membantu sistem mengenali variasi penulisan yang sering muncul pada pertanyaan pengguna. Misalnya, istilah "ganti plat", "pajak lima tahunan", dan "5 tahunan" dapat diarahkan ke konteks layanan yang sama. Keputusan akhir tetap ditentukan oleh proses scoring pattern matching.
+Regex dipakai untuk membantu sistem mengenali variasi penulisan yang sering muncul pada pertanyaan pengguna. Misalnya, istilah "ganti plat", "pajak lima tahunan", dan "5 tahunan" dapat diarahkan ke konteks layanan yang sama. Keputusan akhir tetap ditentukan oleh proses perhitungan nilai relevansi pattern matching.
 ```
 
 Tambahkan satu contoh kasus yang pernah diuji:
@@ -205,7 +205,7 @@ Lalu jelaskan artinya:
 Hasil tersebut menunjukkan bahwa seluruh skenario pengujian otomatis berhasil dijalankan. Pengujian mencakup validasi dataset, pencocokan pertanyaan, fallback, multi-intent, dan format balasan Telegram.
 ```
 
-Kalau sudah ada hasil voting dari responden, buat tabel terpisah. Jangan dicampur dengan skor pattern matching. Voting adalah penilaian user. Skor matcher adalah nilai internal algoritma.
+Kalau sudah ada hasil voting dari responden, buat tabel terpisah. Jangan dicampur dengan nilai relevansi pattern matching. Voting adalah penilaian user. Nilai matcher adalah nilai internal algoritma.
 
 ### 4.10 Analisis Hasil
 
@@ -238,7 +238,7 @@ Kesimpulan bisa dibuat 5 sampai 7 poin. Jangan terlalu panjang.
 Contoh poin:
 
 1. Chatbot FAQ SAMSAT Bandung Timur berhasil dibuat dengan Telegram Bot API dan Cloudflare Workers.
-2. Metode pattern matching diterapkan melalui normalisasi teks, tokenisasi, custom pattern, regex pendukung, dan scoring.
+2. Metode pattern matching diterapkan melalui normalisasi teks, tokenisasi, custom pattern, regex pendukung, dan perhitungan nilai relevansi.
 3. Dataset FAQ berisi 150 data dan disimpan dalam file JSON.
 4. Sistem dapat menjawab pertanyaan bebas, pilihan menu, dan pesan multi-intent selama masih berada dalam cakupan pattern.
 5. Pertanyaan di luar konteks SAMSAT diarahkan ke fallback.
@@ -248,7 +248,7 @@ Contoh poin:
 Narasi yang bisa dipakai:
 
 ```text
-Berdasarkan implementasi dan pengujian, chatbot FAQ SAMSAT Bandung Timur berhasil dibuat sebagai bot Telegram berbasis Cloudflare Workers. Sistem menerapkan pattern matching berbasis aturan untuk mencocokkan pertanyaan pengguna dengan dataset FAQ. Proses pencocokan dilakukan melalui normalisasi teks, tokenisasi, penghapusan stop word, perluasan sinonim sederhana, custom pattern, regex pendukung, dan scoring.
+Berdasarkan implementasi dan pengujian, chatbot FAQ SAMSAT Bandung Timur berhasil dibuat sebagai bot Telegram berbasis Cloudflare Workers. Sistem menerapkan pattern matching berbasis aturan untuk mencocokkan pertanyaan pengguna dengan dataset FAQ. Proses pencocokan dilakukan melalui normalisasi teks, tokenisasi, penghapusan stop word, perluasan sinonim sederhana, custom pattern, regex pendukung, dan perhitungan nilai relevansi.
 ```
 
 ### 5.2 Keterbatasan Sistem
@@ -280,7 +280,7 @@ Contoh saran:
 2. Catat pertanyaan fallback agar pola gagal bisa dianalisis.
 3. Tambahkan evaluasi precision dan recall jika data uji sudah diberi label.
 4. Buat fitur import dataset dari CSV atau spreadsheet.
-5. Tambahkan rekomendasi beberapa jawaban saat skor kandidat berdekatan.
+5. Tambahkan rekomendasi beberapa jawaban saat nilai relevansi kandidat berdekatan.
 6. Kembangkan pendekatan hybrid dengan similarity matching, tetapi jawaban tetap diambil dari dataset valid.
 
 Contoh narasi:
@@ -313,8 +313,8 @@ BAB V KESIMPULAN DAN SARAN
 
 ## Catatan Saat Menulis
 
-- Sebut skor matcher sebagai skor relevansi internal.
-- Jangan menyebut skor matcher sebagai akurasi machine learning.
+- Sebut nilai matcher sebagai nilai relevansi internal.
+- Jangan menyebut nilai matcher sebagai akurasi machine learning.
 - Persentase Memuaskan dan Tidak Memuaskan berasal dari voting pengguna.
 - Regex adalah pendukung. Metode utamanya tetap pattern matching.
 - Angka 150 adalah jumlah dataset FAQ. Angka 209 adalah jumlah test case otomatis.

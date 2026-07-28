@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "score": "tsx tools/check-score.ts",
+    "relevance": "tsx tools/check-relevance.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

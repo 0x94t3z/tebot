@@ -64,7 +64,7 @@ describe("format jawaban FAQ", () => {
         answer: "STNK dan KTP",
         source: "Referensi"
       },
-      score: 100,
+      relevance: 100,
       matchedTerms: ["syarat", "bayar", "pajak"]
     });
 
@@ -74,7 +74,7 @@ describe("format jawaban FAQ", () => {
     expect(message).toContain("Pertanyaan:");
     expect(message).not.toContain("Metode:");
     expect(message).not.toContain("rating");
-    expect(message).not.toContain("Skor akurasi:");
+    expect(message).not.toContain("Nilai akurasi:");
   });
 
   it("menampilkan hasil voting kepuasan user", () => {
@@ -86,7 +86,7 @@ describe("format jawaban FAQ", () => {
         answer: "Gunakan kanal resmi untuk mengecek pajak kendaraan.",
         source: "Referensi"
       },
-      score: 62,
+      relevance: 62,
       matchedTerms: ["pajak"]
     }, { satisfied: 3, dissatisfied: 1 }, "satisfied");
 
@@ -106,7 +106,7 @@ describe("format jawaban FAQ", () => {
         answer: "Pembayaran pajak tahunan dapat dilakukan tanpa KTP pemilik pertama.",
         source: "https://contoh.test/sumber-1; https://contoh.test/sumber-2"
       },
-      score: 100,
+      relevance: 100,
       matchedTerms: ["pajak"]
     });
 
@@ -129,7 +129,7 @@ describe("format jawaban FAQ", () => {
     expect(message).not.toContain("Kategori:");
     expect(message).toContain("Pertanyaan:");
     expect(message).not.toContain("rating");
-    expect(message).not.toContain("Skor akurasi:");
+    expect(message).not.toContain("Nilai akurasi:");
   });
 
   it("membuat tombol voting kepuasan", () => {

@@ -2,7 +2,7 @@ import { faqCategories, faqEntries, type FaqCategory, type FaqEntry } from "./fa
 
 export interface PatternMatchResult {
   entry: FaqEntry;
-  score: number;
+  relevance: number;
   matchedTerms: string[];
 }
 
@@ -17,25 +17,25 @@ export interface PatternInputAnalysis {
   hasDomainContext: boolean;
   hasConflictingContext: boolean;
   hasOutOfScopeContext: boolean;
-  minimumScore: number;
-  minimumMultiIntentScore: number;
+  minimumRelevance: number;
+  minimumMultiIntentRelevance: number;
 }
 
-interface ScoredPatternMatchResult extends PatternMatchResult {
-  rankingScore: number;
+interface RankedPatternMatchResult extends PatternMatchResult {
+  rankingRelevance: number;
 }
 
-// Metode utama: pattern matching dengan perhitungan skor.
+// Metode utama: pattern matching dengan perhitungan nilai relevansi.
 // Regex dipakai sebagai pendukung preprocessing dan pendeteksian pola frasa,
 // bukan sebagai pengganti algoritma utama pencocokan FAQ.
-const minimumScore = 25;
-const minimumMultiIntentScore = 75;
+const minimumRelevance = 25;
+const minimumMultiIntentRelevance = 75;
 const defaultMaxMultiIntentResults = 3;
 
 interface RegexPatternSpec {
   pattern: RegExp;
   label: string;
-  score: number;
+  relevance: number;
 }
 
 // Kata umum yang diabaikan agar pencocokan fokus pada kata bermakna.
@@ -549,81 +549,81 @@ const regexNormalizationRules = [
 ];
 
 // Regex pattern memberi sinyal tambahan untuk FAQ yang punya bentuk kalimat
-// khas. Skor ini tetap digabung dengan token/sinonim/custom pattern.
+// khas. Nilai ini tetap digabung dengan token/sinonim/custom pattern.
 const regexPatterns: Record<number, RegexPatternSpec[]> = {
-  5: [{ pattern: /\b(samsat\s+)?buka\s+(jam|pukul)?\b/, label: "regex:samsat buka", score: 85 }],
-  6: [{ pattern: /\b(tutup|selesai|dilayani).*\b(jam|pukul|operasional|siang)\b|\b(jam|pukul|operasional|siang).*\b(tutup|selesai|dilayani)\b/, label: "regex:samsat tutup", score: 220 }],
-  7: [{ pattern: /\b(sabtu).*\b(buka|layanan|operasional)\b|\b(buka|layanan|operasional).*\b(sabtu)\b/, label: "regex:sabtu buka", score: 90 }],
-  8: [{ pattern: /\b(minggu|tanggal\s+merah|libur).*\b(buka|layanan|operasional|bayar|pajak)\b|\b(buka|layanan|operasional|bayar|pajak).*\b(minggu|tanggal\s+merah|libur)\b/, label: "regex:minggu buka", score: 150 }],
-  10: [{ pattern: /\b(alamat|lokasi|dimana|tempat).*\b(samsat).*\b(bandung\s+timur)\b/, label: "regex:alamat samsat bandung timur", score: 95 }],
-  22: [{ pattern: /\b(jatuh\s+tempo|deadline|masa\s+berlaku).*\b(pajak|stnk|kendaraan)\b|\b(pajak|stnk|kendaraan).*\b(jatuh\s+tempo|deadline|masa\s+berlaku)\b/, label: "regex:jatuh tempo pajak", score: 120 }],
-  23: [{ pattern: /\b(cek|lihat|periksa).*\b(pajak|pkb|tagihan).*\b(kendaraan|motor|mobil)?\b|\b(tagihan|pajak|pkb).*\b(kendaraan|motor|mobil)?.*\b(cek|lihat|periksa)\b/, label: "regex:cek pajak", score: 115 }],
-  26: [{ pattern: /\b(denda|terlambat).*\b(pajak|pkb)\b|\b(pajak|pkb).*\b(denda|terlambat)\b/, label: "regex:denda pajak", score: 125 }],
-  27: [{ pattern: /\b(total|besaran|biaya).*\b(pajak|pkb|kendaraan)\b|\b(tagihan).*\b(pajak|pkb|kendaraan).*\b(mahal|besar|lebih)\b|\b(pajak|pkb|kendaraan).*\b(total|besaran|biaya|mahal|besar|lebih)\b/, label: "regex:besaran pajak", score: 145 }],
-  28: [{ pattern: /\b(pajak|stnk).*\b(diwakilkan|orang\s+tua|istri|suami|orang\s+lain)\b|\b(diwakilkan|orang\s+tua|istri|suami|orang\s+lain).*\b(pajak|stnk)\b/, label: "regex:pajak diwakilkan", score: 145 }],
-  35: [{ pattern: /\b(bayar|pembayaran).*\b(pajak|pkb).*\b(online|digital|signal|e\s+samsat)\b|\b(pajak|pkb).*\b(online|digital|signal|e\s+samsat)\b/, label: "regex:pajak online", score: 95 }],
-  42: [{ pattern: /\b(pajak).*\b(stnk).*\b(hilang)\b|\b(stnk).*\b(hilang).*\b(pajak)\b/, label: "regex:pajak stnk hilang", score: 230 }],
-  45: [{ pattern: /\b(pajak|pkb).*\b(tahunan)?.*\b(aplikasi|hp|ponsel|signal)\b|\b(aplikasi|hp|ponsel|signal).*\b(pajak|pkb)\b/, label: "regex:pajak aplikasi", score: 155 }],
-  30: [{ pattern: /\b(pajak).*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(pajak)\b/, label: "regex:pajak lima tahunan", score: 70 }],
-  33: [{ pattern: /\b(mati|menunggak).*\b(pajak).*\b(tahun|bertahun|lama)\b|\b(pajak).*\b(mati|menunggak).*\b(tahun|bertahun|lama)\b|\b(tahun|bertahun).*\b(pajak).*\b(mati|menunggak)\b/, label: "regex:mati pajak bertahun", score: 170 }],
-  39: [{ pattern: /\b(denda).*\b(hitung|dihitung|bulan|berapa|kapan)\b|\b(terlambat).*\b(bulan).*\b(denda)\b/, label: "regex:besaran denda", score: 140 }],
-  40: [{ pattern: /\b(pemutihan|keringanan|diskon).*\b(pajak)?\b|\b(program).*\b(pemutihan)\b|\b(bbnkb|bea\s+balik\s+nama|balik\s+nama|biaya).*\b(gratis|bebas|pembebasan)\b|\b(gratis|bebas|pembebasan).*\b(bbnkb|bea\s+balik\s+nama|balik\s+nama|biaya)\b/, label: "regex:pemutihan pajak", score: 260 }],
-  43: [{ pattern: /\b(bukti|struk|resi).*\b(pembayaran|bayar|online|pengesahan)\b|\b(pembayaran|bayar|online|pengesahan).*\b(bukti|struk|resi)\b/, label: "regex:bukti pembayaran", score: 130 }],
-  47: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|ktp|fotokopi).*\b(pajak|tahunan)\b|\b(pajak|tahunan).*\b(syarat|dokumen|persyaratan|bawa|ktp|fotokopi)\b/, label: "regex:syarat pajak tahunan", score: 155 }],
-  48: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|cek\s+fisik\s+bantuan|ganti\s+pelat|pelat|leasing|kredit|jaminan|samsat\s+terdekat).*\b(pajak)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan|ganti\s+pelat).*\b(pajak)?.*\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|cek\s+fisik\s+bantuan|leasing|kredit|jaminan|samsat\s+terdekat)\b|\b(ganti\s+pelat).*\b(syarat|cek\s+fisik|cek\s+fisik\s+bantuan|habis|mati|menunggak|leasing|kredit|bpkb|luar\s+kota|samsat\s+terdekat)?\b|\b(waktu|waktunya).*\b(ganti\s+pelat)\b|\b(lima\s+tahunan).*\b(ganti\s+pelat|cek\s+fisik|cek\s+fisik\s+bantuan|samsat\s+terdekat|dokumen|bawa|leasing|kredit)\b/, label: "regex:syarat pajak lima tahunan", score: 250 }],
-  54: [{ pattern: /\b(stnk).*\b(hilang|kehilangan|dompet|leasing)\b|\b(hilang|kehilangan|dompet|leasing).*\b(stnk)\b/, label: "regex:stnk hilang", score: 170 }],
-  55: [{ pattern: /\b(bpkb).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(bpkb)\b/, label: "regex:bpkb hilang", score: 95 }],
-  56: [{ pattern: /\b(stnk).*\b(rusak|kebakar|air|banjir|terbaca)\b|\b(rusak|kebakar|air|banjir|terbaca).*\b(stnk)\b/, label: "regex:stnk rusak", score: 145 }],
-  62: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", score: 135 }],
-  63: [{ pattern: /\b(ktp|alamat).*\b(beda|tidak\s+sesuai).*\b(stnk)\b|\b(stnk).*\b(alamat|ktp).*\b(beda|tidak\s+sesuai)\b/, label: "regex:data stnk sesuai", score: 130 }],
-  66: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(rusak|patah|bengkok|terbaca)\b|\b(rusak|patah|bengkok|terbaca).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb rusak", score: 280 }],
-  67: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(hilang|kehilangan|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|laporan|polri)\b|\b(hilang|kehilangan|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|laporan|polri).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb hilang", score: 280 }],
-  71: [{ pattern: /\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum).*\b(balik\s+nama|kendaraan|stnk|bpkb)\b|\b(balik\s+nama|kendaraan|stnk|bpkb).*\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum)\b|\b(ayah|bapak|pemilik).*\b(meninggal).*\b(balik\s+nama|warisan)\b/, label: "regex:balik nama warisan", score: 330 }],
+  5: [{ pattern: /\b(samsat\s+)?buka\s+(jam|pukul)?\b/, label: "regex:samsat buka", relevance: 85 }],
+  6: [{ pattern: /\b(tutup|selesai|dilayani).*\b(jam|pukul|operasional|siang)\b|\b(jam|pukul|operasional|siang).*\b(tutup|selesai|dilayani)\b/, label: "regex:samsat tutup", relevance: 220 }],
+  7: [{ pattern: /\b(sabtu).*\b(buka|layanan|operasional)\b|\b(buka|layanan|operasional).*\b(sabtu)\b/, label: "regex:sabtu buka", relevance: 90 }],
+  8: [{ pattern: /\b(minggu|tanggal\s+merah|libur).*\b(buka|layanan|operasional|bayar|pajak)\b|\b(buka|layanan|operasional|bayar|pajak).*\b(minggu|tanggal\s+merah|libur)\b/, label: "regex:minggu buka", relevance: 150 }],
+  10: [{ pattern: /\b(alamat|lokasi|dimana|tempat).*\b(samsat).*\b(bandung\s+timur)\b/, label: "regex:alamat samsat bandung timur", relevance: 95 }],
+  22: [{ pattern: /\b(jatuh\s+tempo|deadline|masa\s+berlaku).*\b(pajak|stnk|kendaraan)\b|\b(pajak|stnk|kendaraan).*\b(jatuh\s+tempo|deadline|masa\s+berlaku)\b/, label: "regex:jatuh tempo pajak", relevance: 120 }],
+  23: [{ pattern: /\b(cek|lihat|periksa).*\b(pajak|pkb|tagihan).*\b(kendaraan|motor|mobil)?\b|\b(tagihan|pajak|pkb).*\b(kendaraan|motor|mobil)?.*\b(cek|lihat|periksa)\b/, label: "regex:cek pajak", relevance: 115 }],
+  26: [{ pattern: /\b(denda|terlambat).*\b(pajak|pkb)\b|\b(pajak|pkb).*\b(denda|terlambat)\b/, label: "regex:denda pajak", relevance: 125 }],
+  27: [{ pattern: /\b(total|besaran|biaya).*\b(pajak|pkb|kendaraan)\b|\b(tagihan).*\b(pajak|pkb|kendaraan).*\b(mahal|besar|lebih)\b|\b(pajak|pkb|kendaraan).*\b(total|besaran|biaya|mahal|besar|lebih)\b/, label: "regex:besaran pajak", relevance: 145 }],
+  28: [{ pattern: /\b(pajak|stnk).*\b(diwakilkan|orang\s+tua|istri|suami|orang\s+lain)\b|\b(diwakilkan|orang\s+tua|istri|suami|orang\s+lain).*\b(pajak|stnk)\b/, label: "regex:pajak diwakilkan", relevance: 145 }],
+  35: [{ pattern: /\b(bayar|pembayaran).*\b(pajak|pkb).*\b(online|digital|signal|e\s+samsat)\b|\b(pajak|pkb).*\b(online|digital|signal|e\s+samsat)\b/, label: "regex:pajak online", relevance: 95 }],
+  42: [{ pattern: /\b(pajak).*\b(stnk).*\b(hilang)\b|\b(stnk).*\b(hilang).*\b(pajak)\b/, label: "regex:pajak stnk hilang", relevance: 230 }],
+  45: [{ pattern: /\b(pajak|pkb).*\b(tahunan)?.*\b(aplikasi|hp|ponsel|signal)\b|\b(aplikasi|hp|ponsel|signal).*\b(pajak|pkb)\b/, label: "regex:pajak aplikasi", relevance: 155 }],
+  30: [{ pattern: /\b(pajak).*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(pajak)\b/, label: "regex:pajak lima tahunan", relevance: 70 }],
+  33: [{ pattern: /\b(mati|menunggak).*\b(pajak).*\b(tahun|bertahun|lama)\b|\b(pajak).*\b(mati|menunggak).*\b(tahun|bertahun|lama)\b|\b(tahun|bertahun).*\b(pajak).*\b(mati|menunggak)\b/, label: "regex:mati pajak bertahun", relevance: 170 }],
+  39: [{ pattern: /\b(denda).*\b(hitung|dihitung|bulan|berapa|kapan)\b|\b(terlambat).*\b(bulan).*\b(denda)\b/, label: "regex:besaran denda", relevance: 140 }],
+  40: [{ pattern: /\b(pemutihan|keringanan|diskon).*\b(pajak)?\b|\b(program).*\b(pemutihan)\b|\b(bbnkb|bea\s+balik\s+nama|balik\s+nama|biaya).*\b(gratis|bebas|pembebasan)\b|\b(gratis|bebas|pembebasan).*\b(bbnkb|bea\s+balik\s+nama|balik\s+nama|biaya)\b/, label: "regex:pemutihan pajak", relevance: 260 }],
+  43: [{ pattern: /\b(bukti|struk|resi).*\b(pembayaran|bayar|online|pengesahan)\b|\b(pembayaran|bayar|online|pengesahan).*\b(bukti|struk|resi)\b/, label: "regex:bukti pembayaran", relevance: 130 }],
+  47: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|ktp|fotokopi).*\b(pajak|tahunan)\b|\b(pajak|tahunan).*\b(syarat|dokumen|persyaratan|bawa|ktp|fotokopi)\b/, label: "regex:syarat pajak tahunan", relevance: 155 }],
+  48: [{ pattern: /\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|cek\s+fisik\s+bantuan|ganti\s+pelat|pelat|leasing|kredit|jaminan|samsat\s+terdekat).*\b(pajak)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan|ganti\s+pelat).*\b(pajak)?.*\b(syarat|dokumen|persyaratan|bawa|kendaraan|cek\s+fisik|cek\s+fisik\s+bantuan|leasing|kredit|jaminan|samsat\s+terdekat)\b|\b(ganti\s+pelat).*\b(syarat|cek\s+fisik|cek\s+fisik\s+bantuan|habis|mati|menunggak|leasing|kredit|bpkb|luar\s+kota|samsat\s+terdekat)?\b|\b(waktu|waktunya).*\b(ganti\s+pelat)\b|\b(lima\s+tahunan).*\b(ganti\s+pelat|cek\s+fisik|cek\s+fisik\s+bantuan|samsat\s+terdekat|dokumen|bawa|leasing|kredit)\b/, label: "regex:syarat pajak lima tahunan", relevance: 250 }],
+  54: [{ pattern: /\b(stnk).*\b(hilang|kehilangan|dompet|leasing)\b|\b(hilang|kehilangan|dompet|leasing).*\b(stnk)\b/, label: "regex:stnk hilang", relevance: 170 }],
+  55: [{ pattern: /\b(bpkb).*\b(hilang|kehilangan)\b|\b(hilang|kehilangan).*\b(bpkb)\b/, label: "regex:bpkb hilang", relevance: 95 }],
+  56: [{ pattern: /\b(stnk).*\b(rusak|kebakar|air|banjir|terbaca)\b|\b(rusak|kebakar|air|banjir|terbaca).*\b(stnk)\b/, label: "regex:stnk rusak", relevance: 145 }],
+  62: [{ pattern: /\b(bpkb).*\b(pajak).*\b(lima\s+tahunan)\b|\b(pajak).*\b(lima\s+tahunan).*\b(bpkb)\b/, label: "regex:bpkb pajak lima tahunan", relevance: 135 }],
+  63: [{ pattern: /\b(ktp|alamat).*\b(beda|tidak\s+sesuai).*\b(stnk)\b|\b(stnk).*\b(alamat|ktp).*\b(beda|tidak\s+sesuai)\b/, label: "regex:data stnk sesuai", relevance: 130 }],
+  66: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(rusak|patah|bengkok|terbaca)\b|\b(rusak|patah|bengkok|terbaca).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb rusak", relevance: 280 }],
+  67: [{ pattern: /\b(tnkb|pelat|nomor\s+polisi).*\b(hilang|kehilangan|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|laporan|polri)\b|\b(hilang|kehilangan|hanyut|dicuri|banjir|baru|ga\s+ada|tidak\s+ada|surut|laporan|polri).*\b(tnkb|pelat|nomor\s+polisi)\b/, label: "regex:tnkb hilang", relevance: 280 }],
+  71: [{ pattern: /\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum).*\b(balik\s+nama|kendaraan|stnk|bpkb)\b|\b(balik\s+nama|kendaraan|stnk|bpkb).*\b(warisan|ahli\s+waris|surat\s+keterangan\s+kematian|almarhum)\b|\b(ayah|bapak|pemilik).*\b(meninggal).*\b(balik\s+nama|warisan)\b/, label: "regex:balik nama warisan", relevance: 330 }],
   73: [
-    { pattern: /\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan)\b|\b(perusahaan).*\b(perorangan)\b/, label: "regex:balik nama", score: 130 }
+    { pattern: /\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan).*\b(balik\s+nama)\b|\b(balik\s+nama).*\b(syarat|dokumen|persyaratan|cara|proses|bekas|seken|second|perusahaan|perorangan)\b|\b(perusahaan).*\b(perorangan)\b/, label: "regex:balik nama", relevance: 130 }
   ],
-  76: [{ pattern: /\b(balik\s+nama).*\b(diwakilkan|pemilik\s+lama|dihubungi)\b|\b(pemilik\s+lama|dihubungi).*\b(balik\s+nama)\b/, label: "regex:balik nama diwakilkan", score: 130 }],
-  79: [{ pattern: /\b(pindah\s+tangan|pemilik\s+lama|nama\s+di\s+stnk|nama\s+stnk).*\b(balik\s+nama|nama\s+saya|pemilik\s+baru|harus|cara)\b|\b(balik\s+nama|nama\s+saya|pemilik\s+baru|harus|cara).*\b(pindah\s+tangan|pemilik\s+lama|nama\s+di\s+stnk|nama\s+stnk)\b|\b(teman).*\b(beli).*\b(orang\s+lain)\b/, label: "regex:balik nama pindah tangan", score: 300 }],
-  80: [{ pattern: /\b(ayah|bapak|pemilik|orang\s+tua).*\b(meninggal).*\b(pajak|bayar)\b|\b(pajak|bayar).*\b(ayah|bapak|pemilik|orang\s+tua).*\b(meninggal)\b|\b(stnk).*\b(atas\s+nama).*\b(beliau|almarhum).*\b(pajak|bayar)\b|\b(pajak|bayar).*\b(stnk).*\b(atas\s+nama).*\b(beliau|almarhum)\b/, label: "regex:pajak pemilik meninggal", score: 340 }],
-  82: [{ pattern: /\b(kuitansi|kwitansi|bukti\s+jual\s+beli).*\b(hilang|tidak\s+ada)\b|\b(hilang|tidak\s+ada).*\b(kuitansi|kwitansi|bukti\s+jual\s+beli)\b/, label: "regex:bukti jual beli", score: 145 }],
-  84: [{ pattern: /\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada).*\b(pajak|bayar|habis)\b|\b(tidak\s+ada|tidak\s+punya|ga\s+ada|gak\s+ada).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(pajak|bayar|habis)\b|\b(pajak|bayar|habis).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada)\b|\b(tanpa).*\b(ktp\s+pemilik\s+lama|ktp\s+pemilik\s+pertama)\b/, label: "regex:pajak tanpa ktp pemilik lama", score: 340 }],
-  85: [{ pattern: /\b(balik\s+nama).*\b(pajak|menunggak)\b|\b(pajak|menunggak).*\b(balik\s+nama)\b/, label: "regex:balik nama pajak", score: 135 }],
-  90: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah|jakarta).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah|jakarta)\b|\b(pindah|cabut).*\b(domisili|berkas)\b|\b(pelat\s+luar|luar\s+daerah|jakarta).*\b(cabut\s+berkas)\b/, label: "regex:mutasi", score: 145 }],
-  92: [{ pattern: /\b(kendaraan|motor|mobil).*\b(dibawa|bawa).*\b(mutasi)\b|\b(mutasi).*\b(kendaraan|motor|mobil).*\b(dibawa|bawa)\b/, label: "regex:kendaraan dibawa mutasi", score: 125 }],
-  94: [{ pattern: /\b(mutasi).*\b(bpkb).*\b(asli|ori|original)\b|\b(bpkb).*\b(asli|ori|original).*\b(mutasi)\b/, label: "regex:bpkb asli mutasi", score: 130 }],
-  96: [{ pattern: /\b(cabut\s+berkas|berkas|daerah\s+tujuan).*\b(lama|batas|waktu|proses|daftar)\b|\b(proses|lama|batas|waktu|daftar).*\b(cabut\s+berkas|berkas|daerah\s+tujuan)\b/, label: "regex:lama mutasi", score: 175 }],
-  98: [{ pattern: /\b(luar\s+daerah|luar\s+kota|jakarta|jawa\s+barat).*\b(pajak\s+tahunan|bayar\s+pajak|pajak|samsat\s+bandung\s+timur)\b|\b(pajak\s+tahunan|bayar\s+pajak|pajak).*\b(jakarta|luar\s+daerah|luar\s+kota|jawa\s+barat).*\b(bandung|samsat\s+bandung\s+timur|daerah\s+asal)?\b/, label: "regex:pajak tahunan plat luar daerah", score: 230 }],
-  101: [{ pattern: /\b(mutasi|cabut\s+berkas|plat|pelat|jakarta|luar\s+daerah|luar\s+provinsi).*\b(balik\s+nama|nama\s+saya|stnk.*nama|kepemilikan)\b|\b(balik\s+nama|nama\s+saya|stnk.*nama|kepemilikan).*\b(mutasi|cabut\s+berkas|plat|pelat|jakarta|luar\s+daerah|luar\s+provinsi)\b/, label: "regex:mutasi balik nama luar daerah", score: 340 }],
-  102: [{ pattern: /\b(mutasi).*\b(online|luar\s+daerah)\b|\b(online).*\b(mutasi)\b/, label: "regex:mutasi online", score: 120 }],
-  103: [{ pattern: /\b(apa|pengertian).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kendaraan|rangka|mesin|cek\s+fisik)\b/, label: "regex:apa cek fisik", score: 145 }],
-  105: [{ pattern: /\b(kapan|perlu|wajib|harus|diperlukan).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kapan|perlu|wajib|harus|diperlukan)\b/, label: "regex:kapan cek fisik", score: 115 }],
-  107: [{ pattern: /\b(cek\s+fisik).*\b(wajib|perlu|harus).*\b(mutasi)\b|\b(mutasi).*\b(cek\s+fisik)\b/, label: "regex:cek fisik mutasi", score: 98 }],
-  115: [{ pattern: /\b(nomor\s+rangka).*\b(sulit|susah|ditemukan|dicari)\b|\b(sulit|susah|ditemukan|dicari).*\b(nomor\s+rangka)\b/, label: "regex:nomor rangka sulit", score: 135 }],
-  117: [{ pattern: /\b(signal|sambara|aplikasi\s+signal)\b/, label: "regex:signal", score: 95 }],
-  120: [{ pattern: /\b(daftar|mendaftar|registrasi|cara|akun).*\b(signal)\b|\b(signal).*\b(daftar|mendaftar|registrasi|cara|akun)\b/, label: "regex:daftar signal", score: 125 }],
-  121: [{ pattern: /\b(signal).*\b(jawa\s+barat|jabar)\b|\b(jawa\s+barat|jabar).*\b(signal)\b/, label: "regex:signal jawa barat", score: 120 }],
-  123: [{ pattern: /\b(kendaraan).*\b(tidak\s+muncul|atas\s+nama\s+sendiri).*\b(signal)\b|\b(signal).*\b(kendaraan).*\b(tidak\s+muncul|atas\s+nama\s+sendiri)\b/, label: "regex:signal kendaraan sendiri", score: 130 }],
-  124: [{ pattern: /\b(kendaraan).*\b(orang\s+lain|keluarga).*\b(signal)\b|\b(signal).*\b(kendaraan).*\b(orang\s+lain|keluarga)\b/, label: "regex:signal kendaraan keluarga", score: 130 }],
-  126: [{ pattern: /\b(signal).*\b(gagal|verifikasi|wajah|buram|nik|terbaca)\b|\b(gagal|verifikasi|wajah|buram|nik|terbaca).*\b(signal)\b/, label: "regex:verifikasi signal gagal", score: 190 }],
-  127: [{ pattern: /\b(signal).*\b(pajak\s+tahunan|pembayaran\s+berhasil|pengesahan|datang\s+ke\s+samsat|selesai\s+online|qr\s+code|e\s+pengesahan|e\s+tbpkp|stnk\s+fisik)\b|\b(pajak\s+tahunan|pembayaran\s+berhasil|pengesahan|datang\s+ke\s+samsat|selesai\s+online|qr\s+code|e\s+pengesahan|e\s+tbpkp|stnk\s+fisik).*\b(signal)\b/, label: "regex:signal pajak tahunan", score: 215 }],
-  128: [{ pattern: /\b(signal|online).*\b(pajak|pkb)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(signal|online)\b/, label: "regex:signal pajak lima tahunan", score: 170 }],
-  129: [{ pattern: /\b(samsat\s+keliling|layanan\s+keliling)\b/, label: "regex:samsat keliling", score: 95 }],
-  131: [{ pattern: /\b(samsat\s+keliling).*\b(layanan|beda|induk|stnk\s+hilang|balik\s+nama)\b|\b(stnk\s+hilang|balik\s+nama|beda).*\b(samsat\s+keliling)\b/, label: "regex:layanan samsat keliling", score: 170 }],
-  132: [{ pattern: /\b(samsat\s+keliling).*\b(pajak\s+tahunan|pajak|terlambat|bayar)\b|\b(pajak\s+tahunan|terlambat|bayar).*\b(samsat\s+keliling)\b/, label: "regex:samkel pajak tahunan", score: 175 }],
-  133: [{ pattern: /\b(samsat\s+keliling).*\b(lima\s+tahunan|ganti\s+pelat)\b|\b(lima\s+tahunan|ganti\s+pelat).*\b(samsat\s+keliling)\b/, label: "regex:samkel pajak lima tahunan", score: 240 }],
-  134: [{ pattern: /\b(jadwal|jam|kapan).*\b(samsat\s+keliling|keliling\s+samsat)\b|\b(samsat\s+keliling|keliling\s+samsat).*\b(jadwal|jam|kapan)\b/, label: "regex:jadwal samsat keliling", score: 155 }],
-  135: [{ pattern: /\b(lokasi|dimana|tempat|hari\s+ini).*\b(samsat\s+keliling|keliling\s+samsat)\b|\b(samsat\s+keliling|keliling\s+samsat).*\b(lokasi|dimana|tempat|hari\s+ini)\b/, label: "regex:lokasi samsat keliling", score: 210 }],
-  136: [{ pattern: /\b(parkir|tempat\s+parkir|area\s+parkir).*\b(samsat|motor|mobil)?\b/, label: "regex:parkir samsat", score: 220 }],
-  137: [{ pattern: /\b(ruang\s+tunggu|tunggu).*\b(anak|samsat)?\b|\b(anak).*\b(ruang\s+tunggu|tunggu)\b/, label: "regex:ruang tunggu", score: 125 }],
-  138: [{ pattern: /\b(toilet).*\b(samsat|pengunjung)?\b|\b(samsat|pengunjung).*\b(toilet)\b/, label: "regex:toilet", score: 130 }],
-  139: [{ pattern: /\b(mushola|musala).*\b(samsat|dalam)?\b|\b(samsat|dalam).*\b(mushola|musala)\b/, label: "regex:mushola", score: 130 }],
-  140: [{ pattern: /\b(loket|cs|informasi|customer\s+service|tanya).*\b(samsat|proses)?\b|\b(samsat|proses).*\b(loket|cs|informasi|customer\s+service|tanya)\b/, label: "regex:loket informasi", score: 130 }],
-  141: [{ pattern: /\b(cek\s+fisik).*\b(area|tempat|masuk|lewat)\b|\b(area|tempat|masuk|lewat).*\b(cek\s+fisik)\b/, label: "regex:area cek fisik", score: 220 }],
-  143: [{ pattern: /\b(pembayaran|uang|saldo|rekening).*\b(gagal|terpotong|kendala|belum\s+berubah|belum\s+terbayarkan)\b|\b(gagal|terpotong|kendala|belum\s+berubah|belum\s+terbayarkan).*\b(pembayaran|uang|saldo|rekening)\b|\b(signal|aplikasi).*\b(status|belum\s+berubah|belum\s+terbayarkan|bayar\s+ulang|customer\s+service|live\s+chat)\b|\b(status|belum\s+berubah|belum\s+terbayarkan|bayar\s+ulang|customer\s+service|live\s+chat).*\b(signal|aplikasi)\b|\b(nomor\s+polisi|aplikasi).*\b(salah)\b|\b(salah).*\b(nomor\s+polisi|aplikasi)\b/, label: "regex:kendala layanan", score: 220 }],
-  142: [{ pattern: /\b(pengaduan|keluhan|komplain|lapor|petugas|jutek).*\b(samsat|layanan|petugas)?\b/, label: "regex:pengaduan", score: 110 }],
-  146: [{ pattern: /\b(drive\s+thru|drivethru)\b/, label: "regex:drive thru", score: 80 }],
-  147: [{ pattern: /\b(memiliki|tersedia|ada|punya).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(memiliki|tersedia|ada|punya)\b/, label: "regex:ketersediaan drive thru", score: 130 }],
-  150: [{ pattern: /\b(syarat|dokumen|persyaratan|berkas|bawa).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(syarat|dokumen|persyaratan|berkas|bawa)\b/, label: "regex:syarat drive thru", score: 135 }]
+  76: [{ pattern: /\b(balik\s+nama).*\b(diwakilkan|pemilik\s+lama|dihubungi)\b|\b(pemilik\s+lama|dihubungi).*\b(balik\s+nama)\b/, label: "regex:balik nama diwakilkan", relevance: 130 }],
+  79: [{ pattern: /\b(pindah\s+tangan|pemilik\s+lama|nama\s+di\s+stnk|nama\s+stnk).*\b(balik\s+nama|nama\s+saya|pemilik\s+baru|harus|cara)\b|\b(balik\s+nama|nama\s+saya|pemilik\s+baru|harus|cara).*\b(pindah\s+tangan|pemilik\s+lama|nama\s+di\s+stnk|nama\s+stnk)\b|\b(teman).*\b(beli).*\b(orang\s+lain)\b/, label: "regex:balik nama pindah tangan", relevance: 300 }],
+  80: [{ pattern: /\b(ayah|bapak|pemilik|orang\s+tua).*\b(meninggal).*\b(pajak|bayar)\b|\b(pajak|bayar).*\b(ayah|bapak|pemilik|orang\s+tua).*\b(meninggal)\b|\b(stnk).*\b(atas\s+nama).*\b(beliau|almarhum).*\b(pajak|bayar)\b|\b(pajak|bayar).*\b(stnk).*\b(atas\s+nama).*\b(beliau|almarhum)\b/, label: "regex:pajak pemilik meninggal", relevance: 340 }],
+  82: [{ pattern: /\b(kuitansi|kwitansi|bukti\s+jual\s+beli).*\b(hilang|tidak\s+ada)\b|\b(hilang|tidak\s+ada).*\b(kuitansi|kwitansi|bukti\s+jual\s+beli)\b/, label: "regex:bukti jual beli", relevance: 145 }],
+  84: [{ pattern: /\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada).*\b(pajak|bayar|habis)\b|\b(tidak\s+ada|tidak\s+punya|ga\s+ada|gak\s+ada).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(pajak|bayar|habis)\b|\b(pajak|bayar|habis).*\b(ktp|pemilik\s+lama|orangnya|kontak).*\b(tidak\s+ada|tidak\s+punya|tidak\s+tahu|susah|dimana|ga\s+ada|gak\s+ada)\b|\b(tanpa).*\b(ktp\s+pemilik\s+lama|ktp\s+pemilik\s+pertama)\b/, label: "regex:pajak tanpa ktp pemilik lama", relevance: 340 }],
+  85: [{ pattern: /\b(balik\s+nama).*\b(pajak|menunggak)\b|\b(pajak|menunggak).*\b(balik\s+nama)\b/, label: "regex:balik nama pajak", relevance: 135 }],
+  90: [{ pattern: /\b(syarat|dokumen|persyaratan|cara|proses|alur|mau|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah|jakarta).*\b(mutasi)\b|\b(mutasi).*\b(syarat|dokumen|persyaratan|cara|proses|alur|pindah|domisili|cabut|berkas|pelat\s+luar|luar\s+daerah|jakarta)\b|\b(pindah|cabut).*\b(domisili|berkas)\b|\b(pelat\s+luar|luar\s+daerah|jakarta).*\b(cabut\s+berkas)\b/, label: "regex:mutasi", relevance: 145 }],
+  92: [{ pattern: /\b(kendaraan|motor|mobil).*\b(dibawa|bawa).*\b(mutasi)\b|\b(mutasi).*\b(kendaraan|motor|mobil).*\b(dibawa|bawa)\b/, label: "regex:kendaraan dibawa mutasi", relevance: 125 }],
+  94: [{ pattern: /\b(mutasi).*\b(bpkb).*\b(asli|ori|original)\b|\b(bpkb).*\b(asli|ori|original).*\b(mutasi)\b/, label: "regex:bpkb asli mutasi", relevance: 130 }],
+  96: [{ pattern: /\b(cabut\s+berkas|berkas|daerah\s+tujuan).*\b(lama|batas|waktu|proses|daftar)\b|\b(proses|lama|batas|waktu|daftar).*\b(cabut\s+berkas|berkas|daerah\s+tujuan)\b/, label: "regex:lama mutasi", relevance: 175 }],
+  98: [{ pattern: /\b(luar\s+daerah|luar\s+kota|jakarta|jawa\s+barat).*\b(pajak\s+tahunan|bayar\s+pajak|pajak|samsat\s+bandung\s+timur)\b|\b(pajak\s+tahunan|bayar\s+pajak|pajak).*\b(jakarta|luar\s+daerah|luar\s+kota|jawa\s+barat).*\b(bandung|samsat\s+bandung\s+timur|daerah\s+asal)?\b/, label: "regex:pajak tahunan plat luar daerah", relevance: 230 }],
+  101: [{ pattern: /\b(mutasi|cabut\s+berkas|plat|pelat|jakarta|luar\s+daerah|luar\s+provinsi).*\b(balik\s+nama|nama\s+saya|stnk.*nama|kepemilikan)\b|\b(balik\s+nama|nama\s+saya|stnk.*nama|kepemilikan).*\b(mutasi|cabut\s+berkas|plat|pelat|jakarta|luar\s+daerah|luar\s+provinsi)\b/, label: "regex:mutasi balik nama luar daerah", relevance: 340 }],
+  102: [{ pattern: /\b(mutasi).*\b(online|luar\s+daerah)\b|\b(online).*\b(mutasi)\b/, label: "regex:mutasi online", relevance: 120 }],
+  103: [{ pattern: /\b(apa|pengertian).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kendaraan|rangka|mesin|cek\s+fisik)\b/, label: "regex:apa cek fisik", relevance: 145 }],
+  105: [{ pattern: /\b(kapan|perlu|wajib|harus|diperlukan).*\b(cek\s+fisik)\b|\b(cek\s+fisik).*\b(kapan|perlu|wajib|harus|diperlukan)\b/, label: "regex:kapan cek fisik", relevance: 115 }],
+  107: [{ pattern: /\b(cek\s+fisik).*\b(wajib|perlu|harus).*\b(mutasi)\b|\b(mutasi).*\b(cek\s+fisik)\b/, label: "regex:cek fisik mutasi", relevance: 98 }],
+  115: [{ pattern: /\b(nomor\s+rangka).*\b(sulit|susah|ditemukan|dicari)\b|\b(sulit|susah|ditemukan|dicari).*\b(nomor\s+rangka)\b/, label: "regex:nomor rangka sulit", relevance: 135 }],
+  117: [{ pattern: /\b(signal|sambara|aplikasi\s+signal)\b/, label: "regex:signal", relevance: 95 }],
+  120: [{ pattern: /\b(daftar|mendaftar|registrasi|cara|akun).*\b(signal)\b|\b(signal).*\b(daftar|mendaftar|registrasi|cara|akun)\b/, label: "regex:daftar signal", relevance: 125 }],
+  121: [{ pattern: /\b(signal).*\b(jawa\s+barat|jabar)\b|\b(jawa\s+barat|jabar).*\b(signal)\b/, label: "regex:signal jawa barat", relevance: 120 }],
+  123: [{ pattern: /\b(kendaraan).*\b(tidak\s+muncul|atas\s+nama\s+sendiri).*\b(signal)\b|\b(signal).*\b(kendaraan).*\b(tidak\s+muncul|atas\s+nama\s+sendiri)\b/, label: "regex:signal kendaraan sendiri", relevance: 130 }],
+  124: [{ pattern: /\b(kendaraan).*\b(orang\s+lain|keluarga).*\b(signal)\b|\b(signal).*\b(kendaraan).*\b(orang\s+lain|keluarga)\b/, label: "regex:signal kendaraan keluarga", relevance: 130 }],
+  126: [{ pattern: /\b(signal).*\b(gagal|verifikasi|wajah|buram|nik|terbaca)\b|\b(gagal|verifikasi|wajah|buram|nik|terbaca).*\b(signal)\b/, label: "regex:verifikasi signal gagal", relevance: 190 }],
+  127: [{ pattern: /\b(signal).*\b(pajak\s+tahunan|pembayaran\s+berhasil|pengesahan|datang\s+ke\s+samsat|selesai\s+online|qr\s+code|e\s+pengesahan|e\s+tbpkp|stnk\s+fisik)\b|\b(pajak\s+tahunan|pembayaran\s+berhasil|pengesahan|datang\s+ke\s+samsat|selesai\s+online|qr\s+code|e\s+pengesahan|e\s+tbpkp|stnk\s+fisik).*\b(signal)\b/, label: "regex:signal pajak tahunan", relevance: 215 }],
+  128: [{ pattern: /\b(signal|online).*\b(pajak|pkb)?.*\b(lima\s+tahunan)\b|\b(lima\s+tahunan).*\b(signal|online)\b/, label: "regex:signal pajak lima tahunan", relevance: 170 }],
+  129: [{ pattern: /\b(samsat\s+keliling|layanan\s+keliling)\b/, label: "regex:samsat keliling", relevance: 95 }],
+  131: [{ pattern: /\b(samsat\s+keliling).*\b(layanan|beda|induk|stnk\s+hilang|balik\s+nama)\b|\b(stnk\s+hilang|balik\s+nama|beda).*\b(samsat\s+keliling)\b/, label: "regex:layanan samsat keliling", relevance: 170 }],
+  132: [{ pattern: /\b(samsat\s+keliling).*\b(pajak\s+tahunan|pajak|terlambat|bayar)\b|\b(pajak\s+tahunan|terlambat|bayar).*\b(samsat\s+keliling)\b/, label: "regex:samkel pajak tahunan", relevance: 175 }],
+  133: [{ pattern: /\b(samsat\s+keliling).*\b(lima\s+tahunan|ganti\s+pelat)\b|\b(lima\s+tahunan|ganti\s+pelat).*\b(samsat\s+keliling)\b/, label: "regex:samkel pajak lima tahunan", relevance: 240 }],
+  134: [{ pattern: /\b(jadwal|jam|kapan).*\b(samsat\s+keliling|keliling\s+samsat)\b|\b(samsat\s+keliling|keliling\s+samsat).*\b(jadwal|jam|kapan)\b/, label: "regex:jadwal samsat keliling", relevance: 155 }],
+  135: [{ pattern: /\b(lokasi|dimana|tempat|hari\s+ini).*\b(samsat\s+keliling|keliling\s+samsat)\b|\b(samsat\s+keliling|keliling\s+samsat).*\b(lokasi|dimana|tempat|hari\s+ini)\b/, label: "regex:lokasi samsat keliling", relevance: 210 }],
+  136: [{ pattern: /\b(parkir|tempat\s+parkir|area\s+parkir).*\b(samsat|motor|mobil)?\b/, label: "regex:parkir samsat", relevance: 220 }],
+  137: [{ pattern: /\b(ruang\s+tunggu|tunggu).*\b(anak|samsat)?\b|\b(anak).*\b(ruang\s+tunggu|tunggu)\b/, label: "regex:ruang tunggu", relevance: 125 }],
+  138: [{ pattern: /\b(toilet).*\b(samsat|pengunjung)?\b|\b(samsat|pengunjung).*\b(toilet)\b/, label: "regex:toilet", relevance: 130 }],
+  139: [{ pattern: /\b(mushola|musala).*\b(samsat|dalam)?\b|\b(samsat|dalam).*\b(mushola|musala)\b/, label: "regex:mushola", relevance: 130 }],
+  140: [{ pattern: /\b(loket|cs|informasi|customer\s+service|tanya).*\b(samsat|proses)?\b|\b(samsat|proses).*\b(loket|cs|informasi|customer\s+service|tanya)\b/, label: "regex:loket informasi", relevance: 130 }],
+  141: [{ pattern: /\b(cek\s+fisik).*\b(area|tempat|masuk|lewat)\b|\b(area|tempat|masuk|lewat).*\b(cek\s+fisik)\b/, label: "regex:area cek fisik", relevance: 220 }],
+  143: [{ pattern: /\b(pembayaran|uang|saldo|rekening).*\b(gagal|terpotong|kendala|belum\s+berubah|belum\s+terbayarkan)\b|\b(gagal|terpotong|kendala|belum\s+berubah|belum\s+terbayarkan).*\b(pembayaran|uang|saldo|rekening)\b|\b(signal|aplikasi).*\b(status|belum\s+berubah|belum\s+terbayarkan|bayar\s+ulang|customer\s+service|live\s+chat)\b|\b(status|belum\s+berubah|belum\s+terbayarkan|bayar\s+ulang|customer\s+service|live\s+chat).*\b(signal|aplikasi)\b|\b(nomor\s+polisi|aplikasi).*\b(salah)\b|\b(salah).*\b(nomor\s+polisi|aplikasi)\b/, label: "regex:kendala layanan", relevance: 220 }],
+  142: [{ pattern: /\b(pengaduan|keluhan|komplain|lapor|petugas|jutek).*\b(samsat|layanan|petugas)?\b/, label: "regex:pengaduan", relevance: 110 }],
+  146: [{ pattern: /\b(drive\s+thru|drivethru)\b/, label: "regex:drive thru", relevance: 80 }],
+  147: [{ pattern: /\b(memiliki|tersedia|ada|punya).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(memiliki|tersedia|ada|punya)\b/, label: "regex:ketersediaan drive thru", relevance: 130 }],
+  150: [{ pattern: /\b(syarat|dokumen|persyaratan|berkas|bawa).*\b(drive\s+thru|drivethru)\b|\b(drive\s+thru|drivethru).*\b(syarat|dokumen|persyaratan|berkas|bawa)\b/, label: "regex:syarat drive thru", relevance: 135 }]
 };
 
 // Kata intent umum tidak cukup untuk membuktikan bahwa pertanyaan membahas
@@ -930,11 +930,11 @@ export function matchFaq(input: string): PatternMatchResult | null {
   }
 
   const ranked = faqEntries
-    .map((entry) => scoreEntry(entry, normalizedInput, baseQueryTokens, queryTokens))
-    .sort((a, b) => b.rankingScore - a.rankingScore || b.score - a.score);
+    .map((entry) => measureEntryRelevance(entry, normalizedInput, baseQueryTokens, queryTokens))
+    .sort((a, b) => b.rankingRelevance - a.rankingRelevance || b.relevance - a.relevance);
 
   const best = ranked[0];
-  if (!best || best.score < minimumScore || !hasSubjectOverlap(best.entry, queryTokens)) {
+  if (!best || best.relevance < minimumRelevance || !hasSubjectOverlap(best.entry, queryTokens)) {
     return null;
   }
 
@@ -965,7 +965,7 @@ export function matchMultipleFaq(
 
   for (const segment of segments) {
     const result = matchFaq(segment);
-    if (!result || result.score < minimumMultiIntentScore || seenFaqIds.has(result.entry.id)) {
+    if (!result || result.relevance < minimumMultiIntentRelevance || seenFaqIds.has(result.entry.id)) {
       continue;
     }
 
@@ -1008,8 +1008,8 @@ export function analyzePatternInput(input: string): PatternInputAnalysis {
     hasDomainContext: hasDomainContext(normalizedInput, expandedTokens),
     hasConflictingContext: hasConflictingContext(normalizedInput, expandedTokens, baseTokens),
     hasOutOfScopeContext: hasOutOfScopeContext(normalizedInput),
-    minimumScore,
-    minimumMultiIntentScore
+    minimumRelevance,
+    minimumMultiIntentRelevance
   };
 }
 
@@ -1224,30 +1224,30 @@ function applyRegexNormalization(value: string) {
   );
 }
 
-// Menghitung skor kecocokan antara input user dan satu data FAQ.
-function scoreEntry(
+// Menghitung nilai relevansi antara input user dan satu data FAQ.
+function measureEntryRelevance(
   entry: FaqEntry,
   normalizedInput: string,
   baseQueryTokens: string[],
   queryTokens: string[]
-): ScoredPatternMatchResult {
+): RankedPatternMatchResult {
   const patterns = [
-    { value: entry.question, exactScore: 100, partialScore: 65 },
-    { value: entry.category, exactScore: 45, partialScore: 20 },
+    { value: entry.question, exactRelevance: 100, partialRelevance: 65 },
+    { value: entry.category, exactRelevance: 45, partialRelevance: 20 },
     ...(customPatterns[entry.id] ?? []).map((value) => ({
       value,
-      exactScore: 100,
-      partialScore: 80
+      exactRelevance: 100,
+      partialRelevance: 80
     }))
   ];
   const compactInput = baseQueryTokens.join(" ");
   const entryTokens = expandTokens(tokenize([entry.question, entry.category].join(" ")));
 
-  let phraseScore = 0;
-  let regexScore = 0;
+  let phraseRelevance = 0;
+  let regexRelevance = 0;
   const matchedTerms = new Set<string>();
 
-  // Skor tinggi diberikan jika input cocok persis atau cocok sebagian dengan pola.
+  // Nilai tinggi diberikan jika input cocok persis atau cocok sebagian dengan pola.
   for (const patternSpec of patterns) {
     const pattern = normalize(patternSpec.value);
     if (!pattern) {
@@ -1256,10 +1256,10 @@ function scoreEntry(
 
     const compactPattern = tokenize(pattern).join(" ");
     if (pattern === normalizedInput) {
-      phraseScore = Math.max(phraseScore, patternSpec.exactScore + 100);
+      phraseRelevance = Math.max(phraseRelevance, patternSpec.exactRelevance + 100);
       matchedTerms.add(pattern);
     } else if (compactPattern === compactInput) {
-      phraseScore = Math.max(phraseScore, patternSpec.exactScore + 40);
+      phraseRelevance = Math.max(phraseRelevance, patternSpec.exactRelevance + 40);
       matchedTerms.add(pattern);
     } else if (
       pattern.includes(normalizedInput) ||
@@ -1267,12 +1267,12 @@ function scoreEntry(
       (compactInput.length > 0 && compactPattern.includes(compactInput)) ||
       (compactPattern.length > 0 && compactInput.includes(compactPattern))
     ) {
-      phraseScore = Math.max(phraseScore, patternSpec.partialScore);
+      phraseRelevance = Math.max(phraseRelevance, patternSpec.partialRelevance);
       matchedTerms.add(pattern);
     } else {
-      const unorderedScore = getUnorderedPatternScore(pattern, queryTokens, patternSpec.partialScore);
-      if (unorderedScore > 0) {
-        phraseScore = Math.max(phraseScore, unorderedScore);
+      const unorderedRelevance = getUnorderedPatternRelevance(pattern, queryTokens, patternSpec.partialRelevance);
+      if (unorderedRelevance > 0) {
+        phraseRelevance = Math.max(phraseRelevance, unorderedRelevance);
         matchedTerms.add(`unordered:${pattern}`);
       }
     }
@@ -1280,7 +1280,7 @@ function scoreEntry(
 
   for (const regexPattern of regexPatterns[entry.id] ?? []) {
     if (regexPattern.pattern.test(normalizedInput)) {
-      regexScore = Math.max(regexScore, regexPattern.score);
+      regexRelevance = Math.max(regexRelevance, regexPattern.relevance);
       matchedTerms.add(regexPattern.label);
     }
   }
@@ -1300,11 +1300,11 @@ function scoreEntry(
   const entryCoverage = overlap.length / Math.max(entrySet.size, 1);
   const subjectCoverage = meaningfulOverlap.length / Math.max(meaningfulEntryTokens.length, 1);
   const anchorBonus = overlap.some((token) => domainAnchorTokens.has(token)) ? 10 : 0;
-  // Skor relevansi mengutamakan pola/frasa dan kata inti FAQ. Kata tambahan
-  // yang tidak ada di dataset tidak langsung membuat skor turun drastis.
-  const patternScore = Math.max(phraseScore, regexScore);
-  const relevanceScore =
-    patternScore * 0.65 +
+  // Nilai relevansi mengutamakan pola/frasa dan kata inti FAQ. Kata tambahan
+  // yang tidak ada di dataset tidak langsung membuat nilai turun drastis.
+  const patternRelevance = Math.max(phraseRelevance, regexRelevance);
+  const relevanceValue =
+    patternRelevance * 0.65 +
     subjectCoverage * 20 +
     entryCoverage * 10 +
     queryCoverage * 5 +
@@ -1312,15 +1312,15 @@ function scoreEntry(
 
   return {
     entry,
-    score: Math.min(100, Math.round(relevanceScore)),
-    rankingScore: relevanceScore,
+    relevance: Math.min(100, Math.round(relevanceValue)),
+    rankingRelevance: relevanceValue,
     matchedTerms: [...matchedTerms].slice(0, 6)
   };
 }
 
 // Custom pattern tetap dianggap cocok meski urutan kata user dibalik.
 // Contoh: "syarat bayar pajak" tetap cocok dengan "pajak bayar syaratnya".
-function getUnorderedPatternScore(pattern: string, queryTokens: string[], baseScore: number) {
+function getUnorderedPatternRelevance(pattern: string, queryTokens: string[], baseRelevance: number) {
   const basePatternTokens = tokenize(pattern);
   if (basePatternTokens.length < 2) {
     return 0;
@@ -1333,7 +1333,7 @@ function getUnorderedPatternScore(pattern: string, queryTokens: string[], baseSc
     return 0;
   }
 
-  return baseScore + Math.min(basePatternTokens.length * 10, 40);
+  return baseRelevance + Math.min(basePatternTokens.length * 10, 40);
 }
 
 // Memecah teks menjadi kata penting dan membuang stop word.

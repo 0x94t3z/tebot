@@ -8,7 +8,7 @@ declare const process: {
 const input = process.argv.slice(2).join(" ").trim();
 
 if (!input) {
-  console.error('Usage: npm run score -- "Kalau STNK hilang bagaimana?"');
+  console.error('Usage: npm run relevance -- "Kalau STNK hilang bagaimana?"');
   process.exit(1);
 }
 
@@ -32,8 +32,8 @@ console.log("=== Context Check ===");
 console.log(`Has domain context    : ${analysis.hasDomainContext ? "YES" : "NO"}`);
 console.log(`Has conflicting topic : ${analysis.hasConflictingContext ? "YES" : "NO"}`);
 console.log(`Has out-of-scope topic: ${analysis.hasOutOfScopeContext ? "YES" : "NO"}`);
-console.log(`Minimum score         : ${analysis.minimumScore}`);
-console.log(`Minimum multi-intent  : ${analysis.minimumMultiIntentScore}`);
+console.log(`Minimum relevance     : ${analysis.minimumRelevance}`);
+console.log(`Multi-intent threshold: ${analysis.minimumMultiIntentRelevance}`);
 
 if (results.length === 0) {
   console.log("");
@@ -51,6 +51,6 @@ for (const [index, result] of results.entries()) {
   console.log(`FAQ ID     : ${result.entry.id}`);
   console.log(`Category   : ${result.entry.category}`);
   console.log(`Question   : ${result.entry.question}`);
-  console.log(`Score      : ${result.score}/100`);
+  console.log(`Relevance  : ${result.relevance}/100`);
   console.log(`Terms      : ${result.matchedTerms.length > 0 ? result.matchedTerms.join(", ") : "-"}`);
 }

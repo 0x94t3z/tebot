@@ -43,14 +43,14 @@ Proses pencocokan:
 4. Stop word umum diabaikan agar pencocokan fokus pada kata yang membawa makna.
 5. Beberapa sinonim sederhana diperluas.
 6. Input dibandingkan dengan pertanyaan FAQ, kategori, custom pattern, dan regex pendukung.
-7. Setiap kandidat FAQ diberi skor relevansi.
-8. FAQ dengan skor tertinggi dipilih jika melewati ambang batas.
+7. Setiap kandidat FAQ diberi nilai relevansi.
+8. FAQ dengan nilai relevansi tertinggi dipilih jika melewati ambang batas.
 9. Jika tidak ada kandidat yang cukup relevan, bot mengirim fallback.
 
 Kalimat yang bisa dipakai:
 
 ```text
-Chatbot menerapkan metode pattern matching berbasis aturan. Input pengguna dinormalisasi, ditokenisasi, diperluas dengan aturan sinonim sederhana, lalu dibandingkan dengan pola FAQ. Regex digunakan sebagai teknik pendukung untuk normalisasi teks dan deteksi frasa spesifik, sedangkan pemilihan jawaban akhir dilakukan menggunakan pattern matching dan scoring.
+Chatbot menerapkan metode pattern matching berbasis aturan. Input pengguna dinormalisasi, ditokenisasi, diperluas dengan aturan sinonim sederhana, lalu dibandingkan dengan pola FAQ. Regex digunakan sebagai teknik pendukung untuk normalisasi teks dan deteksi frasa spesifik, sedangkan pemilihan jawaban akhir dilakukan menggunakan pattern matching dan perhitungan nilai relevansi.
 ```
 
 ## Peran Regex
@@ -81,7 +81,7 @@ Regex digunakan dalam dua bagian:
 Kalimat yang bisa dipakai:
 
 ```text
-Regex tidak menggantikan pattern matching. Regex membantu sistem mengenali variasi penulisan dan pola frasa tertentu. Keputusan akhir tetap memakai scoring pattern matching.
+Regex tidak menggantikan pattern matching. Regex membantu sistem mengenali variasi penulisan dan pola frasa tertentu. Keputusan akhir tetap memakai perhitungan nilai relevansi pattern matching.
 ```
 
 ## Dataset 150 dan Test Case 209
@@ -124,7 +124,7 @@ Dataset FAQ berjumlah 150 data, sedangkan 209 adalah jumlah test case otomatis. 
 
 ## Black Box Testing
 
-Pengujian otomatis sesuai dengan pendekatan **black box testing** karena test memeriksa hubungan input dan output tanpa mengharuskan penguji melihat proses internal scoring.
+Pengujian otomatis sesuai dengan pendekatan **black box testing** karena test memeriksa hubungan input dan output tanpa mengharuskan penguji melihat proses internal perhitungan nilai relevansi.
 
 Contoh:
 
@@ -262,7 +262,7 @@ Contoh:
 80: [{
   pattern: /\b(ayah|bapak|pemilik).*\b(meninggal).*\b(pajak|bayar)\b/,
   label: "regex:pajak pemilik meninggal",
-  score: 340
+  relevance: 340
 }]
 ```
 
@@ -314,7 +314,7 @@ Jika ditemukan pola pertanyaan valid baru saat pengujian, dataset FAQ dicek dulu
 
 ### Apa metode yang digunakan?
 
-Metode yang digunakan adalah pattern matching berbasis aturan, dengan dukungan normalisasi teks, stop word removal, sinonim sederhana, custom pattern, regex pendukung, dan scoring.
+Metode yang digunakan adalah pattern matching berbasis aturan, dengan dukungan normalisasi teks, stop word removal, sinonim sederhana, custom pattern, regex pendukung, dan perhitungan nilai relevansi.
 
 ### Apakah chatbot menggunakan AI?
 

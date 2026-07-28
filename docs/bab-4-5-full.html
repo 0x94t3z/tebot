@@ -326,7 +326,7 @@
   -> penghapusan stop word
   -> perluasan sinonim
   -> pencocokan pattern
-  -> scoring kandidat FAQ
+  -> perhitungan relevansi kandidat FAQ
   -> jawaban terbaik atau fallback</pre>
 
   <p class="caption">Gambar 4.2 Alur pattern matching</p>
@@ -345,11 +345,11 @@
 
   <h3>4.3.4 Regex Pendukung</h3>
   <p>Regex dipakai sebagai pendukung pattern matching. Regex membantu sistem mengenali pola frasa yang punya banyak bentuk. Contohnya pola <em>STNK hilang</em>, <em>pajak lima tahunan</em>, <em>TNKB rusak</em>, <em>pembayaran SIGNAL belum berubah</em>, dan <em>cek fisik untuk mutasi</em>.</p>
-  <p>Regex tidak menggantikan pattern matching. Keputusan akhir tetap memakai scoring. Regex hanya memberi sinyal tambahan bahwa input pengguna memiliki pola yang kuat terhadap FAQ tertentu.</p>
+  <p>Regex tidak menggantikan pattern matching. Keputusan akhir tetap memakai perhitungan nilai relevansi. Regex hanya memberi sinyal tambahan bahwa input pengguna memiliki pola yang kuat terhadap FAQ tertentu.</p>
 
-  <h3>4.3.5 Scoring dan Pemilihan Jawaban</h3>
-  <p>Setiap FAQ diberi skor berdasarkan kecocokan dengan input pengguna. Komponen skor berasal dari kecocokan frasa, custom pattern, regex, overlap token, cakupan token, dan token domain. Kandidat FAQ dengan skor tertinggi dipilih jika nilainya melewati batas minimum. Jika tidak ada kandidat yang cukup kuat, bot mengirim fallback.</p>
-  <p>Skor ini disebut skor relevansi internal. Skor tersebut bukan akurasi machine learning karena sistem tidak melakukan proses training model statistik. Skor dipakai untuk memilih jawaban yang paling dekat dengan input pengguna.</p>
+  <h3>4.3.5 Perhitungan Relevansi dan Pemilihan Jawaban</h3>
+  <p>Setiap FAQ diberi nilai relevansi berdasarkan kecocokan dengan input pengguna. Komponen nilai relevansi berasal dari kecocokan frasa, custom pattern, regex, overlap token, cakupan token, dan token domain. Kandidat FAQ dengan nilai relevansi tertinggi dipilih jika nilainya melewati batas minimum. Jika tidak ada kandidat yang cukup kuat, bot mengirim fallback.</p>
+  <p>Nilai ini disebut nilai relevansi internal. Nilai tersebut bukan akurasi machine learning karena sistem tidak melakukan proses training model statistik. Nilai relevansi dipakai untuk memilih jawaban yang paling dekat dengan input pengguna.</p>
 
   <h3>4.3.6 Multi-Intent dan Fallback</h3>
   <p>Sistem juga menangani input yang berisi lebih dari satu pertanyaan. Misalnya pengguna menulis, <em>STNK saya hilang dan pajak motor mati bertahun-tahun gimana?</em>. Sistem memecah pertanyaan tersebut menjadi beberapa segmen, lalu menjalankan pattern matching pada setiap segmen yang bermakna.</p>
@@ -402,7 +402,7 @@
   <p>Pengujian sistem dilakukan lewat dua jalur. Jalur pertama adalah pengujian otomatis menggunakan Vitest. Jalur kedua adalah uji coba langsung melalui Telegram bot. Pengujian otomatis memeriksa fungsi program, sedangkan uji coba Telegram memeriksa pengalaman pengguna pada media implementasi yang sebenarnya.</p>
 
   <h3>4.6.1 Black Box Testing</h3>
-  <p>Pengujian black box dilakukan dengan memberi input kepada chatbot dan membandingkan output dengan hasil yang diharapkan. Penguji tidak perlu melihat detail scoring di dalam fungsi matcher. Yang diperiksa adalah apakah input tertentu menghasilkan FAQ yang benar atau fallback.</p>
+  <p>Pengujian black box dilakukan dengan memberi input kepada chatbot dan membandingkan output dengan hasil yang diharapkan. Penguji tidak perlu melihat detail perhitungan relevansi di dalam fungsi matcher. Yang diperiksa adalah apakah input tertentu menghasilkan FAQ yang benar atau fallback.</p>
 
   <p class="table-caption">Tabel 4.5 Contoh skenario black box testing</p>
   <table>
@@ -509,9 +509,9 @@ Tests       209 passed (209)</pre>
   <p>Berdasarkan implementasi dan pengujian yang telah dilakukan, beberapa kesimpulan yang diperoleh adalah sebagai berikut.</p>
   <ol>
     <li>Chatbot FAQ SAMSAT Bandung Timur berhasil dibuat dalam bentuk bot Telegram dengan backend Cloudflare Workers. Bot menerima pesan melalui webhook dan mengirim balasan menggunakan Telegram Bot API.</li>
-    <li>Metode pattern matching berhasil diterapkan untuk mencocokkan pertanyaan pengguna dengan dataset FAQ. Proses pencocokan dilakukan melalui normalisasi teks, tokenisasi, penghapusan stop word, perluasan sinonim sederhana, custom pattern, regex pendukung, dan scoring.</li>
+    <li>Metode pattern matching berhasil diterapkan untuk mencocokkan pertanyaan pengguna dengan dataset FAQ. Proses pencocokan dilakukan melalui normalisasi teks, tokenisasi, penghapusan stop word, perluasan sinonim sederhana, custom pattern, regex pendukung, dan perhitungan nilai relevansi.</li>
     <li>Dataset FAQ berjumlah 150 data dan disimpan dalam format JSON. Dataset tersebut memuat kategori, pertanyaan, jawaban, dan sumber rujukan.</li>
-    <li>Regex berperan sebagai teknik pendukung. Regex dipakai untuk menyamakan variasi penulisan dan mengenali pola frasa tertentu, sedangkan pemilihan jawaban akhir tetap memakai scoring pattern matching.</li>
+    <li>Regex berperan sebagai teknik pendukung. Regex dipakai untuk menyamakan variasi penulisan dan mengenali pola frasa tertentu, sedangkan pemilihan jawaban akhir tetap memakai perhitungan nilai relevansi pattern matching.</li>
     <li>Sistem dapat menangani pertanyaan bebas, pilihan menu, dan pesan multi-intent selama input masih berada dalam cakupan dataset dan pattern yang dibuat.</li>
     <li>Pertanyaan di luar konteks SAMSAT diarahkan ke fallback. Hal ini mencegah bot memberikan jawaban administrasi kendaraan untuk topik yang tidak sesuai.</li>
     <li>Pengujian otomatis menunjukkan 2 file test berhasil dijalankan dengan total 209 test case. Hasil tersebut menunjukkan bahwa fungsi dataset, pattern matching, fallback, multi-intent, dan format balasan Telegram berjalan sesuai skenario pengujian.</li>
@@ -530,7 +530,7 @@ Tests       209 passed (209)</pre>
     <li>Menambahkan fitur import dataset dari CSV atau spreadsheet. Fitur ini akan membantu ketika data FAQ bertambah atau perlu diperbarui dari sumber eksternal.</li>
     <li>Mencatat pertanyaan yang masuk ke fallback. Data fallback dapat dipakai untuk mengetahui pola pertanyaan yang belum dikenali sistem.</li>
     <li>Menambahkan evaluasi kuantitatif seperti precision dan recall apabila data uji sudah diberi label jawaban yang benar.</li>
-    <li>Mengembangkan rekomendasi beberapa jawaban ketika skor kandidat FAQ berdekatan, agar pengguna bisa memilih jawaban yang paling sesuai.</li>
+    <li>Mengembangkan rekomendasi beberapa jawaban ketika nilai relevansi kandidat FAQ berdekatan, agar pengguna bisa memilih jawaban yang paling sesuai.</li>
     <li>Mengembangkan pendekatan hybrid dengan similarity matching, tetapi jawaban tetap dibatasi pada dataset yang sudah divalidasi.</li>
   </ol>
   <p>Pengembangan tersebut dapat dilakukan tanpa mengubah tujuan utama sistem, yaitu menyediakan chatbot FAQ SAMSAT Bandung Timur berbasis pattern matching. Perubahan yang paling dekat untuk dilakukan adalah pencatatan fallback dan dashboard pengelolaan dataset, karena dua hal tersebut langsung membantu proses perawatan data setelah bot diuji oleh pengguna.</p>

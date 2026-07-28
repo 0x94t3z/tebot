@@ -220,7 +220,7 @@ function emptySatisfactionStats(): SatisfactionStats {
   };
 }
 
-// Membuat ringkasan voting agar user melihat skor kepuasan berbasis penilaian.
+// Membuat ringkasan voting agar user melihat persentase kepuasan berbasis penilaian.
 function buildSatisfactionText(stats: SatisfactionStats, selectedChoice?: SatisfactionChoice) {
   const total = stats.satisfied + stats.dissatisfied;
   const percentages = getSatisfactionPercentages(stats);
