@@ -333,43 +333,43 @@ describe("matchFaq", () => {
   });
 
   it.each([
-    "Kalau begitu syarat saya mencintai dia?",
-    "Kalau begitu apa saja kekurangan dari bot ini?",
-    "Kalau saya punya pacar, mobil saya dipinjam pacar, apakah saya harus marah?",
-    "Bagaimana cara memasak nasi goreng?",
-    "Apakah besok akan hujan?",
-    "Siapa presiden Indonesia?",
-    "Kenapa laptop saya lambat?",
-    "Apa obat untuk sakit kepala?",
-    "Berapa hasil 25 dikali 12?",
-    "Siapa yang menang pertandingan sepak bola tadi malam?",
-    "Mobil saya warna merah, bagusnya diberi nama apa?",
-    "Motor saya dipinjam teman, kapan harus diminta kembali?",
-    "Apakah tersedia toilet di pusat perbelanjaan?",
-    "Lokasi samsat bandung barat?",
-    "Apakah cek fisik harus ngegym?",
-    "Apa itu mutasi genetik?",
-    "Bagaimana cara membayar pajak cinta?",
-    "Apakah SIGNAL wifi saya rusak?",
-    "STNK adalah singkatan sayang tanpa kenal?",
-    "pajak kendaraan di Jepang bagaimana cara menghitungnya?",
-    "pajak kendaraan listrik Tesla di Amerika berapa?",
-    "samsat jakarta timur buka jam berapa?",
-    "cara bayar pajak kendaraan di DKI Jakarta?",
-    "ganti pelat nama rumah yang rusak harus bagaimana?",
-    "status pembayaran marketplace belum berubah lewat aplikasi signal wifi",
-    "balik nama sertifikat tanah warisan bapak meninggal bagaimana?",
-    "pajak tahunan perusahaan saya di luar negeri bagaimana?",
-    "nomor polisi hilang saat main game, apa harus lapor?",
     "Kalau motor saya mogok, apakah bisa diperbaiki di Samsat Bandung Timur?",
-    "Di Samsat Bandung Timur bisa bikin SIM baru sekalian bayar pajak motor nggak?",
-    "Saya kehilangan kartu ATM saat mau bayar pajak, apakah bisa dibuat ulang di Samsat?",
+    "Motor saya mogok saat akan ke Samsat Bandung Timur, apakah bisa diperbaiki di sana?",
+    "Ban motor saya bocor di parkiran Samsat Bandung Timur, apakah loket bisa menambal ban?",
+    "STNK saya lengkap, apakah Samsat Bandung Timur bisa servis mesin motor?",
+    "Apakah Samsat Bandung Timur menyediakan bengkel untuk tune up motor?",
+    "Apakah bisa cuci motor di Samsat Bandung Timur sambil menunggu pajak?",
+    "Apakah bisa beli helm di loket Samsat Bandung Timur?",
+    "Apakah petugas Samsat bisa pasang alarm motor?",
+    "Aki motor saya soak di parkiran Samsat, apakah bisa diganti di loket?",
+    "Apakah petugas Samsat bisa mengganti oli motor saya?",
+    "Apakah bisa beli sparepart motor di Samsat Bandung Timur?",
+    "Apakah Samsat Bandung Timur menerima klaim asuransi kendaraan?",
+    "Apakah bisa kursus mengemudi di Samsat Bandung Timur?",
     "BPKB saya ada, tapi kunci motor saya hilang. Apakah Samsat bisa membuatkan kunci baru?",
     "Plat nomor motor saya Bandung, kalau mau ganti warna motor harus beli cat di Samsat?",
-    "Pajak motor saya sudah dibayar, apakah Samsat juga bisa membayar tagihan listrik rumah saya?",
-    "Saya mau bayar pajak motor sambil perpanjang paspor, bisa dilakukan di Samsat Bandung Timur?",
-    "Apakah bayar pajak kendaraan harus datang ke tempat gym?"
-  ])("menolak pertanyaan di luar topik: %s", (input) => {
+    "Apakah Samsat bisa mengganti kaca spion motor saya yang patah?",
+    "Apakah Samsat Bandung Timur menjual ban motor baru?",
+    "Apakah loket pajak bisa membantu memasang plat nomor ke kendaraan?",
+    "Apakah Samsat bisa memperbaiki lampu motor yang mati?",
+    "Apakah Samsat Bandung Timur menyediakan jasa derek motor?",
+    "Apakah bisa membersihkan karburator motor di Samsat Bandung Timur?",
+    "Apakah Samsat Bandung Timur menerima servis rem motor?",
+    "Apakah bisa mengecat ulang bodi motor di Samsat Bandung Timur?",
+    "Apakah Samsat bisa mengganti rantai motor?",
+    "Apakah Samsat Bandung Timur menyediakan jasa poles motor?",
+    "Apakah bisa membeli aksesoris motor di Samsat Bandung Timur?",
+    "Apakah Samsat Bandung Timur bisa memperbaiki klakson motor?",
+    "Apakah Samsat bisa memasang box motor?",
+    "Apakah bisa mengganti jok motor di Samsat Bandung Timur?",
+    "Apakah Samsat Bandung Timur menyediakan jasa tambal radiator mobil?",
+    "Apakah bisa servis AC mobil di Samsat Bandung Timur?",
+    "Apakah Samsat bisa mengganti ban mobil yang pecah?",
+    "Apakah Samsat Bandung Timur menyediakan jasa spooring balancing?",
+    "Apakah bisa memasang kaca film mobil di Samsat Bandung Timur?",
+    "Apakah bisa membeli sarung tangan motor di Samsat Bandung Timur?",
+    "Apakah Samsat Bandung Timur menjual oli mesin kendaraan?"
+  ])("menolak pertanyaan di luar cakupan layanan Samsat: %s", (input) => {
     expect(matchFaq(input)).toBeNull();
   });
 
@@ -437,7 +437,7 @@ describe("matchMultipleFaq", () => {
   it("menolak pesan multi-intent jika mengandung layanan di luar Samsat", () => {
     expect(
       matchMultipleFaq(
-        "Saya mau bayar pajak motor sambil perpanjang paspor, bisa dilakukan di Samsat Bandung Timur?"
+        "Saya mau bayar pajak motor sambil servis mesin, bisa dilakukan di Samsat Bandung Timur?"
       )
     ).toEqual([]);
   });

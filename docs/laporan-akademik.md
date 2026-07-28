@@ -172,10 +172,10 @@ Respons fallback diberikan ketika sistem tidak menemukan FAQ yang cukup relevan 
 Contoh pertanyaan yang berada di luar cakupan adalah:
 
 ```text
-Saya mau bayar pajak motor sambil perpanjang paspor, bisa dilakukan di Samsat Bandung Timur?
+Motor saya mogok saat akan ke SAMSAT Bandung Timur, apakah bisa diperbaiki di sana?
 ```
 
-Pertanyaan tersebut mengandung kata `pajak motor`, tetapi topik utamanya bercampur dengan `paspor`. Karena paspor bukan layanan SAMSAT, chatbot tidak mengambil jawaban dari dataset FAQ dan mengirim respons fallback.
+Pertanyaan tersebut masih menyebut SAMSAT Bandung Timur, tetapi topik utamanya adalah perbaikan kendaraan. Karena perbaikan kendaraan bukan layanan administrasi SAMSAT yang tersedia pada dataset FAQ, chatbot tidak mengambil jawaban dari dataset dan mengirim respons fallback.
 
 Fallback juga diberikan ketika pertanyaan terlalu umum atau tidak memiliki kecocokan yang cukup dengan dataset. Ini menjaga batas jawaban chatbot tetap sesuai dengan ruang lingkup penelitian.
 
@@ -232,7 +232,7 @@ Contoh skenario pengujian ditunjukkan pada Tabel 4.6.
 | 4 | Istilah tidak baku | STNK ilang harus ngapain? | FAQ STNK hilang |
 | 5 | Variasi istilah | Mau ganti plat lima tahunan bawa apa? | FAQ pajak lima tahunan |
 | 6 | Multi-intent | Syarat balik nama dan mutasi apa saja? | Lebih dari satu FAQ sesuai konteks |
-| 7 | Di luar cakupan | Bisa perpanjang paspor di Samsat? | Respons fallback |
+| 7 | Di luar cakupan layanan | Motor mogok bisa diperbaiki di SAMSAT Bandung Timur? | Respons fallback |
 | 8 | Input media | Pengguna mengirim foto | Pesan bahwa chatbot hanya mendukung teks |
 
 Skenario pengujian juga memuat pertanyaan natural yang masih berhubungan dengan layanan SAMSAT, misalnya STNK hilang saat pajak menunggak, TNKB hilang karena banjir, pembayaran SIGNAL yang statusnya belum berubah, dan kendaraan warisan. Pertanyaan seperti ini dipakai untuk melihat apakah chatbot tetap mengenali maksud pengguna meskipun kalimatnya tidak sama dengan dataset.
@@ -268,7 +268,7 @@ Contoh pengujian pertanyaan bebas ditunjukkan pada Tabel 4.8.
 | 2 | `Mau ganti plat lima tahunan bawa apa?` | Chatbot menampilkan FAQ pajak lima tahunan/ganti plat | Sesuai |
 | 3 | `Plat motor saya rusak karena kecelakaan` | Chatbot menampilkan FAQ TNKB atau pelat rusak | Sesuai |
 | 4 | `Syarat balik nama dan mutasi apa saja?` | Chatbot menampilkan lebih dari satu jawaban sesuai intent | Sesuai |
-| 5 | `Bisa perpanjang paspor di Samsat?` | Chatbot menampilkan respons fallback | Sesuai |
+| 5 | `Motor mogok bisa diperbaiki di SAMSAT Bandung Timur?` | Chatbot menampilkan respons fallback | Sesuai |
 
 Chatbot tidak memaksakan jawaban ketika input berada di luar cakupan. Pada pertanyaan yang memuat topik di luar layanan SAMSAT, chatbot mengirim respons fallback.
 
@@ -296,7 +296,7 @@ Pertanyaan tersebut diarahkan ke FAQ tentang STNK hilang karena chatbot mengenal
 
 Regex membantu chatbot mengenali pola frasa yang sering muncul, seperti STNK hilang, TNKB rusak, pajak lima tahunan, pembayaran SIGNAL belum berubah, dan balik nama warisan. Namun, regex tetap menjadi pendukung. Keputusan akhir tetap mengikuti proses pattern matching melalui perhitungan nilai relevansi.
 
-Respons fallback menjaga batas jawaban chatbot. Pertanyaan tentang paspor, ATM, SIM, tagihan listrik, atau layanan lain di luar SAMSAT tidak dipaksakan untuk dijawab dengan dataset FAQ.
+Respons fallback menjaga batas jawaban chatbot. Pertanyaan yang masih menyebut SAMSAT tetapi membahas layanan di luar administrasi SAMSAT, seperti perbaikan kendaraan, pembuatan kunci kendaraan, atau pembelian cat kendaraan, tidak dipaksakan untuk dijawab dengan dataset FAQ.
 
 Keterbatasan sistem ada pada dataset dan aturan yang disusun. Jika pengguna mengajukan pertanyaan valid dengan pola yang belum terwakili, chatbot masih dapat mengirim fallback. Dataset, custom pattern, sinonim, dan regex pendukung perlu diperbarui ketika ditemukan pola pertanyaan baru.
 

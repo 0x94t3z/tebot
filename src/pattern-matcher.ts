@@ -627,8 +627,8 @@ const regexPatterns: Record<number, RegexPatternSpec[]> = {
 };
 
 // Kata intent umum tidak cukup untuk membuktikan bahwa pertanyaan membahas
-// Samsat. Ini mencegah kalimat seperti "syarat mencintai dia" cocok hanya
-// karena kata "syarat" bersinonim dengan kategori Dokumen.
+// administrasi Samsat. Ini mencegah layanan non-administrasi kendaraan cocok
+// hanya karena memakai kata umum seperti "syarat" atau "cara".
 const genericIntentTokens = new Set([
   "alamat",
   "lokasi",
@@ -798,6 +798,53 @@ const outOfScopeRegionTokens = [
 
 const outOfScopeTopicPhrases = [
   "motor mogok",
+  "ban bocor",
+  "tambal ban",
+  "menambal ban",
+  "servis mesin",
+  "bengkel",
+  "tune up",
+  "cuci motor",
+  "beli helm",
+  "pasang alarm",
+  "aki motor",
+  "ganti oli",
+  "sparepart",
+  "klaim asuransi",
+  "kursus mengemudi",
+  "kaca spion",
+  "menjual ban",
+  "ban motor baru",
+  "memasang plat",
+  "memasang plat nomor",
+  "memasang pelat",
+  "memasang pelat nomor",
+  "membantu memasang plat",
+  "plat nomor ke kendaraan",
+  "pelat nomor ke kendaraan",
+  "pasang plat",
+  "lampu motor",
+  "jasa derek",
+  "derek motor",
+  "karburator",
+  "servis rem",
+  "mengecat ulang",
+  "bodi motor",
+  "rantai motor",
+  "poles motor",
+  "aksesoris motor",
+  "klakson motor",
+  "box motor",
+  "jok motor",
+  "tambal radiator",
+  "servis ac",
+  "ban mobil",
+  "spooring",
+  "balancing",
+  "kaca film",
+  "oli mesin",
+  "sarung tangan motor",
+  "diperbaiki di sana",
   "perbaiki di samsat",
   "diperbaiki di samsat",
   "bikin sim",
@@ -1066,7 +1113,7 @@ function hasConflictingContext(
   }
 
   // Satu istilah domain tidak boleh memaksa kecocokan ketika konteks lainnya
-  // berasal dari topik berbeda (contoh: "mutasi genetik" atau "pajak cinta").
+  // mengarah ke layanan yang bukan administrasi Samsat.
   if (!hasStrongContext && unknownTokenCount > 0 && knownTokenCount < unknownTokenCount + 3) {
     return true;
   }

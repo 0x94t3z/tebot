@@ -121,6 +121,76 @@ Kalimat yang bisa dipakai:
 Dataset FAQ berjumlah 150 data, sedangkan 209 adalah jumlah test case otomatis. Jumlah test tidak dihitung dari perkalian dataset dengan seluruh variasi pertanyaan. Test case ditentukan berdasarkan skenario black box, seperti input FAQ valid, urutan kata dibalik, pertanyaan natural, multi-intent, dan fallback untuk pertanyaan di luar konteks.
 ```
 
+## Isi Test Case Otomatis
+
+Bagian ini boleh dijelaskan kepada pembimbing sebagai **validasi teknis internal**. Namun, jangan diposisikan sebagai satu-satunya hasil pengujian penelitian. Hasil utama tetap berasal dari pengujian chatbot melalui Telegram, sedangkan test otomatis dipakai untuk memastikan logic sistem tidak berubah atau rusak setelah dataset, pattern, atau regex diperbarui.
+
+Isi test case otomatis dibagi menjadi dua bagian besar.
+
+### 1. Test Pattern Matching
+
+File:
+
+```text
+test/pattern-matcher.test.ts
+```
+
+Test ini memeriksa kemampuan sistem dalam mencocokkan pertanyaan user ke FAQ yang benar. Isi pengujiannya meliputi:
+
+| Kelompok Test | Tujuan |
+| --- | --- |
+| Validasi dataset | Memastikan dataset aktif berjumlah 150 FAQ dan jumlah data per kategori sesuai |
+| Pertanyaan resmi FAQ | Memastikan setiap pertanyaan utama di dataset cocok ke ID FAQ asalnya |
+| Urutan kata dibalik | Memastikan sistem tidak bergantung pada urutan kalimat yang persis sama |
+| Variasi regex | Memastikan variasi seperti `drive-thru`, `drivethru`, `pajak 5 tahunan`, `pajak lima tahunan`, `cabut berkas`, dan `gesek rangka` tetap dikenali |
+| Pertanyaan natural | Memastikan pertanyaan seperti `Kalau STNK hilang bagaimana?` tetap masuk ke FAQ yang tepat |
+| Slang dan variasi ejaan | Memastikan kata seperti `ilang`, `raib`, `seken`, atau `nopol` tetap dapat dikenali jika masih relevan |
+| Pertanyaan panjang hasil audit | Memastikan kasus yang lebih kompleks, seperti STNK hilang saat pajak menunggak, TNKB hilang karena banjir, SIGNAL status belum berubah, kendaraan warisan, leasing, mutasi, dan balik nama tetap terjawab sesuai FAQ |
+| Pertanyaan di luar cakupan layanan | Memastikan pertanyaan yang masih menyebut SAMSAT tetapi membahas layanan di luar administrasi SAMSAT, seperti perbaikan kendaraan, pembuatan kunci kendaraan, atau pembelian cat kendaraan, tidak salah dicocokkan ke FAQ |
+| Multi-intent | Memastikan satu pesan yang berisi lebih dari satu pertanyaan dapat menghasilkan lebih dari satu jawaban jika masih dalam konteks SAMSAT |
+| Kategori callback | Memastikan label kategori dari tombol Telegram tetap dibaca dengan benar oleh sistem |
+
+Contoh penjelasan lisan:
+
+```text
+Test pattern matching dipakai untuk mengecek apakah input user diarahkan ke FAQ yang benar. Test ini mencakup pertanyaan asli dari dataset, pertanyaan natural, urutan kata yang berubah, variasi regex, pertanyaan panjang, multi-intent, dan fallback untuk input di luar cakupan layanan SAMSAT.
+```
+
+### 2. Test Format Balasan Telegram
+
+File:
+
+```text
+test/replies.test.ts
+```
+
+Test ini memeriksa tampilan dan struktur balasan chatbot yang dikirim ke Telegram. Isi pengujiannya meliputi:
+
+| Kelompok Test | Tujuan |
+| --- | --- |
+| Menu kategori | Memastikan daftar pertanyaan per kategori hanya menampilkan maksimal 7 pertanyaan per halaman |
+| Navigasi menu | Memastikan tombol `Berikutnya`, `Sebelumnya`, dan `Kembali ke kategori` muncul pada kondisi yang benar |
+| Menu utama | Memastikan kategori utama memiliki icon dan callback yang sesuai |
+| Pesan pembuka | Memastikan `/start` menampilkan sapaan dan instruksi penggunaan yang jelas |
+| Format jawaban | Memastikan jawaban menampilkan `Pertanyaan`, isi jawaban, sumber, dan voting pengguna |
+| Kebersihan tampilan | Memastikan label teknis seperti `Jawaban:`, `Kategori:`, `Nilai akurasi:`, dan `rating` tidak ditampilkan ke user |
+| Voting kepuasan | Memastikan tombol `Memuaskan` dan `Tidak memuaskan` terbentuk dengan benar |
+| Sumber ganda | Memastikan beberapa sumber ditampilkan sebagai `Sumber 1`, `Sumber 2`, dan seterusnya |
+| Input selain teks | Memastikan media seperti foto, video, atau file ditolak karena bot hanya mendukung teks |
+| Fallback | Memastikan pesan fallback menjelaskan bahwa bot hanya menjawab pertanyaan seputar SAMSAT Bandung Timur |
+
+Contoh penjelasan lisan:
+
+```text
+Test format balasan Telegram dipakai untuk memastikan output chatbot tetap rapi dan sesuai kebutuhan user. Yang diuji bukan hanya jawabannya, tetapi juga menu, tombol navigasi, voting kepuasan, sumber, dan fallback.
+```
+
+Kesimpulan yang bisa disampaikan:
+
+```text
+Jadi, 209 test case otomatis bukan berarti 209 responden atau 209 pertanyaan penelitian utama. Angka tersebut adalah jumlah validasi teknis internal untuk memastikan pattern matching, regex pendukung, fallback, multi-intent, dan tampilan balasan Telegram berjalan sesuai rancangan sebelum chatbot diuji langsung melalui Telegram.
+```
+
 ## Black Box Testing
 
 Pengujian otomatis sesuai dengan pendekatan **black box testing** karena test memeriksa hubungan input dan output tanpa mengharuskan penguji melihat proses internal perhitungan nilai relevansi.
@@ -139,10 +209,10 @@ Contoh lain:
 
 ```text
 Input:
-Saya mau bayar pajak sambil perpanjang paspor
+Motor mogok bisa diperbaiki di SAMSAT Bandung Timur?
 
 Output yang diharapkan:
-Fallback, karena paspor bukan layanan SAMSAT
+Fallback, karena perbaikan kendaraan bukan layanan administrasi SAMSAT dalam dataset FAQ
 ```
 
 Kalimat yang bisa dipakai:

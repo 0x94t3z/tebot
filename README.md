@@ -275,7 +275,7 @@ At a high level, the chatbot works as a Telegram-based request-response system:
 5. If the input is `/start`, the bot stores basic Telegram profile data for research and shows the main menu.
 6. If the input is a menu or FAQ button, the bot returns the selected category page or selected FAQ answer.
 7. If the input is a free-text question, the bot runs the pattern matching process against the 150-row FAQ dataset.
-8. Before selecting an answer, the bot checks whether the question is still within the SAMSAT/vehicle-administration domain. Questions about passport, ATM, SIM, electricity bills, gym, or other unrelated services are rejected with fallback.
+8. Before selecting an answer, the bot checks whether the question is still within the SAMSAT/vehicle-administration domain. Questions that mention SAMSAT but ask about non-administrative services, such as vehicle repair, key replacement, repainting, or workshop services, are rejected with fallback.
 9. If the message contains more than one valid FAQ intent, the bot can return more than one answer, but the number is limited so the chat stays readable.
 10. For each matched FAQ, the bot sends the selected question, answer, source, satisfaction voting buttons, and then shows the main menu again.
 11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates the vote in Cloudflare KV and recalculates the satisfaction percentage.
@@ -778,7 +778,7 @@ Secara umum, chatbot bekerja sebagai sistem tanya jawab berbasis Telegram:
 5. Jika input berupa `/start`, bot menyimpan profil dasar Telegram user untuk kebutuhan riset dan menampilkan menu utama.
 6. Jika input berasal dari tombol menu atau tombol FAQ, bot menampilkan halaman kategori atau jawaban FAQ yang dipilih.
 7. Jika input berupa pertanyaan bebas, bot menjalankan proses pattern matching terhadap 150 data FAQ aktif.
-8. Sebelum memilih jawaban, bot memeriksa apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan. Pertanyaan tentang paspor, ATM, SIM, tagihan listrik, gym, atau layanan lain di luar SAMSAT akan diarahkan ke fallback.
+8. Sebelum memilih jawaban, bot memeriksa apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan. Pertanyaan yang menyebut SAMSAT tetapi membahas layanan non-administrasi, seperti perbaikan kendaraan, pembuatan kunci, pengecatan kendaraan, atau layanan bengkel, akan diarahkan ke fallback.
 9. Jika satu pesan berisi lebih dari satu intent FAQ yang valid, bot dapat mengirim lebih dari satu jawaban, tetapi jumlahnya dibatasi agar chat tetap mudah dibaca.
 10. Untuk setiap FAQ yang cocok, bot mengirim pertanyaan terpilih, jawaban, sumber, tombol voting kepuasan, lalu menampilkan kembali menu utama.
 11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui voting di Cloudflare KV dan menghitung ulang persentase kepuasan.
