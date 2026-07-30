@@ -248,6 +248,8 @@ Data responden dan data kepuasan boleh disimpan secara terpisah pada level tekni
 | Data voting per user | Menyimpan pilihan `Memuaskan` atau `Tidak memuaskan` dari user untuk satu FAQ |
 | Rekap kepuasan per FAQ | Menghitung total dan persentase voting untuk setiap FAQ |
 
+Aturan voting pada sistem adalah satu responden hanya memiliki satu vote aktif untuk satu FAQ ID. Kunci penyimpanan voting memakai kombinasi `faq_id` dan `telegram_id`, sehingga jika responden mengganti pilihan pada FAQ yang sama, sistem memperbarui record lama dan mengoreksi total vote. Dengan cara ini, perubahan pilihan tetap diperbolehkan, tetapi tidak dihitung sebagai suara ganda.
+
 Walaupun disimpan terpisah, data tersebut harus bisa digabung untuk analisis penelitian. Pada sistem ini, export gabungan tersedia melalui:
 
 ```sh
@@ -275,7 +277,7 @@ Export gabungan ini menampilkan satu baris untuk satu penilaian jawaban FAQ. Kol
 Kalimat yang bisa dipakai:
 
 ```text
-Pada implementasi sistem, data responden dan data voting disimpan terpisah agar struktur penyimpanan lebih rapi dan tidak menduplikasi data profil user. Namun untuk analisis penelitian, sistem menyediakan export gabungan yang menyatukan responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu voting. Jadi hubungan antara responden dan penilaian jawaban tetap dapat dilihat dalam satu tabel.
+Pada implementasi sistem, data responden dan data voting disimpan terpisah agar struktur penyimpanan lebih rapi dan tidak menduplikasi data profil user. Data voting memakai kombinasi FAQ ID dan Telegram ID agar satu responden hanya memiliki satu vote aktif untuk satu jawaban FAQ. Jika responden mengganti pilihan, record voting diperbarui dan total statistik dikoreksi. Untuk analisis penelitian, sistem menyediakan export gabungan yang menyatukan responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu voting. Jadi hubungan antara responden dan penilaian jawaban tetap dapat dilihat dalam satu tabel.
 ```
 
 ## Command Sistem dan Request API
@@ -460,6 +462,8 @@ Bagian tersebut membaca semua data voting per user yang tersimpan di Cloudflare 
 2. Data responden berdasarkan `telegram_id`.
 3. Pilihan kepuasan user.
 4. Waktu voting.
+
+Karena key voting disimpan dalam format `research:faq_vote:{faqId}:{telegramId}`, satu responden hanya memiliki satu record voting untuk satu FAQ. Jika tombol voting berbeda ditekan lagi pada FAQ yang sama, record lama diperbarui dan total statistik dikoreksi. Jika tombol yang sama ditekan ulang, suara tidak bertambah.
 
 Hasilnya digabung menjadi baris export:
 

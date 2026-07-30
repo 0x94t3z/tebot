@@ -185,7 +185,7 @@ Data riset disimpan untuk kebutuhan evaluasi. Data tersebut terdiri dari data re
 
 Data responden diperoleh dari informasi dasar Telegram pengguna, seperti Telegram ID, username, nama, kode bahasa, waktu mulai, dan waktu terakhir aktif. Data ini dipakai untuk mencatat pengguna yang mencoba chatbot.
 
-Voting kepuasan dicatat setelah jawaban FAQ dikirim. Pengguna dapat memilih `Memuaskan` atau `Tidak memuaskan`. Satu pengguna dihitung satu suara untuk satu FAQ. Jika pilihan diganti, suara lama diperbarui.
+Voting kepuasan dicatat setelah jawaban FAQ dikirim. Pengguna dapat memilih `Memuaskan` atau `Tidak memuaskan`. Satu pengguna dihitung satu suara aktif untuk satu FAQ. Jika pengguna mengganti pilihan pada FAQ ID yang sama, sistem memperbarui pilihan tersebut dengan mengoreksi total lama, sehingga tidak terjadi penghitungan ganda.
 
 Secara teknis, data responden dan data voting disimpan dalam key yang berbeda agar struktur penyimpanan lebih rapi dan tidak terjadi duplikasi data profil. Namun, untuk kebutuhan analisis penelitian, sistem menyediakan export gabungan yang menyatukan identitas responden, pertanyaan FAQ yang dinilai, pilihan kepuasan, dan waktu voting. Dengan demikian, peneliti tetap dapat melihat hubungan antara responden dan penilaian jawaban pada satu tabel.
 

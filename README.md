@@ -83,7 +83,7 @@ Memuaskan (%) = jumlah vote memuaskan / total vote * 100
 Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 ```
 
-Each Telegram user has one active vote per FAQ. If the same user changes their choice, the old vote is corrected instead of counted twice.
+Each Telegram user has one active vote per FAQ. If the same user changes their choice on the same FAQ ID, the old vote is corrected instead of counted twice.
 
 For research analysis, use the joined response export. It combines respondent identity, FAQ question, FAQ answer, satisfaction choice, and voting time in one row:
 
@@ -320,7 +320,7 @@ At a high level, the chatbot works as a Telegram-based request-response system:
 8. Before selecting an answer, the bot checks whether the question is still within the SAMSAT/vehicle-administration domain. Questions that mention SAMSAT but ask about non-administrative services, such as vehicle repair, key replacement, repainting, or workshop services, are rejected with fallback.
 9. If the message contains more than one valid FAQ intent, the bot can return more than one answer, but the number is limited so the chat stays readable.
 10. For each matched FAQ, the bot sends the selected question, answer, source, satisfaction voting buttons, and then shows the main menu again.
-11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates the vote in Cloudflare KV and recalculates the satisfaction percentage.
+11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates one active vote in Cloudflare KV and recalculates the satisfaction percentage without creating a new chat message.
 12. If the user sends `/clear`, the bot deletes tracked messages according to Telegram Bot API limits and sends a fresh main menu.
 
 In simple terms:
@@ -802,7 +802,7 @@ User Telegram
 7. Sistem memilih FAQ dengan nilai relevansi tertinggi jika melewati batas minimum.
 8. Bot mengirim satu atau beberapa jawaban, sumber referensi, dan tombol voting kepuasan untuk masing-masing jawaban.
 9. Bot menampilkan kembali menu utama agar user dapat melanjutkan pencarian.
-10. Jika user memilih voting, sistem menyimpan atau memperbarui vote user.
+10. Jika user memilih voting, sistem menyimpan atau memperbarui satu vote aktif user untuk FAQ tersebut.
 11. Bot memperbarui tampilan hasil voting dalam bentuk persentase memuaskan dan tidak memuaskan.
 
 #### Pola Cara Kerja Keseluruhan
@@ -823,7 +823,7 @@ Secara umum, chatbot bekerja sebagai sistem tanya jawab berbasis Telegram:
 8. Sebelum memilih jawaban, bot memeriksa apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan. Pertanyaan yang menyebut SAMSAT tetapi membahas layanan non-administrasi, seperti perbaikan kendaraan, pembuatan kunci, pengecatan kendaraan, atau layanan bengkel, akan diarahkan ke fallback.
 9. Jika satu pesan berisi lebih dari satu intent FAQ yang valid, bot dapat mengirim lebih dari satu jawaban, tetapi jumlahnya dibatasi agar chat tetap mudah dibaca.
 10. Untuk setiap FAQ yang cocok, bot mengirim pertanyaan terpilih, jawaban, sumber, tombol voting kepuasan, lalu menampilkan kembali menu utama.
-11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui voting di Cloudflare KV dan menghitung ulang persentase kepuasan.
+11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui satu voting aktif di Cloudflare KV dan menghitung ulang persentase kepuasan tanpa membuat chat baru.
 12. Jika user mengirim `/clear`, bot menghapus pesan yang terlacak sesuai batasan Telegram Bot API dan mengirim menu utama baru.
 
 Ringkasnya:
@@ -865,11 +865,12 @@ Jawaban FAQ dikirim
   -> bot menampilkan tombol Memuaskan / Tidak memuaskan
   -> user memilih salah satu tombol
   -> callback vote:FAQ_ID:s atau vote:FAQ_ID:d diterima Worker
-  -> Worker mengecek vote lama user untuk FAQ tersebut
-  -> jika vote berubah, total lama dikurangi dan total baru ditambah
-  -> hasil voting disimpan ke RESEARCH_STORE
-  -> pesan jawaban di-update dengan persentase voting terbaru
-  -> bot menampilkan kembali menu utama
+  -> Worker mengecek record voting user untuk FAQ tersebut
+  -> jika belum pernah voting, pilihan disimpan dan total ditambah
+  -> jika pilihan berubah, total pilihan lama dikurangi dan total pilihan baru ditambah
+  -> hasil voting aktif disimpan ke RESEARCH_STORE
+  -> pesan jawaban di-edit dengan persentase voting terbaru
+  -> bot menampilkan tombol menu utama pada pesan yang sama
 ```
 
 Rumus persentase kepuasan:
@@ -879,7 +880,7 @@ Memuaskan (%) = jumlah vote memuaskan / total vote * 100
 Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 ```
 
-Satu user hanya memiliki satu vote aktif untuk satu FAQ. Jika user menekan tombol yang berbeda pada FAQ yang sama, sistem memperbarui pilihan tersebut dan tidak menghitungnya sebagai suara ganda.
+Satu user hanya memiliki satu vote aktif untuk satu FAQ. Jika user menekan tombol yang berbeda pada FAQ yang sama, sistem memperbarui pilihan tersebut dan tidak menghitungnya sebagai suara ganda. Jika tombol yang sama ditekan ulang, jumlah vote tidak bertambah.
 
 #### Rancangan Database
 
@@ -953,7 +954,7 @@ Contoh struktur:
 | `chat:{chatId}:message_ids` | `number[]` | Menyimpan daftar message ID yang dapat dibersihkan oleh `/clear` |
 | `research:user:{telegramId}` | `ResearchUserRecord` | Menyimpan profil dasar user Telegram untuk kebutuhan riset |
 | `research:faq_stats:{faqId}` | `SatisfactionStats` | Menyimpan total vote memuaskan dan tidak memuaskan per FAQ |
-| `research:faq_vote:{faqId}:{telegramId}` | `SatisfactionVoteRecord` | Menyimpan pilihan terakhir satu user untuk satu FAQ |
+| `research:faq_vote:{faqId}:{telegramId}` | `SatisfactionVoteRecord` | Menyimpan pilihan aktif satu user untuk satu FAQ |
 
 ##### Struktur `ResearchUserRecord`
 
@@ -1092,7 +1093,7 @@ Memuaskan (%) = jumlah vote memuaskan / total vote * 100
 Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 ```
 
-Setiap user Telegram memiliki satu vote aktif per FAQ. Jika user yang sama mengganti pilihan, vote lama dikoreksi dan tidak dihitung dobel.
+Setiap user Telegram memiliki satu vote aktif per FAQ. Jika user yang sama mengganti pilihan pada FAQ ID yang sama, vote lama dikoreksi dan tidak dihitung dobel. Jika tombol yang sama ditekan ulang, jumlah vote tidak bertambah.
 
 Untuk analisis penelitian, gunakan export respon gabungan. Export ini menyatukan identitas responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu voting dalam satu baris:
 

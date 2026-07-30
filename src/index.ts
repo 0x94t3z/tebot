@@ -69,6 +69,12 @@ interface SatisfactionVoteRecord {
   updated_at: string;
 }
 
+interface SatisfactionVoteResult {
+  stats: SatisfactionStats;
+  choice: SatisfactionChoice;
+  changed: boolean;
+}
+
 interface SatisfactionExportRow {
   faq_id: number;
   category: string;
@@ -318,25 +324,26 @@ async function handleCallback(
       return;
     }
 
-    const stats = await saveSatisfactionVote(env, vote.faqId, callback.from.id, vote.choice);
+    const voteResult = await saveSatisfactionVote(env, vote.faqId, callback.from.id, vote.choice);
     console.log(
       JSON.stringify({
         event: "satisfaction_vote",
         faq_id: vote.faqId,
         telegram_id: callback.from.id,
-        choice: vote.choice,
-        satisfied: stats.satisfied,
-        dissatisfied: stats.dissatisfied
+        attempted_choice: vote.choice,
+        saved_choice: voteResult.choice,
+        changed: voteResult.changed,
+        satisfied: voteResult.stats.satisfied,
+        dissatisfied: voteResult.stats.dissatisfied
       })
     );
     await editOrSendMessage(
       env,
       chatId,
       messageId,
-      buildDirectFaqMessage(entry, stats, vote.choice),
-      buildSatisfactionKeyboard(entry.id, stats)
+      buildDirectFaqMessage(entry, voteResult.stats, voteResult.choice),
+      mainMenu
     );
-    await sendMessage(env, chatId, buildStartMessage(), mainMenu);
     return;
   }
 
@@ -1585,18 +1592,22 @@ function getResearchUserKey(telegramId: number) {
   return `research:user:${telegramId}`;
 }
 
-// Menyimpan pilihan voting user dan mengembalikan total kepuasan terbaru.
+// Menyimpan satu vote aktif user untuk satu FAQ dan mengembalikan total kepuasan terbaru.
 async function saveSatisfactionVote(
   env: Env,
   faqId: number,
   telegramId: number,
   choice: SatisfactionChoice
-) {
+): Promise<SatisfactionVoteResult> {
   const stats = await getSatisfactionStats(env, faqId);
   const previousVote = await getSatisfactionVote(env, faqId, telegramId);
 
   if (previousVote?.choice === choice) {
-    return stats;
+    return {
+      stats,
+      choice: previousVote.choice,
+      changed: false
+    };
   }
 
   if (previousVote?.choice === "satisfied") {
@@ -1614,7 +1625,11 @@ async function saveSatisfactionVote(
   }
 
   if (!env.RESEARCH_STORE) {
-    return stats;
+    return {
+      stats,
+      choice,
+      changed: true
+    };
   }
 
   const timestamp = new Date().toISOString();
@@ -1628,7 +1643,11 @@ async function saveSatisfactionVote(
   await env.RESEARCH_STORE.put(getSatisfactionStatsKey(faqId), JSON.stringify(stats));
   await env.RESEARCH_STORE.put(getSatisfactionVoteKey(faqId, telegramId), JSON.stringify(voteRecord));
 
-  return stats;
+  return {
+    stats,
+    choice,
+    changed: true
+  };
 }
 
 // Mengambil total voting kepuasan untuk satu FAQ.
@@ -1646,7 +1665,7 @@ async function getSatisfactionStats(env: Env, faqId: number): Promise<Satisfacti
   }
 }
 
-// Mengambil pilihan terakhir user untuk satu FAQ agar vote tidak dobel.
+// Mengambil pilihan user untuk satu FAQ agar satu responden hanya punya satu vote aktif.
 async function getSatisfactionVote(env: Env, faqId: number, telegramId: number) {
   const value = await env.RESEARCH_STORE?.get(getSatisfactionVoteKey(faqId, telegramId));
   if (!value) {
@@ -1670,7 +1689,7 @@ function getSatisfactionStatsKey(faqId: number) {
   return `research:faq_stats:${faqId}`;
 }
 
-// Key pilihan terakhir user per FAQ.
+// Key pilihan user per FAQ.
 function getSatisfactionVoteKey(faqId: number, telegramId: number) {
   return `research:faq_vote:${faqId}:${telegramId}`;
 }
