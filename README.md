@@ -320,7 +320,7 @@ At a high level, the chatbot works as a Telegram-based request-response system:
 8. Before selecting an answer, the bot checks whether the question is still within the SAMSAT/vehicle-administration domain. Questions that mention SAMSAT but ask about non-administrative services, such as vehicle repair, key replacement, repainting, or workshop services, are rejected with fallback.
 9. If the message contains more than one valid FAQ intent, the bot can return more than one answer, but the number is limited so the chat stays readable.
 10. For each matched FAQ, the bot sends the selected question, answer, source, and satisfaction voting buttons.
-11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates one active vote in Cloudflare KV, recalculates the satisfaction percentage by editing only the selected answer message, removes the voting buttons, and sends a fresh main menu message.
+11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates one active vote in Cloudflare KV, recalculates the satisfaction percentage by editing only the selected answer message, removes the voting buttons, and sends a fresh main menu message. For multi-FAQ answers, the fresh main menu is sent only once for that answer batch.
 12. If the user sends `/clear`, the bot deletes tracked messages according to Telegram Bot API limits and sends a fresh main menu.
 
 In simple terms:
@@ -823,7 +823,7 @@ Secara umum, chatbot bekerja sebagai sistem tanya jawab berbasis Telegram:
 8. Sebelum memilih jawaban, bot memeriksa apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan. Pertanyaan yang menyebut SAMSAT tetapi membahas layanan non-administrasi, seperti perbaikan kendaraan, pembuatan kunci, pengecatan kendaraan, atau layanan bengkel, akan diarahkan ke fallback.
 9. Jika satu pesan berisi lebih dari satu intent FAQ yang valid, bot dapat mengirim lebih dari satu jawaban, tetapi jumlahnya dibatasi agar chat tetap mudah dibaca.
 10. Untuk setiap FAQ yang cocok, bot mengirim pertanyaan terpilih, jawaban, sumber, dan tombol voting kepuasan.
-11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui satu voting aktif di Cloudflare KV, menghitung ulang persentase kepuasan dengan mengedit hanya pesan jawaban yang dipilih, menghapus tombol voting, lalu mengirim menu utama baru.
+11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui satu voting aktif di Cloudflare KV, menghitung ulang persentase kepuasan dengan mengedit hanya pesan jawaban yang dipilih, menghapus tombol voting, lalu mengirim menu utama baru. Pada jawaban multi-FAQ, menu utama baru hanya dikirim satu kali untuk batch jawaban tersebut.
 12. Jika user mengirim `/clear`, bot menghapus pesan yang terlacak sesuai batasan Telegram Bot API dan mengirim menu utama baru.
 
 Ringkasnya:
@@ -872,6 +872,7 @@ Jawaban FAQ dikirim
   -> pesan jawaban di-edit dengan persentase voting terbaru
   -> tombol voting dihapus dari pesan jawaban
   -> bot mengirim pesan menu utama baru
+  -> untuk multi-FAQ, menu utama baru hanya dikirim sekali dalam satu batch jawaban
 ```
 
 Rumus persentase kepuasan:

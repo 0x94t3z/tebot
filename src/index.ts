@@ -110,7 +110,9 @@ interface TelegramApiResponse {
 }
 
 const maxTrackedMessagesPerChat = 10000;
+const maxVoteMenuBatchIdsPerChat = 100;
 const trackedMessageIdsByChat = new Map<number, Set<number>>();
+const voteMenuBatchIdsByChat = new Map<number, Set<string>>();
 const emptyInlineKeyboard = { inline_keyboard: [] };
 
 export default {
@@ -247,9 +249,11 @@ export async function handleUpdate(update: TelegramUpdate, env: Env, ctx?: Execu
     })
   );
 
+  const voteBatchId = results.length > 1 ? createVoteBatchId() : undefined;
+
   for (const result of results) {
     const stats = await getSatisfactionStats(env, result.entry.id);
-    await sendMessage(env, chatId, buildFaqMessage(result, stats), buildSatisfactionKeyboard(result.entry.id, stats));
+    await sendMessage(env, chatId, buildFaqMessage(result, stats), buildSatisfactionKeyboard(result.entry.id, stats, voteBatchId));
   }
 }
 
@@ -343,7 +347,7 @@ async function handleCallback(
       buildDirectFaqMessage(entry, voteResult.stats, voteResult.choice),
       emptyInlineKeyboard
     );
-    if (edited) {
+    if (edited && await shouldSendMainMenuAfterVote(env, chatId, vote.batchId)) {
       await sendMessage(env, chatId, buildStartMessage(), mainMenu);
     }
     return;
@@ -442,6 +446,57 @@ function buildClearMessageIds(messageIds: number[]) {
   return Array.from({ length: rangeSize }, (_, index) => lastMessageId - index);
 }
 
+// Membuat ID pendek untuk mengelompokkan beberapa jawaban dari satu input multi-FAQ.
+function createVoteBatchId() {
+  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+}
+
+// Menentukan apakah menu utama perlu dikirim setelah voting.
+// Untuk single FAQ selalu dikirim. Untuk multi-FAQ hanya dikirim sekali per batch jawaban.
+async function shouldSendMainMenuAfterVote(env: Env, chatId: number, batchId?: string) {
+  if (!batchId) {
+    return true;
+  }
+
+  const messageStoreKey = getVoteMenuBatchStoreKey(chatId);
+  const sentBatchIds = await getVoteMenuBatchIds(env, chatId);
+  if (sentBatchIds.has(batchId)) {
+    return false;
+  }
+
+  sentBatchIds.add(batchId);
+  trimSet(sentBatchIds, maxVoteMenuBatchIdsPerChat);
+  voteMenuBatchIdsByChat.set(chatId, sentBatchIds);
+  await env.MESSAGE_STORE?.put(messageStoreKey, JSON.stringify([...sentBatchIds]));
+
+  return true;
+}
+
+// Mengambil batch multi-FAQ yang sudah pernah memunculkan menu utama.
+async function getVoteMenuBatchIds(env: Env, chatId: number) {
+  const memoryIds = voteMenuBatchIdsByChat.get(chatId) ?? new Set<string>();
+  const kvIds = await getVoteMenuBatchIdsFromKv(env, chatId);
+
+  return new Set([...kvIds, ...memoryIds]);
+}
+
+// Mengambil batch multi-FAQ dari KV jika binding tersedia.
+async function getVoteMenuBatchIdsFromKv(env: Env, chatId: number) {
+  const value = await env.MESSAGE_STORE?.get(getVoteMenuBatchStoreKey(chatId));
+  if (!value) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed)
+      ? parsed.filter((batchId): batchId is string => typeof batchId === "string" && batchId.length > 0)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 // Mengambil nama kategori dan halaman dari callback kategori.
 function parseCategoryCallback(data: string) {
   const value = data.slice(4);
@@ -463,8 +518,8 @@ function parseCategoryCallback(data: string) {
 }
 
 // Mengambil FAQ dan pilihan kepuasan dari callback voting.
-function parseVoteCallback(data: string): { faqId: number; choice: SatisfactionChoice } | null {
-  const [, faqIdValue, choiceValue] = data.split(":");
+function parseVoteCallback(data: string): { faqId: number; choice: SatisfactionChoice; batchId?: string } | null {
+  const [, faqIdValue, choiceValue, batchId] = data.split(":");
   const faqId = Number(faqIdValue);
 
   if (!Number.isInteger(faqId) || faqId <= 0) {
@@ -472,11 +527,11 @@ function parseVoteCallback(data: string): { faqId: number; choice: SatisfactionC
   }
 
   if (choiceValue === "s") {
-    return { faqId, choice: "satisfied" };
+    return { faqId, choice: "satisfied", batchId };
   }
 
   if (choiceValue === "d") {
-    return { faqId, choice: "dissatisfied" };
+    return { faqId, choice: "dissatisfied", batchId };
   }
 
   return null;
@@ -1799,7 +1854,9 @@ async function getTrackedMessageIdsFromKv(env: Env, chatId: number) {
 // Menghapus daftar message_id setelah command /clear selesai.
 async function clearTrackedMessageIds(env: Env, chatId: number) {
   trackedMessageIdsByChat.delete(chatId);
+  voteMenuBatchIdsByChat.delete(chatId);
   await env.MESSAGE_STORE?.delete(getMessageStoreKey(chatId));
+  await env.MESSAGE_STORE?.delete(getVoteMenuBatchStoreKey(chatId));
 }
 
 // Membagi message_id menjadi batch sesuai batas deleteMessages Telegram.
@@ -1818,9 +1875,25 @@ function getMessageStoreKey(chatId: number) {
   return `chat:${chatId}:message_ids`;
 }
 
+// Key penyimpanan batch multi-FAQ yang sudah memunculkan menu utama.
+function getVoteMenuBatchStoreKey(chatId: number) {
+  return `chat:${chatId}:vote_menu_batches`;
+}
+
 // Memastikan message_id valid sebelum disimpan atau dikirim ke Telegram API.
 function isPositiveMessageId(messageId: unknown): messageId is number {
   return Number.isInteger(messageId) && Number(messageId) > 0;
+}
+
+// Membatasi ukuran Set dengan menghapus item terlama berdasarkan urutan masuk.
+function trimSet<T>(values: Set<T>, maxSize: number) {
+  while (values.size > maxSize) {
+    const oldest = values.values().next().value;
+    if (oldest === undefined) {
+      return;
+    }
+    values.delete(oldest);
+  }
 }
 
 // Mengambil message_id dari response sendMessage Telegram.

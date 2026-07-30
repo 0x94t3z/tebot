@@ -151,12 +151,18 @@ function buildSourceText(source: string) {
 }
 
 // Membuat tombol voting kepuasan untuk satu jawaban FAQ.
-export function buildSatisfactionKeyboard(faqId: number, _stats: SatisfactionStats = emptySatisfactionStats()) {
+export function buildSatisfactionKeyboard(
+  faqId: number,
+  _stats: SatisfactionStats = emptySatisfactionStats(),
+  batchId?: string
+) {
+  const batchSuffix = batchId ? `:${batchId}` : "";
+
   return {
     inline_keyboard: [
       [
-        { text: "👍 Memuaskan", callback_data: `vote:${faqId}:s` },
-        { text: "👎 Tidak memuaskan", callback_data: `vote:${faqId}:d` }
+        { text: "👍 Memuaskan", callback_data: `vote:${faqId}:s${batchSuffix}` },
+        { text: "👎 Tidak memuaskan", callback_data: `vote:${faqId}:d${batchSuffix}` }
       ]
     ]
   };

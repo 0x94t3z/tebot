@@ -117,18 +117,25 @@ describe("voting kepuasan", () => {
 
       const sendMessageCallsAfterAnswers = fetchSpy.mock.calls.filter(([input]) => String(input).includes("/sendMessage"));
       const sendMessageBodiesAfterAnswers = sendMessageCallsAfterAnswers.map(([, init]) => JSON.stringify(init)).join("\n");
+      const answerPayloads = sendMessageCallsAfterAnswers.map(([, init]) => JSON.parse(String(init?.body ?? "{}")) as {
+        reply_markup?: { inline_keyboard?: Array<Array<{ callback_data?: string }>> };
+      });
+      const stnkSatisfiedCallback = findCallbackData(answerPayloads, "vote:54:s:");
+      const pajakDissatisfiedCallback = findCallbackData(answerPayloads, "vote:33:d:");
 
       expect(sendMessageCallsAfterAnswers).toHaveLength(2);
       expect(sendMessageBodiesAfterAnswers).toContain("vote:54:");
       expect(sendMessageBodiesAfterAnswers).toContain("vote:33:");
       expect(sendMessageBodiesAfterAnswers).not.toContain("Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.");
+      expect(stnkSatisfiedCallback).toBeTruthy();
+      expect(pajakDissatisfiedCallback).toBeTruthy();
 
       await handleUpdate({
         update_id: 13,
         callback_query: {
           id: "callback-multi-1",
           from: { id: 5565698191, first_name: "Khang" },
-          data: "vote:54:s",
+          data: stnkSatisfiedCallback,
           message: {
             message_id: 100,
             chat: { id: 999 }
@@ -144,7 +151,7 @@ describe("voting kepuasan", () => {
         callback_query: {
           id: "callback-multi-2",
           from: { id: 5565698191, first_name: "Khang" },
-          data: "vote:33:d",
+          data: pajakDissatisfiedCallback,
           message: {
             message_id: 101,
             chat: { id: 999 }
@@ -164,7 +171,7 @@ describe("voting kepuasan", () => {
       });
       const editMessageTexts = editMessagePayloads.map((payload) => payload.text).join("\n");
 
-      expect(sendMessageCalls).toHaveLength(4);
+      expect(sendMessageCalls).toHaveLength(3);
       expect(editMessageCalls).toHaveLength(2);
       expect(sendMessageBodies).toContain("Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.");
       expect(sendMessageBodies).toContain("cat:Layanan");
@@ -294,3 +301,20 @@ describe("voting kepuasan", () => {
     }
   });
 });
+
+function findCallbackData(
+  payloads: Array<{ reply_markup?: { inline_keyboard?: Array<Array<{ callback_data?: string }>> } }>,
+  prefix: string
+) {
+  for (const payload of payloads) {
+    for (const row of payload.reply_markup?.inline_keyboard ?? []) {
+      for (const button of row) {
+        if (button.callback_data?.startsWith(prefix)) {
+          return button.callback_data;
+        }
+      }
+    }
+  }
+
+  return undefined;
+}
