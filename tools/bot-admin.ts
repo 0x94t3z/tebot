@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 
 const defaultWorkerUrl = "https://samsat-bandung-timur-bot.samsat.workers.dev";
 const command = process.argv[2];
@@ -106,8 +107,8 @@ async function exportData() {
   const dataset = args[0];
   const format = args[1] ?? "csv";
 
-  if (!["research", "satisfaction"].includes(dataset ?? "")) {
-    throw new Error("Export dataset must be 'research' or 'satisfaction'.");
+  if (!["research", "satisfaction", "responses"].includes(dataset ?? "")) {
+    throw new Error("Export dataset must be 'research', 'satisfaction', or 'responses'.");
   }
 
   if (!["csv", "txt", "html"].includes(format)) {
@@ -127,6 +128,7 @@ async function exportData() {
   }
 
   if (outputPath) {
+    mkdirSync(dirname(outputPath), { recursive: true });
     writeFileSync(outputPath, text);
     console.log(`Saved to ${outputPath}`);
     return;
@@ -166,11 +168,14 @@ function printHelp() {
     "  npm run webhook:info",
     "  npm run export:research",
     "  npm run export:research:txt",
+    "  npm run export:responses",
+    "  npm run export:responses:txt",
     "  npm run export:satisfaction",
     "  npm run export:satisfaction:txt",
     "",
     "Optional:",
     "  WORKER_URL=https://your-worker.workers.dev npm run webhook:set",
+    "  npm run export:responses -- --output research/responses.csv",
     "  npm run export:satisfaction:html -- --output satisfaction.html"
   ].join("\n"));
 }

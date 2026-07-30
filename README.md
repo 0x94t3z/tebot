@@ -85,6 +85,24 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 
 Each Telegram user has one active vote per FAQ. If the same user changes their choice, the old vote is corrected instead of counted twice.
 
+For research analysis, use the joined response export. It combines respondent identity, FAQ question, satisfaction choice, and voting time in one row:
+
+```sh
+npm run export:responses
+npm run export:responses:txt
+npm run export:responses:html
+```
+
+These commands automatically save the files into the `research/` folder:
+
+```text
+research/responses.csv
+research/responses.txt
+research/responses.html
+```
+
+The separate `research` export is useful for respondent profile data, while the separate `satisfaction` export is useful for FAQ-level recap. The joined `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer.
+
 Exported fields:
 
 ```text
@@ -142,12 +160,15 @@ Easy npm commands:
 npm run export:research
 npm run export:research:txt
 npm run export:research:html
+npm run export:responses
+npm run export:responses:txt
+npm run export:responses:html
 npm run export:satisfaction
 npm run export:satisfaction:txt
 npm run export:satisfaction:html
 ```
 
-The npm commands automatically read `.env`. The HTML commands save files as `research.html` and `satisfaction.html`.
+The npm commands automatically read `.env`. The `responses` commands save research analysis files into the `research/` folder. The other HTML commands save files as `research.html` and `satisfaction.html`.
 
 ### Why It Can Run for Free
 
@@ -229,7 +250,7 @@ Explanation:
 
 - `BOT_TOKEN`: token from BotFather. The Worker uses this to call Telegram API methods such as `sendMessage`.
 - `WEBHOOK_SECRET`: secret used to verify incoming Telegram webhook requests.
-- `ADMIN_EXPORT_TOKEN`: secret used to protect `/research.csv`, `/research.txt`, and `/research.html`.
+- `ADMIN_EXPORT_TOKEN`: secret used to protect `/research.*`, `/responses.*`, and `/satisfaction.*` export endpoints.
 
 Optional local testing variable:
 
@@ -1006,6 +1027,9 @@ Contoh:
 | `/research.csv` | GET | Admin token | Export profil user riset dalam CSV |
 | `/research.txt` | GET | Admin token | Export profil user riset dalam tabel teks |
 | `/research.html` | GET | Admin token | Export profil user riset dalam HTML |
+| `/responses.csv` | GET | Admin token | Export gabungan responden dan voting dalam CSV |
+| `/responses.txt` | GET | Admin token | Export gabungan responden dan voting dalam tabel teks |
+| `/responses.html` | GET | Admin token | Export gabungan responden dan voting dalam HTML |
 | `/satisfaction.csv` | GET | Admin token | Export rekap voting kepuasan FAQ dalam CSV |
 | `/satisfaction.txt` | GET | Admin token | Export rekap voting kepuasan FAQ dalam tabel teks |
 | `/satisfaction.html` | GET | Admin token | Export rekap voting kepuasan FAQ dalam HTML |
@@ -1035,6 +1059,7 @@ Data yang dapat digunakan untuk kebutuhan analisis penelitian:
 | Data FAQ aktif | `src/data/faq-samsat-bandung-timur.json` | Objek utama pencocokan pattern matching |
 | Hasil pencocokan | Log Worker dan perilaku bot | Melihat FAQ yang dipilih dari input user |
 | Profil responden | `/research.csv` | Mendata user yang mencoba bot |
+| Respon kepuasan per responden | `/responses.csv` | Menghubungkan responden, pertanyaan FAQ, pilihan kepuasan, dan waktu vote |
 | Rekap kepuasan jawaban | `/satisfaction.csv` | Mengukur persentase jawaban yang dinilai memuaskan atau tidak memuaskan |
 | Unit test | `test/` | Membuktikan dataset dan matcher berjalan sesuai ekspektasi |
 
@@ -1068,6 +1093,24 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 ```
 
 Setiap user Telegram memiliki satu vote aktif per FAQ. Jika user yang sama mengganti pilihan, vote lama dikoreksi dan tidak dihitung dobel.
+
+Untuk analisis penelitian, gunakan export respon gabungan. Export ini menyatukan identitas responden, pertanyaan FAQ, pilihan kepuasan, dan waktu voting dalam satu baris:
+
+```sh
+npm run export:responses
+npm run export:responses:txt
+npm run export:responses:html
+```
+
+Command tersebut otomatis menyimpan file ke folder `research/`:
+
+```text
+research/responses.csv
+research/responses.txt
+research/responses.html
+```
+
+Export `research` yang terpisah berguna untuk data profil responden, sedangkan export `satisfaction` yang terpisah berguna untuk rekap per FAQ. Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ.
 
 Field export:
 
@@ -1126,12 +1169,15 @@ Command npm yang lebih mudah:
 npm run export:research
 npm run export:research:txt
 npm run export:research:html
+npm run export:responses
+npm run export:responses:txt
+npm run export:responses:html
 npm run export:satisfaction
 npm run export:satisfaction:txt
 npm run export:satisfaction:html
 ```
 
-Command npm tersebut otomatis membaca `.env`. Command HTML akan menyimpan file sebagai `research.html` dan `satisfaction.html`.
+Command npm tersebut otomatis membaca `.env`. Command `responses` akan menyimpan file analisis penelitian ke folder `research/`. Command HTML lain akan menyimpan file sebagai `research.html` dan `satisfaction.html`.
 
 ### Kenapa Bisa Berjalan Gratis
 
@@ -1191,7 +1237,7 @@ Penjelasan:
 
 - `BOT_TOKEN`: token dari BotFather. Worker memakai token ini untuk memanggil Telegram API seperti `sendMessage`.
 - `WEBHOOK_SECRET`: secret untuk memverifikasi request webhook yang masuk dari Telegram.
-- `ADMIN_EXPORT_TOKEN`: secret untuk melindungi endpoint `/research.csv`, `/research.txt`, dan `/research.html`.
+- `ADMIN_EXPORT_TOKEN`: secret untuk melindungi endpoint export `/research.*`, `/responses.*`, dan `/satisfaction.*`.
 
 Variabel opsional untuk testing lokal:
 

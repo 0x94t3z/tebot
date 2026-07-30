@@ -9,3 +9,5 @@ node_modules/
 dist/
 coverage/
 research.html
+research/*
+!research/.gitkeep

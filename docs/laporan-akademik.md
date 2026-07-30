@@ -187,6 +187,8 @@ Data responden diperoleh dari informasi dasar Telegram pengguna, seperti Telegra
 
 Voting kepuasan dicatat setelah jawaban FAQ dikirim. Pengguna dapat memilih `Memuaskan` atau `Tidak memuaskan`. Satu pengguna dihitung satu suara untuk satu FAQ. Jika pilihan diganti, suara lama diperbarui.
 
+Secara teknis, data responden dan data voting disimpan dalam key yang berbeda agar struktur penyimpanan lebih rapi dan tidak terjadi duplikasi data profil. Namun, untuk kebutuhan analisis penelitian, sistem menyediakan export gabungan yang menyatukan identitas responden, pertanyaan FAQ yang dinilai, pilihan kepuasan, dan waktu voting. Dengan demikian, peneliti tetap dapat melihat hubungan antara responden dan penilaian jawaban pada satu tabel.
+
 Persentase kepuasan dihitung dengan rumus:
 
 ```text

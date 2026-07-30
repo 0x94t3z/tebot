@@ -80,6 +80,21 @@ interface SatisfactionExportRow {
   dissatisfied_percent: number;
 }
 
+interface ResearchResponseExportRow {
+  telegram_id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  language_code: string;
+  started_at: string;
+  last_seen_at: string;
+  faq_id: number;
+  category: string;
+  question: string;
+  choice: SatisfactionChoice;
+  voted_at: string;
+}
+
 interface TelegramApiResponse {
   ok?: boolean;
   result?: boolean | {
@@ -119,6 +134,18 @@ export default {
 
       if (url.pathname === "/satisfaction.html") {
         return exportSatisfactionHtml(request, env);
+      }
+
+      if (url.pathname === "/responses.csv") {
+        return exportResearchResponsesCsv(request, env);
+      }
+
+      if (url.pathname === "/responses.txt") {
+        return exportResearchResponsesText(request, env);
+      }
+
+      if (url.pathname === "/responses.html") {
+        return exportResearchResponsesHtml(request, env);
       }
 
       return healthResponse(url.pathname);
@@ -530,6 +557,55 @@ async function exportSatisfactionHtml(request: Request, env: Env) {
   });
 }
 
+// Export gabungan data responden dan voting per jawaban FAQ dalam format CSV.
+async function exportResearchResponsesCsv(request: Request, env: Env) {
+  const rows = await getAuthorizedResearchResponseRows(request, env);
+  if (rows instanceof Response) {
+    return rows;
+  }
+
+  const csv = buildResearchResponsesCsv(rows);
+
+  return new Response(csv, {
+    headers: {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Cache-Control": "no-store",
+      "Content-Disposition": 'attachment; filename="research-responses.csv"'
+    }
+  });
+}
+
+// Export gabungan data responden dan voting dalam tabel teks.
+async function exportResearchResponsesText(request: Request, env: Env) {
+  const rows = await getAuthorizedResearchResponseRows(request, env);
+  if (rows instanceof Response) {
+    return rows;
+  }
+
+  return new Response(buildResearchResponsesTextTable(rows), {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-store"
+    }
+  });
+}
+
+// Export gabungan data responden dan voting sebagai HTML table.
+async function exportResearchResponsesHtml(request: Request, env: Env) {
+  const rows = await getAuthorizedResearchResponseRows(request, env);
+  if (rows instanceof Response) {
+    return rows;
+  }
+
+  return new Response(buildResearchResponsesHtmlTable(rows), {
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+      "Content-Disposition": 'inline; filename="research-responses.html"'
+    }
+  });
+}
+
 // Mengambil data riset hanya jika request membawa token admin yang benar.
 async function getAuthorizedResearchRows(request: Request, env: Env) {
   if (!env.ADMIN_EXPORT_TOKEN) {
@@ -562,6 +638,23 @@ async function getAuthorizedSatisfactionRows(request: Request, env: Env) {
   }
 
   return listSatisfactionRows(env);
+}
+
+// Mengambil data gabungan responden dan vote hanya jika request membawa token admin.
+async function getAuthorizedResearchResponseRows(request: Request, env: Env) {
+  if (!env.ADMIN_EXPORT_TOKEN) {
+    return json({ ok: false, error: "ADMIN_EXPORT_TOKEN is not configured" }, 500);
+  }
+
+  if (request.headers.get("Authorization") !== `Bearer ${env.ADMIN_EXPORT_TOKEN}`) {
+    return json({ ok: false, error: "Unauthorized" }, 401);
+  }
+
+  if (!env.RESEARCH_STORE) {
+    return json({ ok: false, error: "RESEARCH_STORE is not configured" }, 500);
+  }
+
+  return listResearchResponseRows(env);
 }
 
 // Mengirim pesan teks ke chat Telegram.
@@ -822,6 +915,61 @@ async function listSatisfactionRows(env: Env) {
   return rows.sort((a, b) => a.faq_id - b.faq_id);
 }
 
+// Mengambil data voting per user lalu menggabungkannya dengan profil responden dan FAQ.
+async function listResearchResponseRows(env: Env) {
+  const rows: ResearchResponseExportRow[] = [];
+  let cursor: string | undefined;
+  const prefix = "research:faq_vote:";
+
+  do {
+    const result = await env.RESEARCH_STORE!.list({ prefix, cursor });
+    cursor = result.list_complete ? undefined : result.cursor;
+
+    for (const key of result.keys) {
+      const value = await env.RESEARCH_STORE!.get(key.name);
+      if (!value) {
+        continue;
+      }
+
+      try {
+        const vote = normalizeSatisfactionVoteRecord(JSON.parse(value));
+        if (!vote) {
+          continue;
+        }
+
+        const entry = getFaqById(vote.faq_id);
+        if (!entry) {
+          continue;
+        }
+
+        const user = await getResearchUser(env, vote.telegram_id);
+        rows.push({
+          telegram_id: vote.telegram_id,
+          username: user?.username ?? "",
+          first_name: user?.first_name ?? "",
+          last_name: user?.last_name ?? "",
+          language_code: user?.language_code ?? "",
+          started_at: user?.started_at ?? "",
+          last_seen_at: user?.last_seen_at ?? "",
+          faq_id: vote.faq_id,
+          category: entry.category,
+          question: entry.question,
+          choice: vote.choice,
+          voted_at: vote.updated_at
+        });
+      } catch {
+        console.log(JSON.stringify({ event: "responses_export", ok: false, key: key.name }));
+      }
+    }
+  } while (cursor);
+
+  return rows.sort((a, b) =>
+    a.telegram_id - b.telegram_id ||
+    a.faq_id - b.faq_id ||
+    a.voted_at.localeCompare(b.voted_at)
+  );
+}
+
 // Menyamakan record lama/baru agar field CSV selalu lengkap.
 function normalizeResearchUserRecord(value: unknown): ResearchUserRecord {
   const record = value as Partial<ResearchUserRecord> & { consented_at?: string };
@@ -845,6 +993,28 @@ function normalizeSatisfactionStats(value: unknown): SatisfactionStats {
     satisfied: normalizeCount(record.satisfied),
     dissatisfied: normalizeCount(record.dissatisfied)
   };
+}
+
+// Menyamakan record voting agar export gabungan hanya memuat pilihan valid.
+function normalizeSatisfactionVoteRecord(value: unknown) {
+  const record = value as Partial<SatisfactionVoteRecord>;
+  const faqId = Number(record.faq_id ?? 0);
+  const telegramId = Number(record.telegram_id ?? 0);
+
+  if (
+    !Number.isFinite(faqId) ||
+    !Number.isFinite(telegramId) ||
+    (record.choice !== "satisfied" && record.choice !== "dissatisfied")
+  ) {
+    return null;
+  }
+
+  return {
+    faq_id: faqId,
+    telegram_id: telegramId,
+    choice: record.choice,
+    updated_at: record.updated_at ?? ""
+  } satisfies SatisfactionVoteRecord;
 }
 
 // Mengubah nilai hitungan menjadi bilangan bulat tidak negatif.
@@ -903,6 +1073,40 @@ function buildSatisfactionCsv(records: SatisfactionExportRow[]) {
   return [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n") + "\n";
 }
 
+// Membuat isi CSV gabungan profil responden dan pilihan kepuasan per FAQ.
+function buildResearchResponsesCsv(records: ResearchResponseExportRow[]) {
+  const header = [
+    "telegram_id",
+    "username",
+    "first_name",
+    "last_name",
+    "language_code",
+    "started_at",
+    "last_seen_at",
+    "faq_id",
+    "category",
+    "question",
+    "choice",
+    "voted_at"
+  ];
+  const rows = records.map((record) => [
+    record.telegram_id,
+    record.username,
+    record.first_name,
+    record.last_name,
+    record.language_code,
+    record.started_at,
+    record.last_seen_at,
+    record.faq_id,
+    record.category,
+    record.question,
+    record.choice,
+    record.voted_at
+  ]);
+
+  return [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n") + "\n";
+}
+
 // Membuat tabel teks agar data riset nyaman dibaca di terminal.
 function buildResearchTextTable(records: ResearchUserRecord[]) {
   const table = buildResearchDisplayRows(records);
@@ -923,6 +1127,23 @@ function buildResearchTextTable(records: ResearchUserRecord[]) {
 // Membuat tabel teks rekap voting kepuasan FAQ.
 function buildSatisfactionTextTable(records: SatisfactionExportRow[]) {
   const table = buildSatisfactionDisplayRows(records);
+  const widths = table[0].map((_, columnIndex) =>
+    Math.max(...table.map((row) => visibleLength(row[columnIndex])))
+  );
+
+  return table
+    .map((row, rowIndex) => {
+      const line = row.map((cell, columnIndex) => padRight(cell, widths[columnIndex])).join("  ");
+      const divider = widths.map((width) => "-".repeat(width)).join("  ");
+
+      return rowIndex === 0 ? `${line}\n${divider}` : line;
+    })
+    .join("\n") + "\n";
+}
+
+// Membuat tabel teks gabungan responden dan voting.
+function buildResearchResponsesTextTable(records: ResearchResponseExportRow[]) {
+  const table = buildResearchResponsesDisplayRows(records);
   const widths = table[0].map((_, columnIndex) =>
     Math.max(...table.map((row) => visibleLength(row[columnIndex])))
   );
@@ -1015,6 +1236,96 @@ function buildResearchHtmlTable(records: ResearchUserRecord[]) {
   <main>
     <h1>Data Riset Chatbot SAMSAT Bandung Timur</h1>
     <p>Total responden: ${records.length}. Waktu ditampilkan dalam WIB.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>${headerCells}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
+`;
+}
+
+// Membuat HTML table gabungan profil responden dan pilihan kepuasan.
+function buildResearchResponsesHtmlTable(records: ResearchResponseExportRow[]) {
+  const [header, ...rows] = buildResearchResponsesDisplayRows(records);
+  const headerCells = header.map((cell) => `<th>${escapeHtml(cell)}</th>`).join("");
+  const bodyRows = rows
+    .map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`)
+    .join("");
+
+  return `<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Respon Kepuasan FAQ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #172026;
+      background: #f6f8fb;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: #5b6673;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid #d9e1ea;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid #e6ecf2;
+      text-align: left;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    th {
+      background: #eaf1f8;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Data Respon Kepuasan FAQ</h1>
+    <p>Total respon voting: ${records.length}. Waktu ditampilkan dalam WIB.</p>
     <div class="table-wrap">
       <table>
         <thead><tr>${headerCells}</tr></thead>
@@ -1165,6 +1476,38 @@ function buildSatisfactionDisplayRows(records: SatisfactionExportRow[]) {
   ];
 }
 
+// Membuat baris tampilan gabungan responden, pertanyaan FAQ, dan pilihan kepuasan.
+function buildResearchResponsesDisplayRows(records: ResearchResponseExportRow[]) {
+  return [
+    [
+      "Telegram ID",
+      "Username",
+      "Nama",
+      "Bahasa",
+      "Mulai (WIB)",
+      "Terakhir Aktif (WIB)",
+      "FAQ ID",
+      "Kategori",
+      "Pertanyaan",
+      "Kepuasan",
+      "Waktu Vote (WIB)"
+    ],
+    ...records.map((record) => [
+      String(record.telegram_id),
+      record.username ? `@${record.username}` : "-",
+      [record.first_name, record.last_name].filter(Boolean).join(" ") || "-",
+      record.language_code || "-",
+      formatJakartaTime(record.started_at),
+      formatJakartaTime(record.last_seen_at),
+      String(record.faq_id),
+      record.category,
+      record.question,
+      formatSatisfactionChoice(record.choice),
+      formatJakartaTime(record.voted_at)
+    ])
+  ];
+}
+
 // Menghitung persentase voting kepuasan untuk laporan.
 function calculateSatisfactionPercentages(stats: SatisfactionStats) {
   const total = stats.satisfied + stats.dissatisfied;
@@ -1180,6 +1523,11 @@ function calculateSatisfactionPercentages(stats: SatisfactionStats) {
     satisfied: Math.round((stats.satisfied / total) * 100),
     dissatisfied: Math.round((stats.dissatisfied / total) * 100)
   };
+}
+
+// Mengubah nilai internal voting menjadi label yang mudah dibaca.
+function formatSatisfactionChoice(choice: SatisfactionChoice) {
+  return choice === "satisfied" ? "Memuaskan" : "Tidak memuaskan";
 }
 
 // Escape nilai agar aman untuk format CSV.

@@ -238,6 +238,335 @@ Kalimat yang bisa dipakai:
 Pengujian sistem dilakukan lewat dua jalur. Vitest dipakai untuk memeriksa fungsi pattern matching. Uji coba responden dilakukan lewat Telegram bot karena Telegram adalah media tempat chatbot dipakai.
 ```
 
+## Data Responden dan Data Kepuasan
+
+Data responden dan data kepuasan boleh disimpan secara terpisah pada level teknis, karena keduanya memiliki fungsi yang berbeda:
+
+| Data | Fungsi |
+| --- | --- |
+| Data responden | Menyimpan identitas dasar pengguna Telegram yang mencoba chatbot |
+| Data voting per user | Menyimpan pilihan `Memuaskan` atau `Tidak memuaskan` dari user untuk satu FAQ |
+| Rekap kepuasan per FAQ | Menghitung total dan persentase voting untuk setiap FAQ |
+
+Walaupun disimpan terpisah, data tersebut harus bisa digabung untuk analisis penelitian. Pada sistem ini, export gabungan tersedia melalui:
+
+```sh
+npm run export:responses
+npm run export:responses:txt
+npm run export:responses:html
+```
+
+Command tersebut otomatis menyimpan hasil export ke folder:
+
+```text
+research/
+```
+
+File yang dihasilkan:
+
+```text
+research/responses.csv
+research/responses.txt
+research/responses.html
+```
+
+Export gabungan ini menampilkan satu baris untuk satu penilaian jawaban FAQ. Kolomnya memuat Telegram ID, username, nama, bahasa, waktu mulai, terakhir aktif, FAQ ID, kategori, pertanyaan, pilihan kepuasan, dan waktu vote.
+
+Kalimat yang bisa dipakai:
+
+```text
+Pada implementasi sistem, data responden dan data voting disimpan terpisah agar struktur penyimpanan lebih rapi dan tidak menduplikasi data profil user. Namun untuk analisis penelitian, sistem menyediakan export gabungan yang menyatukan responden, pertanyaan FAQ, pilihan kepuasan, dan waktu voting. Jadi hubungan antara responden dan penilaian jawaban tetap dapat dilihat dalam satu tabel.
+```
+
+## Command Sistem dan Request API
+
+Bagian ini menjelaskan command yang dipakai dalam proyek, fungsi command tersebut, dan bentuk request API yang sebenarnya dijalankan. Penjelasan ini dapat digunakan ketika pembimbing menanyakan dari mana data export berasal dan bagaimana prosesnya di dalam kode.
+
+### Ringkasan Command
+
+Command ditulis di file:
+
+```text
+package.json
+```
+
+Bagian:
+
+```json
+"scripts": {
+  "deploy": "wrangler deploy --secrets-file .env",
+  "health": "tsx tools/bot-admin.ts health",
+  "webhook:set": "tsx tools/bot-admin.ts set-webhook",
+  "webhook:info": "tsx tools/bot-admin.ts webhook-info",
+  "export:research": "tsx tools/bot-admin.ts export research csv",
+  "export:responses": "tsx tools/bot-admin.ts export responses csv --output research/responses.csv",
+  "export:responses:txt": "tsx tools/bot-admin.ts export responses txt --output research/responses.txt",
+  "export:responses:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
+  "export:satisfaction": "tsx tools/bot-admin.ts export satisfaction csv",
+  "relevance": "tsx tools/check-relevance.ts",
+  "typecheck": "tsc --noEmit",
+  "test": "vitest run"
+}
+```
+
+Fungsi command:
+
+| Command | Fungsi |
+| --- | --- |
+| `npm run deploy` | Deploy kode chatbot ke Cloudflare Workers dengan secret dari `.env` |
+| `npm run health` | Mengecek apakah Worker aktif melalui endpoint `/health` |
+| `npm run webhook:set` | Mendaftarkan URL webhook Worker ke server Telegram |
+| `npm run webhook:info` | Mengecek URL webhook Telegram yang sedang aktif |
+| `npm run export:research` | Export profil responden dalam format CSV |
+| `npm run export:research:txt` | Export profil responden dalam bentuk tabel teks |
+| `npm run export:research:html` | Export profil responden dalam HTML |
+| `npm run export:responses` | Export gabungan responden, FAQ, pilihan kepuasan, dan waktu vote ke `research/responses.csv` |
+| `npm run export:responses:txt` | Export gabungan ke `research/responses.txt` |
+| `npm run export:responses:html` | Export gabungan ke `research/responses.html` |
+| `npm run export:satisfaction` | Export rekap kepuasan per FAQ dalam CSV |
+| `npm run export:satisfaction:txt` | Export rekap kepuasan per FAQ dalam tabel teks |
+| `npm run export:satisfaction:html` | Export rekap kepuasan per FAQ dalam HTML |
+| `npm run relevance -- "pertanyaan"` | Melihat proses normalisasi, token, stop word, regex, dan hasil pattern matching untuk satu input |
+| `npm run typecheck` | Memeriksa kesalahan tipe TypeScript |
+| `npm test` | Menjalankan test otomatis pattern matching dan format balasan Telegram |
+
+Command export yang paling disarankan untuk analisis penelitian adalah:
+
+```sh
+npm run export:responses
+```
+
+Alasannya, data ini sudah menggabungkan responden dan penilaian jawaban. Satu baris berarti satu responden memberi satu penilaian terhadap satu FAQ.
+
+### Command Export dan Request API Asli
+
+Command npm hanya dibuat agar penggunaan lebih mudah. Di balik command tersebut, sistem tetap melakukan request HTTP ke endpoint Worker.
+
+Contoh command:
+
+```sh
+npm run export:responses
+```
+
+Secara internal command tersebut menjalankan:
+
+```sh
+tsx tools/bot-admin.ts export responses csv --output research/responses.csv
+```
+
+File:
+
+```text
+tools/bot-admin.ts
+```
+
+Pada file tersebut, `.env` dibaca otomatis, lalu script mengirim request ke Worker:
+
+```ts
+const response = await fetch(`${getWorkerUrl()}/${dataset}.${format}`, {
+  headers: {
+    Authorization: `Bearer ${requireEnv("ADMIN_EXPORT_TOKEN")}`
+  }
+});
+```
+
+Jika dijalankan secara manual tanpa npm script, bentuk request API-nya adalah:
+
+```sh
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/responses.csv" \
+  -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
+```
+
+Perbedaannya, command npm otomatis menyimpan hasil request ke file:
+
+```text
+research/responses.csv
+```
+
+Untuk export lain:
+
+```sh
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.csv" \
+  -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
+
+curl "https://samsat-bandung-timur-bot.samsat.workers.dev/satisfaction.csv" \
+  -H "Authorization: Bearer $ADMIN_EXPORT_TOKEN"
+```
+
+Format yang tersedia:
+
+| Endpoint | Fungsi |
+| --- | --- |
+| `/research.csv` | Data profil responden |
+| `/research.txt` | Data profil responden dalam tabel teks |
+| `/research.html` | Data profil responden dalam HTML |
+| `/responses.csv` | Data gabungan responden dan voting |
+| `/responses.txt` | Data gabungan dalam tabel teks |
+| `/responses.html` | Data gabungan dalam HTML |
+| `/satisfaction.csv` | Rekap kepuasan per FAQ |
+| `/satisfaction.txt` | Rekap kepuasan per FAQ dalam tabel teks |
+| `/satisfaction.html` | Rekap kepuasan per FAQ dalam HTML |
+
+### Proses Export CSV di Kode Worker
+
+File utama Worker:
+
+```text
+src/index.ts
+```
+
+Saat Worker menerima request `GET`, sistem membaca path URL. Contohnya:
+
+```ts
+if (url.pathname === "/responses.csv") {
+  return exportResearchResponsesCsv(request, env);
+}
+```
+
+Alur export gabungan:
+
+```text
+npm run export:responses
+  -> tools/bot-admin.ts membaca .env
+  -> tools/bot-admin.ts request GET /responses.csv
+  -> src/index.ts menerima request
+  -> exportResearchResponsesCsv()
+  -> getAuthorizedResearchResponseRows()
+  -> listResearchResponseRows()
+  -> buildResearchResponsesCsv()
+  -> Worker mengembalikan file CSV
+```
+
+Fungsi otorisasi:
+
+```ts
+if (request.headers.get("Authorization") !== `Bearer ${env.ADMIN_EXPORT_TOKEN}`) {
+  return json({ ok: false, error: "Unauthorized" }, 401);
+}
+```
+
+Maksudnya, export data riset tidak bisa diakses publik. Request harus membawa `ADMIN_EXPORT_TOKEN`.
+
+Fungsi pengambilan data gabungan:
+
+```ts
+const prefix = "research:faq_vote:";
+const result = await env.RESEARCH_STORE!.list({ prefix, cursor });
+```
+
+Bagian tersebut membaca semua data voting per user yang tersimpan di Cloudflare KV. Setelah vote ditemukan, sistem mengambil:
+
+1. Data FAQ berdasarkan `faq_id`.
+2. Data responden berdasarkan `telegram_id`.
+3. Pilihan kepuasan user.
+4. Waktu voting.
+
+Hasilnya digabung menjadi baris export:
+
+```text
+telegram_id, username, first_name, last_name, language_code,
+started_at, last_seen_at, faq_id, category, question, choice, voted_at
+```
+
+### Perbedaan Tiga Export Riset
+
+| Export | Isi Data | Dipakai Untuk |
+| --- | --- | --- |
+| `research` | Profil responden Telegram | Melihat siapa saja yang mencoba chatbot |
+| `responses` | Profil responden + FAQ + pilihan kepuasan | Analisis utama penelitian |
+| `satisfaction` | Rekap jumlah dan persentase vote per FAQ | Melihat FAQ mana yang dinilai memuaskan/tidak memuaskan |
+
+Jadi, untuk pembahasan hasil penelitian, yang paling kuat digunakan adalah:
+
+```sh
+npm run export:responses
+```
+
+Sedangkan:
+
+```sh
+npm run export:research
+```
+
+dipakai sebagai daftar responden, dan:
+
+```sh
+npm run export:satisfaction
+```
+
+dipakai sebagai rekap statistik kepuasan per FAQ.
+
+### Command Webhook
+
+Command:
+
+```sh
+npm run webhook:set
+```
+
+dipakai untuk mendaftarkan endpoint Worker ke Telegram. Bentuk request API aslinya:
+
+```sh
+curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/setWebhook" \
+  -d "url=$WORKER_URL/webhook" \
+  -d "secret_token=$WEBHOOK_SECRET"
+```
+
+Di kode helper:
+
+```text
+tools/bot-admin.ts
+```
+
+bagian yang menjalankan request:
+
+```ts
+const response = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+  method: "POST",
+  body
+});
+```
+
+Command:
+
+```sh
+npm run webhook:info
+```
+
+dipakai untuk mengecek webhook Telegram yang aktif. Bentuk request API aslinya:
+
+```sh
+curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
+```
+
+### Command Relevance
+
+Command:
+
+```sh
+npm run relevance -- "Kalau STNK hilang bagaimana?"
+```
+
+dipakai untuk menjelaskan proses pattern matching secara teknis. Output-nya menampilkan:
+
+1. Input asli.
+2. Hasil normalisasi.
+3. Token sebelum stop word.
+4. Stop word yang dibuang.
+5. Token dasar.
+6. Token yang diperluas dengan sinonim.
+7. Regex atau pattern yang cocok.
+8. FAQ yang dipilih.
+9. Nilai relevansi internal.
+
+Command ini berguna untuk bimbingan karena dapat menunjukkan bahwa sistem tidak menjawab secara acak. Sistem melakukan normalisasi, tokenisasi, penghapusan stop word, perluasan sinonim, regex pendukung, lalu pattern matching ke dataset FAQ.
+
+Kalimat yang bisa dipakai:
+
+```text
+Command npm dibuat untuk mempermudah pengoperasian sistem. Pada dasarnya command export tetap melakukan request HTTP ke endpoint Worker, misalnya GET /responses.csv dengan Authorization Bearer token. Worker kemudian mengambil data dari Cloudflare KV, menggabungkan data responden dengan voting dan FAQ, lalu mengembalikan file CSV. Dengan demikian, proses export data penelitian dapat dijelaskan dari sisi command, request API, dan fungsi kode yang menjalankannya.
+```
+
 ## Batasan Pertanyaan Random
 
 Pertanyaan random atau pertanyaan tidak biasa digunakan sebagai skenario uji yang mewakili kemungkinan input user. Pertanyaan random tidak perlu ditambahkan tanpa batas, karena variasi bahasa user sangat banyak dan terus berubah.
