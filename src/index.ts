@@ -91,6 +91,7 @@ interface ResearchResponseExportRow {
   faq_id: number;
   category: string;
   question: string;
+  answer: string;
   choice: SatisfactionChoice;
   voted_at: string;
 }
@@ -954,6 +955,7 @@ async function listResearchResponseRows(env: Env) {
           faq_id: vote.faq_id,
           category: entry.category,
           question: entry.question,
+          answer: entry.answer,
           choice: vote.choice,
           voted_at: vote.updated_at
         });
@@ -1086,6 +1088,7 @@ function buildResearchResponsesCsv(records: ResearchResponseExportRow[]) {
     "faq_id",
     "category",
     "question",
+    "answer",
     "choice",
     "voted_at"
   ];
@@ -1100,6 +1103,7 @@ function buildResearchResponsesCsv(records: ResearchResponseExportRow[]) {
     record.faq_id,
     record.category,
     record.question,
+    record.answer,
     record.choice,
     record.voted_at
   ]);
@@ -1489,6 +1493,7 @@ function buildResearchResponsesDisplayRows(records: ResearchResponseExportRow[])
       "FAQ ID",
       "Kategori",
       "Pertanyaan",
+      "Jawaban",
       "Kepuasan",
       "Waktu Vote (WIB)"
     ],
@@ -1502,6 +1507,7 @@ function buildResearchResponsesDisplayRows(records: ResearchResponseExportRow[])
       String(record.faq_id),
       record.category,
       record.question,
+      record.answer,
       formatSatisfactionChoice(record.choice),
       formatJakartaTime(record.voted_at)
     ])

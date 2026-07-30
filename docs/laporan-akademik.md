@@ -198,6 +198,71 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 
 Voting kepuasan berbeda dari nilai relevansi internal. Nilai relevansi dipakai untuk memilih jawaban. Voting kepuasan mencatat penilaian pengguna terhadap jawaban yang diterima.
 
+Data utama yang digunakan untuk pengolahan hasil kepuasan adalah export gabungan `responses.csv`. Data ini diperoleh melalui command:
+
+```text
+npm run export:responses
+```
+
+Command tersebut menghasilkan file:
+
+```text
+research/responses.csv
+```
+
+Secara teknis, command tersebut melakukan request API ke Worker dengan bentuk:
+
+```text
+GET /responses.csv
+Authorization: Bearer ADMIN_EXPORT_TOKEN
+```
+
+Endpoint tersebut mengambil data voting dari penyimpanan `RESEARCH_STORE`, kemudian menggabungkannya dengan data responden dan data FAQ. Dengan cara ini, satu baris data menunjukkan satu responden yang memberi penilaian terhadap satu jawaban FAQ. Field jawaban ikut disertakan agar peneliti dapat mengetahui isi jawaban yang dinilai oleh responden.
+
+Struktur data gabungan yang digunakan untuk pengolahan adalah sebagai berikut.
+
+```text
+telegram_id
+username
+nama responden
+language_code
+started_at
+last_seen_at
+faq_id
+category
+question
+answer
+choice
+voted_at
+```
+
+Tahapan pengolahan data kepuasan dilakukan sebagai berikut.
+
+1. Mengekspor data gabungan menggunakan `npm run export:responses`.
+2. Membuka file `research/responses.csv` menggunakan aplikasi spreadsheet.
+3. Mengelompokkan data berdasarkan `faq_id`, `question`, `answer`, dan `category`.
+4. Menghitung jumlah pilihan `Memuaskan` dan `Tidak memuaskan`.
+5. Menghitung persentase kepuasan berdasarkan total vote pada setiap FAQ atau kategori.
+6. Menafsirkan hasil untuk melihat jawaban atau kategori yang sudah memuaskan dan yang masih perlu diperbaiki.
+
+Untuk pengolahan numerik, pilihan pengguna dapat dikodekan sebagai berikut.
+
+```text
+Memuaskan = 1
+Tidak memuaskan = 0
+```
+
+Persentase kepuasan kemudian dihitung dari jumlah penilaian memuaskan dibandingkan total penilaian. Rekapitulasi dapat dibuat pada tingkat FAQ maupun kategori. Contoh bentuk rekapitulasi pengolahan data adalah:
+
+```text
+Kategori | Jumlah Vote | Memuaskan | Tidak Memuaskan | Persentase Memuaskan
+Pajak    | ...         | ...       | ...              | ...%
+Dokumen  | ...         | ...       | ...              | ...%
+Mutasi   | ...         | ...       | ...              | ...%
+```
+
+Dari hasil tersebut, peneliti dapat menganalisis tingkat penerimaan pengguna terhadap jawaban chatbot. Jika suatu FAQ atau kategori memiliki persentase `Tidak memuaskan` yang tinggi, maka bagian tersebut dapat dijadikan dasar evaluasi untuk memperbaiki dataset, pola pencocokan, atau redaksi jawaban.
+
 ## 4.10 Pengujian Sistem
 
 Pengujian dilakukan melalui interaksi langsung di Telegram. Bagian yang diuji meliputi menu kategori, pertanyaan bebas, pertanyaan di luar cakupan, input multi-intent, voting kepuasan, dan input selain teks.

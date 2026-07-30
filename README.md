@@ -85,7 +85,7 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 
 Each Telegram user has one active vote per FAQ. If the same user changes their choice, the old vote is corrected instead of counted twice.
 
-For research analysis, use the joined response export. It combines respondent identity, FAQ question, satisfaction choice, and voting time in one row:
+For research analysis, use the joined response export. It combines respondent identity, FAQ question, FAQ answer, satisfaction choice, and voting time in one row:
 
 ```sh
 npm run export:responses
@@ -1059,7 +1059,7 @@ Data yang dapat digunakan untuk kebutuhan analisis penelitian:
 | Data FAQ aktif | `src/data/faq-samsat-bandung-timur.json` | Objek utama pencocokan pattern matching |
 | Hasil pencocokan | Log Worker dan perilaku bot | Melihat FAQ yang dipilih dari input user |
 | Profil responden | `/research.csv` | Mendata user yang mencoba bot |
-| Respon kepuasan per responden | `/responses.csv` | Menghubungkan responden, pertanyaan FAQ, pilihan kepuasan, dan waktu vote |
+| Respon kepuasan per responden | `/responses.csv` | Menghubungkan responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu vote |
 | Rekap kepuasan jawaban | `/satisfaction.csv` | Mengukur persentase jawaban yang dinilai memuaskan atau tidak memuaskan |
 | Unit test | `test/` | Membuktikan dataset dan matcher berjalan sesuai ekspektasi |
 
@@ -1094,7 +1094,7 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 
 Setiap user Telegram memiliki satu vote aktif per FAQ. Jika user yang sama mengganti pilihan, vote lama dikoreksi dan tidak dihitung dobel.
 
-Untuk analisis penelitian, gunakan export respon gabungan. Export ini menyatukan identitas responden, pertanyaan FAQ, pilihan kepuasan, dan waktu voting dalam satu baris:
+Untuk analisis penelitian, gunakan export respon gabungan. Export ini menyatukan identitas responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu voting dalam satu baris:
 
 ```sh
 npm run export:responses

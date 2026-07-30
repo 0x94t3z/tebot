@@ -270,12 +270,12 @@ research/responses.txt
 research/responses.html
 ```
 
-Export gabungan ini menampilkan satu baris untuk satu penilaian jawaban FAQ. Kolomnya memuat Telegram ID, username, nama, bahasa, waktu mulai, terakhir aktif, FAQ ID, kategori, pertanyaan, pilihan kepuasan, dan waktu vote.
+Export gabungan ini menampilkan satu baris untuk satu penilaian jawaban FAQ. Kolomnya memuat Telegram ID, username, nama, bahasa, waktu mulai, terakhir aktif, FAQ ID, kategori, pertanyaan, jawaban, pilihan kepuasan, dan waktu vote.
 
 Kalimat yang bisa dipakai:
 
 ```text
-Pada implementasi sistem, data responden dan data voting disimpan terpisah agar struktur penyimpanan lebih rapi dan tidak menduplikasi data profil user. Namun untuk analisis penelitian, sistem menyediakan export gabungan yang menyatukan responden, pertanyaan FAQ, pilihan kepuasan, dan waktu voting. Jadi hubungan antara responden dan penilaian jawaban tetap dapat dilihat dalam satu tabel.
+Pada implementasi sistem, data responden dan data voting disimpan terpisah agar struktur penyimpanan lebih rapi dan tidak menduplikasi data profil user. Namun untuk analisis penelitian, sistem menyediakan export gabungan yang menyatukan responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu voting. Jadi hubungan antara responden dan penilaian jawaban tetap dapat dilihat dalam satu tabel.
 ```
 
 ## Command Sistem dan Request API
@@ -465,7 +465,7 @@ Hasilnya digabung menjadi baris export:
 
 ```text
 telegram_id, username, first_name, last_name, language_code,
-started_at, last_seen_at, faq_id, category, question, choice, voted_at
+started_at, last_seen_at, faq_id, category, question, answer, choice, voted_at
 ```
 
 ### Perbedaan Tiga Export Riset
