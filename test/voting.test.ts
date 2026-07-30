@@ -14,6 +14,73 @@ class MemoryKv {
 }
 
 describe("voting kepuasan", () => {
+  it("tidak mengirim menu pembuka sebagai pesan baru setelah jawaban FAQ", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const fetchSpy = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      new Response(JSON.stringify({ ok: true, result: { message_id: 21 } }), { status: 200 })
+    );
+
+    vi.stubGlobal("fetch", fetchSpy);
+
+    try {
+      await handleUpdate({
+        update_id: 10,
+        message: {
+          message_id: 20,
+          from: { id: 5565698191, first_name: "Khang" },
+          chat: { id: 999 },
+          text: "Apa itu Samsat"
+        }
+      }, {
+        BOT_TOKEN: "test-token"
+      } as never);
+
+      const sendMessageCalls = fetchSpy.mock.calls.filter(([input]) => String(input).includes("/sendMessage"));
+
+      expect(sendMessageCalls).toHaveLength(1);
+      expect(JSON.stringify(sendMessageCalls[0][1])).toContain("vote:1:");
+      expect(JSON.stringify(sendMessageCalls[0][1])).not.toContain("Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.");
+    } finally {
+      vi.unstubAllGlobals();
+      logSpy.mockRestore();
+    }
+  });
+
+  it("tidak mengirim menu pembuka sebagai pesan baru setelah memilih FAQ dari menu", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const fetchSpy = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      new Response(JSON.stringify({ ok: true, result: true }), { status: 200 })
+    );
+
+    vi.stubGlobal("fetch", fetchSpy);
+
+    try {
+      await handleUpdate({
+        update_id: 11,
+        callback_query: {
+          id: "callback-faq",
+          from: { id: 5565698191, first_name: "Khang" },
+          data: "faq:1",
+          message: {
+            message_id: 30,
+            chat: { id: 999 }
+          }
+        }
+      }, {
+        BOT_TOKEN: "test-token"
+      } as never);
+
+      const calledUrls = fetchSpy.mock.calls.map(([input]) => String(input)).join("\n");
+
+      expect(calledUrls).toContain("/answerCallbackQuery");
+      expect(calledUrls).toContain("/editMessageText");
+      expect(calledUrls).not.toContain("/sendMessage");
+    } finally {
+      vi.unstubAllGlobals();
+      logSpy.mockRestore();
+    }
+  });
+
   it("memperbarui satu vote aktif per responden tanpa mengirim menu sebagai chat baru", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
     const researchStore = new MemoryKv();

@@ -52,7 +52,7 @@ The webhook URL is stored on Telegram's server, not in `.env` and not in the Wor
 - Text-only input handling
 - 150 curated FAQ entries for SAMSAT Bandung Timur
 - Satisfaction voting UI on each FAQ response
-- Main menu is shown again after each FAQ answer
+- Main menu is shown on the same FAQ message after the user votes
 
 ### Clear Command
 
@@ -62,11 +62,11 @@ The bot supports:
 /clear
 ```
 
-This command deletes the conversation messages that have been tracked by the bot. It includes user messages, bot replies, media messages that were rejected by the bot, and the `/clear` command message itself when Telegram allows it. The bot sends a fresh main menu immediately, then runs the old-message cleanup in the background so the opening text and menu stay visible.
+This command deletes the conversation messages from the respondent and the bot that fall within the message ID range known by the bot. It includes user messages, bot replies, media messages that were rejected by the bot, and the `/clear` command message itself when Telegram allows it. The bot sends one fresh main menu, then runs the old-message cleanup in the background so only that new menu stays visible.
 
-Message IDs are stored in Cloudflare KV through the `MESSAGE_STORE` binding, so tracking can survive Worker runtime restarts. The bot stores up to 10000 tracked message IDs per chat and deletes only those known IDs in Telegram batches. This is safer than deleting a guessed numeric range because it protects the fresh main menu from being removed.
+Message IDs are stored in Cloudflare KV through the `MESSAGE_STORE` binding, so tracking can survive Worker runtime restarts. The bot stores up to 10000 tracked message IDs per chat. When `/clear` is used, it builds a delete range from the earliest tracked message ID to the latest tracked message ID, sends a new main menu, and excludes that new menu from deletion.
 
-Important limitation: Telegram bots can only delete messages by `message_id`, and deletion is still limited by Telegram Bot API rules. The bot cannot delete messages that were sent before tracking was enabled, messages whose IDs were never received by the bot, or messages Telegram refuses to delete.
+Important limitation: Telegram bots can only delete messages by `message_id`, and deletion is still limited by Telegram Bot API rules. The bot cannot guarantee deletion of messages sent before tracking was enabled or messages Telegram refuses to delete.
 
 ### Research Data CSV
 
@@ -319,7 +319,7 @@ At a high level, the chatbot works as a Telegram-based request-response system:
 7. If the input is a free-text question, the bot runs the pattern matching process against the 150-row FAQ dataset.
 8. Before selecting an answer, the bot checks whether the question is still within the SAMSAT/vehicle-administration domain. Questions that mention SAMSAT but ask about non-administrative services, such as vehicle repair, key replacement, repainting, or workshop services, are rejected with fallback.
 9. If the message contains more than one valid FAQ intent, the bot can return more than one answer, but the number is limited so the chat stays readable.
-10. For each matched FAQ, the bot sends the selected question, answer, source, satisfaction voting buttons, and then shows the main menu again.
+10. For each matched FAQ, the bot sends the selected question, answer, source, and satisfaction voting buttons.
 11. If the user votes `Memuaskan` or `Tidak memuaskan`, the Worker stores or updates one active vote in Cloudflare KV and recalculates the satisfaction percentage without creating a new chat message.
 12. If the user sends `/clear`, the bot deletes tracked messages according to Telegram Bot API limits and sends a fresh main menu.
 
@@ -719,7 +719,7 @@ URL webhook disimpan di server Telegram, bukan di `.env` dan bukan di source cod
 - Pencarian multi-intent untuk satu pesan yang berisi lebih dari satu pertanyaan FAQ
 - Input hanya teks; media seperti foto, video, sticker, voice note, dan file ditolak dengan pesan instruksi singkat
 - 150 data FAQ terkurasi untuk SAMSAT Bandung Timur
-- Menu utama ditampilkan kembali setelah setiap jawaban FAQ
+- Menu utama ditampilkan pada pesan FAQ yang sama setelah user memberi voting
 - UI voting kepuasan pada setiap jawaban FAQ
 - 10 kategori aktif FAQ:
   - Layanan
@@ -801,7 +801,7 @@ User Telegram
 6. Jika satu pesan berisi beberapa pertanyaan, sistem memecah pesan menjadi beberapa segmen intent yang bermakna.
 7. Sistem memilih FAQ dengan nilai relevansi tertinggi jika melewati batas minimum.
 8. Bot mengirim satu atau beberapa jawaban, sumber referensi, dan tombol voting kepuasan untuk masing-masing jawaban.
-9. Bot menampilkan kembali menu utama agar user dapat melanjutkan pencarian.
+9. Menu utama ditampilkan pada pesan jawaban yang sama setelah user memberi voting.
 10. Jika user memilih voting, sistem menyimpan atau memperbarui satu vote aktif user untuk FAQ tersebut.
 11. Bot memperbarui tampilan hasil voting dalam bentuk persentase memuaskan dan tidak memuaskan.
 
@@ -822,7 +822,7 @@ Secara umum, chatbot bekerja sebagai sistem tanya jawab berbasis Telegram:
 7. Jika input berupa pertanyaan bebas, bot menjalankan proses pattern matching terhadap 150 data FAQ aktif.
 8. Sebelum memilih jawaban, bot memeriksa apakah pertanyaan masih berada dalam domain SAMSAT atau administrasi kendaraan. Pertanyaan yang menyebut SAMSAT tetapi membahas layanan non-administrasi, seperti perbaikan kendaraan, pembuatan kunci, pengecatan kendaraan, atau layanan bengkel, akan diarahkan ke fallback.
 9. Jika satu pesan berisi lebih dari satu intent FAQ yang valid, bot dapat mengirim lebih dari satu jawaban, tetapi jumlahnya dibatasi agar chat tetap mudah dibaca.
-10. Untuk setiap FAQ yang cocok, bot mengirim pertanyaan terpilih, jawaban, sumber, tombol voting kepuasan, lalu menampilkan kembali menu utama.
+10. Untuk setiap FAQ yang cocok, bot mengirim pertanyaan terpilih, jawaban, sumber, dan tombol voting kepuasan.
 11. Jika user memilih `Memuaskan` atau `Tidak memuaskan`, Worker menyimpan atau memperbarui satu voting aktif di Cloudflare KV dan menghitung ulang persentase kepuasan tanpa membuat chat baru.
 12. Jika user mengirim `/clear`, bot menghapus pesan yang terlacak sesuai batasan Telegram Bot API dan mengirim menu utama baru.
 
@@ -1072,11 +1072,11 @@ Bot mendukung:
 /clear
 ```
 
-Command ini menghapus pesan percakapan yang sudah dilacak oleh bot. Ini mencakup pesan user, balasan bot, pesan media yang ditolak oleh bot, dan pesan `/clear` itu sendiri jika Telegram mengizinkan. Bot langsung mengirim menu utama baru, lalu membersihkan pesan lama di background agar kata pembuka dan menu tetap terlihat.
+Command ini menghapus pesan percakapan dari responden dan bot yang berada dalam rentang message ID yang diketahui bot. Ini mencakup pesan user, balasan bot, pesan media yang ditolak oleh bot, dan pesan `/clear` itu sendiri jika Telegram mengizinkan. Bot langsung mengirim satu menu utama baru, lalu membersihkan pesan lama di background agar hanya menu baru tersebut yang tetap terlihat.
 
-Message ID disimpan di Cloudflare KV melalui binding `MESSAGE_STORE`, sehingga data pelacakan tetap tersedia meskipun runtime Worker restart. Bot menyimpan sampai 10000 message ID yang terlacak per chat dan hanya menghapus ID yang memang diketahui oleh bot secara batch di Telegram. Cara ini lebih aman daripada menghapus berdasarkan tebakan rentang angka karena menu utama baru tidak ikut terhapus.
+Message ID disimpan di Cloudflare KV melalui binding `MESSAGE_STORE`, sehingga data pelacakan tetap tersedia meskipun runtime Worker restart. Bot menyimpan sampai 10000 message ID yang terlacak per chat. Ketika `/clear` dipakai, bot membuat rentang hapus dari message ID terlacak paling awal sampai message ID terlacak paling akhir, mengirim menu utama baru, lalu mengecualikan menu baru tersebut dari penghapusan.
 
-Batasan penting: bot Telegram hanya bisa menghapus pesan berdasarkan `message_id`, dan penghapusan tetap mengikuti aturan Telegram Bot API. Bot tidak bisa menghapus pesan yang dikirim sebelum tracking aktif, pesan yang ID-nya tidak pernah diterima bot, atau pesan yang ditolak oleh Telegram.
+Batasan penting: bot Telegram hanya bisa menghapus pesan berdasarkan `message_id`, dan penghapusan tetap mengikuti aturan Telegram Bot API. Bot tidak bisa menjamin pesan yang dikirim sebelum tracking aktif atau pesan yang ditolak Telegram ikut terhapus.
 
 ### CSV Data Riset
 

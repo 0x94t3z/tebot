@@ -250,8 +250,6 @@ export async function handleUpdate(update: TelegramUpdate, env: Env, ctx?: Execu
     const stats = await getSatisfactionStats(env, result.entry.id);
     await sendMessage(env, chatId, buildFaqMessage(result, stats), buildSatisfactionKeyboard(result.entry.id, stats));
   }
-
-  await sendMessage(env, chatId, buildStartMessage(), mainMenu);
 }
 
 // Endpoint sederhana untuk memastikan Worker aktif.
@@ -358,7 +356,7 @@ async function handleCallback(
     console.log(JSON.stringify({ event: "callback_route", route: "faq", faq_id: entry.id }));
     const stats = await getSatisfactionStats(env, entry.id);
     await editOrSendMessage(env, chatId, messageId, buildDirectFaqMessage(entry, stats), buildSatisfactionKeyboard(entry.id, stats));
-    await sendMessage(env, chatId, buildStartMessage(), mainMenu);
+    return;
   }
 }
 
@@ -397,7 +395,8 @@ async function handleClearCommand(
 ) {
   await trackMessageId(env, chatId, commandMessageId);
 
-  const messageIds = await getTrackedMessageIds(env, chatId);
+  const trackedMessageIds = await getTrackedMessageIds(env, chatId);
+  const messageIds = buildClearMessageIds(trackedMessageIds);
   await clearTrackedMessageIds(env, chatId);
   await sendMessage(env, chatId, buildStartMessage(), mainMenu);
 
@@ -405,6 +404,7 @@ async function handleClearCommand(
     console.log(
       JSON.stringify({
         event: "clear_chat",
+        tracked_count: trackedMessageIds.length,
         attempted_count: messageIds.length,
         deleted_count: deletedCount
       })
@@ -416,6 +416,26 @@ async function handleClearCommand(
   } else {
     await cleanup;
   }
+}
+
+// Membuat daftar message_id yang akan dihapus oleh /clear.
+// Telegram tidak menyediakan API untuk mengambil seluruh riwayat chat, jadi bot
+// menghapus rentang ID yang diketahui dari pesan terlacak paling awal sampai terbaru.
+function buildClearMessageIds(messageIds: number[]) {
+  const uniqueMessageIds = [...new Set(messageIds)].filter(isPositiveMessageId);
+  if (uniqueMessageIds.length === 0) {
+    return [];
+  }
+
+  const firstMessageId = Math.min(...uniqueMessageIds);
+  const lastMessageId = Math.max(...uniqueMessageIds);
+  const rangeSize = lastMessageId - firstMessageId + 1;
+
+  if (rangeSize > maxTrackedMessagesPerChat) {
+    return uniqueMessageIds.sort((a, b) => b - a);
+  }
+
+  return Array.from({ length: rangeSize }, (_, index) => lastMessageId - index);
 }
 
 // Mengambil nama kategori dan halaman dari callback kategori.
