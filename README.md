@@ -35,6 +35,14 @@ Webhook endpoint:
 https://samsat-bandung-timur-bot.samsat.workers.dev/webhook
 ```
 
+Active Telegram webhook, verified with `getWebhookInfo` on 30 July 2026:
+
+```text
+https://samsat-bandung-timur-bot.samsat.workers.dev/webhook
+```
+
+The webhook URL is stored on Telegram's server, not in `.env` and not in the Worker source code. If this URL changes after deploying from another Cloudflare account, run `setWebhook` again.
+
 ### Features
 
 - Telegram command support: `/start`, `/help`, and `/clear`
@@ -127,6 +135,19 @@ Readable versions are also available:
 /satisfaction.txt
 /satisfaction.html
 ```
+
+Easy npm commands:
+
+```sh
+npm run export:research
+npm run export:research:txt
+npm run export:research:html
+npm run export:satisfaction
+npm run export:satisfaction:txt
+npm run export:satisfaction:html
+```
+
+The npm commands automatically read `.env`. The HTML commands save files as `research.html` and `satisfaction.html`.
 
 ### Why It Can Run for Free
 
@@ -519,27 +540,19 @@ npx wrangler login
 Deploy:
 
 ```sh
-npx wrangler deploy --secrets-file .env
+npm run deploy
 ```
 
 Set webhook:
 
 ```sh
-set -a
-source .env
-set +a
-
-export WORKER_URL="https://samsat-bandung-timur-bot.samsat.workers.dev"
-
-curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/setWebhook" \
-  -d "url=$WORKER_URL/webhook" \
-  -d "secret_token=$WEBHOOK_SECRET"
+npm run webhook:set
 ```
 
 Check webhook:
 
 ```sh
-curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
+npm run webhook:info
 ```
 
 ### Updating FAQ Data
@@ -665,6 +678,14 @@ Endpoint webhook:
 ```text
 https://samsat-bandung-timur-bot.samsat.workers.dev/webhook
 ```
+
+Webhook Telegram aktif, sudah dicek dengan `getWebhookInfo` pada 30 Juli 2026:
+
+```text
+https://samsat-bandung-timur-bot.samsat.workers.dev/webhook
+```
+
+URL webhook disimpan di server Telegram, bukan di `.env` dan bukan di source code Worker. Jika URL ini berubah setelah deploy dari akun Cloudflare lain, jalankan `setWebhook` ulang.
 
 ### Fitur
 
@@ -1099,6 +1120,19 @@ open research.html
 
 Endpoint export data riset membutuhkan `ADMIN_EXPORT_TOKEN`. Jangan membagikan token ini ke publik.
 
+Command npm yang lebih mudah:
+
+```sh
+npm run export:research
+npm run export:research:txt
+npm run export:research:html
+npm run export:satisfaction
+npm run export:satisfaction:txt
+npm run export:satisfaction:html
+```
+
+Command npm tersebut otomatis membaca `.env`. Command HTML akan menyimpan file sebagai `research.html` dan `satisfaction.html`.
+
 ### Kenapa Bisa Berjalan Gratis
 
 Telegram mendukung webhook, jadi Telegram hanya mengirim update ke endpoint HTTPS publik saat user berinteraksi dengan bot.
@@ -1436,27 +1470,19 @@ npx wrangler login
 Deploy:
 
 ```sh
-npx wrangler deploy --secrets-file .env
+npm run deploy
 ```
 
 Set webhook:
 
 ```sh
-set -a
-source .env
-set +a
-
-export WORKER_URL="https://samsat-bandung-timur-bot.samsat.workers.dev"
-
-curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/setWebhook" \
-  -d "url=$WORKER_URL/webhook" \
-  -d "secret_token=$WEBHOOK_SECRET"
+npm run webhook:set
 ```
 
 Cek webhook:
 
 ```sh
-curl "https://api.telegram.org/bot$BOT_TOKEN/getWebhookInfo"
+npm run webhook:info
 ```
 
 ### Update Data FAQ
