@@ -81,6 +81,101 @@ describe("voting kepuasan", () => {
     }
   });
 
+  it("menghapus tombol voting dan mengirim menu pembuka setelah voting pada jawaban multi-FAQ", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const researchStore = new MemoryKv();
+    let nextMessageId = 100;
+    const fetchSpy = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+
+      if (url.includes("/sendMessage")) {
+        return new Response(JSON.stringify({ ok: true, result: { message_id: nextMessageId++ } }), { status: 200 });
+      }
+
+      if (url.includes("/answerCallbackQuery") || url.includes("/editMessageText")) {
+        return new Response(JSON.stringify({ ok: true, result: true }), { status: 200 });
+      }
+
+      return new Response(JSON.stringify({ ok: true, result: true }), { status: 200 });
+    });
+
+    vi.stubGlobal("fetch", fetchSpy);
+
+    try {
+      await handleUpdate({
+        update_id: 12,
+        message: {
+          message_id: 50,
+          from: { id: 5565698191, first_name: "Khang" },
+          chat: { id: 999 },
+          text: "STNK saya hilang dan pajak motor mati bertahun tahun gimana?"
+        }
+      }, {
+        BOT_TOKEN: "test-token",
+        RESEARCH_STORE: researchStore
+      } as never);
+
+      const sendMessageCallsAfterAnswers = fetchSpy.mock.calls.filter(([input]) => String(input).includes("/sendMessage"));
+      const sendMessageBodiesAfterAnswers = sendMessageCallsAfterAnswers.map(([, init]) => JSON.stringify(init)).join("\n");
+
+      expect(sendMessageCallsAfterAnswers).toHaveLength(2);
+      expect(sendMessageBodiesAfterAnswers).toContain("vote:54:");
+      expect(sendMessageBodiesAfterAnswers).toContain("vote:33:");
+      expect(sendMessageBodiesAfterAnswers).not.toContain("Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.");
+
+      await handleUpdate({
+        update_id: 13,
+        callback_query: {
+          id: "callback-multi-1",
+          from: { id: 5565698191, first_name: "Khang" },
+          data: "vote:54:s",
+          message: {
+            message_id: 100,
+            chat: { id: 999 }
+          }
+        }
+      }, {
+        BOT_TOKEN: "test-token",
+        RESEARCH_STORE: researchStore
+      } as never);
+
+      await handleUpdate({
+        update_id: 14,
+        callback_query: {
+          id: "callback-multi-2",
+          from: { id: 5565698191, first_name: "Khang" },
+          data: "vote:33:d",
+          message: {
+            message_id: 101,
+            chat: { id: 999 }
+          }
+        }
+      }, {
+        BOT_TOKEN: "test-token",
+        RESEARCH_STORE: researchStore
+      } as never);
+
+      const sendMessageCalls = fetchSpy.mock.calls.filter(([input]) => String(input).includes("/sendMessage"));
+      const editMessageCalls = fetchSpy.mock.calls.filter(([input]) => String(input).includes("/editMessageText"));
+      const sendMessageBodies = sendMessageCalls.map(([, init]) => JSON.stringify(init)).join("\n");
+      const editMessagePayloads = editMessageCalls.map(([, init]) => JSON.parse(String(init?.body ?? "{}")) as {
+        text: string;
+        reply_markup?: { inline_keyboard?: unknown[] };
+      });
+      const editMessageTexts = editMessagePayloads.map((payload) => payload.text).join("\n");
+
+      expect(sendMessageCalls).toHaveLength(4);
+      expect(editMessageCalls).toHaveLength(2);
+      expect(sendMessageBodies).toContain("Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.");
+      expect(sendMessageBodies).toContain("cat:Layanan");
+      expect(editMessagePayloads.every((payload) => payload.reply_markup?.inline_keyboard?.length === 0)).toBe(true);
+      expect(editMessageTexts).toContain("Hasil voting pengguna");
+    } finally {
+      vi.unstubAllGlobals();
+      logSpy.mockRestore();
+    }
+  });
+
   it("memperbarui satu vote aktif per responden tanpa mengirim menu sebagai chat baru", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
     const researchStore = new MemoryKv();
@@ -144,7 +239,8 @@ describe("voting kepuasan", () => {
       expect(loggedCalls).toContain('"changed":true');
       expect(loggedCalls).toContain('"saved_choice":"dissatisfied"');
       expect(loggedCalls).toContain('"method":"editMessageText"');
-      expect(loggedCalls).not.toContain('"method":"sendMessage"');
+      expect(loggedCalls).toContain('"method":"sendMessage"');
+      expect(loggedCalls).toContain("Selamat datang di Chatbot FAQ SAMSAT Bandung Timur.");
     } finally {
       logSpy.mockRestore();
     }

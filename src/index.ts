@@ -111,6 +111,7 @@ interface TelegramApiResponse {
 
 const maxTrackedMessagesPerChat = 10000;
 const trackedMessageIdsByChat = new Map<number, Set<number>>();
+const emptyInlineKeyboard = { inline_keyboard: [] };
 
 export default {
   // Entry point utama Cloudflare Worker untuk menerima request HTTP.
@@ -335,13 +336,16 @@ async function handleCallback(
         dissatisfied: voteResult.stats.dissatisfied
       })
     );
-    await editMessageOnly(
+    const edited = await editMessageOnly(
       env,
       chatId,
       messageId,
       buildDirectFaqMessage(entry, voteResult.stats, voteResult.choice),
-      mainMenu
+      emptyInlineKeyboard
     );
+    if (edited) {
+      await sendMessage(env, chatId, buildStartMessage(), mainMenu);
+    }
     return;
   }
 
@@ -745,7 +749,7 @@ async function editMessageOnly(
 ) {
   if (!messageId) {
     console.log(JSON.stringify({ event: "edit_message", ok: false, error: "Missing message_id" }));
-    return;
+    return false;
   }
 
   try {
@@ -756,6 +760,7 @@ async function editMessageOnly(
       reply_markup: replyMarkup
     });
     trackMessageIdLocally(chatId, messageId);
+    return true;
   } catch (error) {
     console.log(
       JSON.stringify({
@@ -765,6 +770,7 @@ async function editMessageOnly(
         error: error instanceof Error ? error.message : "Unknown error"
       })
     );
+    return false;
   }
 }
 
