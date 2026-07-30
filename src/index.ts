@@ -337,7 +337,7 @@ async function handleCallback(
         dissatisfied: voteResult.stats.dissatisfied
       })
     );
-    await editOrSendMessage(
+    await editMessageOnly(
       env,
       chatId,
       messageId,
@@ -712,6 +712,39 @@ async function editOrSendMessage(
       })
     );
     return sendMessage(env, chatId, text, replyMarkup);
+  }
+}
+
+// Mengedit pesan tanpa fallback sendMessage. Dipakai untuk voting agar tidak membuat chat baru.
+async function editMessageOnly(
+  env: Env,
+  chatId: number,
+  messageId: number | undefined,
+  text: string,
+  replyMarkup?: unknown
+) {
+  if (!messageId) {
+    console.log(JSON.stringify({ event: "edit_message", ok: false, error: "Missing message_id" }));
+    return;
+  }
+
+  try {
+    await telegramApi(env, "editMessageText", {
+      chat_id: chatId,
+      message_id: messageId,
+      text,
+      reply_markup: replyMarkup
+    });
+    trackMessageIdLocally(chatId, messageId);
+  } catch (error) {
+    console.log(
+      JSON.stringify({
+        event: "edit_message",
+        ok: false,
+        mode: "edit_only",
+        error: error instanceof Error ? error.message : "Unknown error"
+      })
+    );
   }
 }
 

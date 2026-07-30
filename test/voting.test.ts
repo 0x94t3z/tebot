@@ -82,4 +82,52 @@ describe("voting kepuasan", () => {
       logSpy.mockRestore();
     }
   });
+
+  it("tidak mengirim chat baru saat edit pesan voting gagal", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const fetchSpy = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+
+      if (url.includes("/answerCallbackQuery")) {
+        return new Response(JSON.stringify({ ok: true, result: true }), { status: 200 });
+      }
+
+      if (url.includes("/editMessageText")) {
+        return new Response(JSON.stringify({ ok: false, description: "Bad Request: message is not modified" }), { status: 400 });
+      }
+
+      return new Response(JSON.stringify({ ok: true, result: { message_id: 99 } }), { status: 200 });
+    });
+    const researchStore = new MemoryKv();
+
+    vi.stubGlobal("fetch", fetchSpy);
+
+    try {
+      await handleUpdate({
+        update_id: 4,
+        callback_query: {
+          id: "callback-4",
+          from: { id: 5565698191, first_name: "Khang" },
+          data: "vote:54:d",
+          message: {
+            message_id: 10,
+            chat: { id: 999 }
+          }
+        }
+      }, {
+        BOT_TOKEN: "test-token",
+        RESEARCH_STORE: researchStore
+      } as never);
+
+      const calledUrls = fetchSpy.mock.calls.map(([input]) => String(input)).join("\n");
+
+      expect(calledUrls).toContain("/answerCallbackQuery");
+      expect(calledUrls).toContain("/editMessageText");
+      expect(calledUrls).not.toContain("/sendMessage");
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('"mode":"edit_only"'));
+    } finally {
+      vi.unstubAllGlobals();
+      logSpy.mockRestore();
+    }
+  });
 });
