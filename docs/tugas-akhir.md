@@ -270,6 +270,8 @@ File yang dihasilkan:
 research/responses.csv
 research/responses.txt
 research/responses.html
+research/summary.txt
+research/summary.html
 ```
 
 Export gabungan ini menampilkan satu baris untuk satu penilaian jawaban FAQ. Kolomnya memuat Telegram ID, username, nama, bahasa, waktu mulai, terakhir aktif, FAQ ID, kategori, pertanyaan, jawaban, pilihan kepuasan, dan waktu vote.
@@ -304,6 +306,8 @@ Bagian:
   "export:responses": "tsx tools/bot-admin.ts export responses csv --output research/responses.csv",
   "export:responses:txt": "tsx tools/bot-admin.ts export responses txt --output research/responses.txt",
   "export:responses:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
+  "export:summary": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
+  "export:summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
   "export:satisfaction": "tsx tools/bot-admin.ts export satisfaction csv",
   "relevance": "tsx tools/check-relevance.ts",
   "typecheck": "tsc --noEmit",
@@ -325,6 +329,8 @@ Fungsi command:
 | `npm run export:responses` | Export gabungan responden, FAQ, pilihan kepuasan, dan waktu vote ke `research/responses.csv` |
 | `npm run export:responses:txt` | Export gabungan ke `research/responses.txt` |
 | `npm run export:responses:html` | Export gabungan ke `research/responses.html` |
+| `npm run export:summary` | Membuat ringkasan TXT dari `research/responses.csv` ke `research/summary.txt` |
+| `npm run export:summary:html` | Membuat ringkasan HTML dari `research/responses.csv` ke `research/summary.html` |
 | `npm run export:satisfaction` | Export rekap kepuasan per FAQ dalam CSV |
 | `npm run export:satisfaction:txt` | Export rekap kepuasan per FAQ dalam tabel teks |
 | `npm run export:satisfaction:html` | Export rekap kepuasan per FAQ dalam HTML |
@@ -339,6 +345,15 @@ npm run export:responses
 ```
 
 Alasannya, data ini sudah menggabungkan responden dan penilaian jawaban. Satu baris berarti satu responden memberi satu penilaian terhadap satu FAQ.
+
+Setelah data gabungan tersedia, ringkasan penelitian dapat dibuat dengan command:
+
+```sh
+npm run export:summary
+npm run export:summary:html
+```
+
+Command tersebut tidak mengambil data baru dari Worker. Command ini membaca file lokal `research/responses.csv`, lalu membuat rekap jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, serta FAQ yang paling banyak mendapat penilaian. Dengan demikian, `responses.csv` tetap menjadi data mentah utama, sedangkan `summary.txt` dan `summary.html` menjadi hasil olahan awal untuk membantu pembahasan Bab IV.
 
 ### Command Export dan Request API Asli
 
@@ -408,6 +423,18 @@ Format yang tersedia:
 | `/satisfaction.csv` | Rekap kepuasan per FAQ |
 | `/satisfaction.txt` | Rekap kepuasan per FAQ dalam tabel teks |
 | `/satisfaction.html` | Rekap kepuasan per FAQ dalam HTML |
+
+Endpoint di atas dipakai untuk mengambil data dari Worker. Berbeda dari endpoint tersebut, command `npm run export:summary` dan `npm run export:summary:html` bekerja secara lokal. Alurnya adalah:
+
+```text
+npm run export:responses
+  -> menghasilkan research/responses.csv
+  -> npm run export:summary
+  -> tools/bot-admin.ts membaca research/responses.csv
+  -> sistem membuat research/summary.txt
+```
+
+Untuk versi HTML, alurnya sama, tetapi output yang dibuat adalah `research/summary.html`. File ringkasan ini dapat dipakai sebagai bahan awal tabel rekap, sedangkan angka final tetap dapat diperiksa kembali dari `research/responses.csv`.
 
 ### Proses Export CSV di Kode Worker
 
@@ -479,6 +506,7 @@ started_at, last_seen_at, faq_id, category, question, answer, choice, voted_at
 | `research` | Profil responden Telegram | Melihat siapa saja yang mencoba chatbot |
 | `responses` | Profil responden + FAQ + pilihan kepuasan | Analisis utama penelitian |
 | `satisfaction` | Rekap jumlah dan persentase vote per FAQ | Melihat FAQ mana yang dinilai memuaskan/tidak memuaskan |
+| `summary` | Ringkasan dari `responses.csv` | Melihat jumlah responden, persentase kepuasan, rekap kategori, dan FAQ yang perlu dievaluasi |
 
 Jadi, untuk pembahasan hasil penelitian, yang paling kuat digunakan adalah:
 
@@ -499,6 +527,14 @@ npm run export:satisfaction
 ```
 
 dipakai sebagai rekap statistik kepuasan per FAQ.
+
+Command:
+
+```sh
+npm run export:summary
+```
+
+dipakai untuk membuat ringkasan cepat dari data gabungan. Command ini membantu peneliti melihat gambaran umum hasil voting tanpa menghitung manual sejak awal. Namun, ketika menulis laporan, data rinci tetap merujuk ke `research/responses.csv` karena file tersebut menyimpan hubungan lengkap antara responden, pertanyaan, jawaban, dan pilihan kepuasan.
 
 ### Command Webhook
 
