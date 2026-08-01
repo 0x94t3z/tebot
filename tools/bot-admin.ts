@@ -670,6 +670,7 @@ function printHelp() {
     "  npm run summary:txt",
     "  npm run summary:html",
     "  npm run export:data",
+    "  npm run export:data:html",
     "",
     "Optional:",
     "  WORKER_URL=https://your-worker.workers.dev npm run webhook:set",

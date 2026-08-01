@@ -202,12 +202,14 @@ Data utama yang digunakan untuk pengolahan hasil kepuasan adalah export gabungan
 
 ```text
 npm run export:data
+npm run export:data:html
 ```
 
 Command tersebut menghasilkan file:
 
 ```text
 research/responses.csv
+research/responses.html
 ```
 
 Setelah data gabungan tersedia, sistem juga menyediakan command ringkasan:

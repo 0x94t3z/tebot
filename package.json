@@ -14,6 +14,7 @@
     "summary:txt": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
     "summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
     "export:data": "tsx tools/bot-admin.ts export responses csv --output research/responses.csv",
+    "export:data:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
     "relevance": "tsx tools/check-relevance.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"

@@ -302,6 +302,7 @@ Bagian:
   "summary:txt": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
   "summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
   "export:data": "tsx tools/bot-admin.ts export responses csv --output research/responses.csv",
+  "export:data:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
   "relevance": "tsx tools/check-relevance.ts",
   "typecheck": "tsc --noEmit",
   "test": "vitest run"
@@ -320,6 +321,7 @@ Fungsi command:
 | `npm run summary:txt` | Mengambil data terbaru dan menyimpan ringkasan TXT ke `research/summary.txt` |
 | `npm run summary:html` | Mengambil data terbaru dan menyimpan ringkasan HTML ke `research/summary.html` |
 | `npm run export:data` | Export data gabungan responden, FAQ, jawaban, pilihan kepuasan, dan waktu vote ke `research/responses.csv` |
+| `npm run export:data:html` | Export data gabungan lengkap ke `research/responses.html` agar bisa dibuka di browser |
 | `npm run relevance -- "pertanyaan"` | Melihat proses normalisasi, token, stop word, regex, dan hasil pattern matching untuk satu input |
 | `npm run typecheck` | Memeriksa kesalahan tipe TypeScript |
 | `npm test` | Menjalankan test otomatis pattern matching dan format balasan Telegram |
@@ -328,9 +330,10 @@ Command export yang paling disarankan untuk analisis penelitian adalah:
 
 ```sh
 npm run export:data
+npm run export:data:html
 ```
 
-Alasannya, data ini sudah menggabungkan responden dan penilaian jawaban. Satu baris berarti satu responden memberi satu penilaian terhadap satu FAQ.
+Alasannya, data ini sudah menggabungkan responden dan penilaian jawaban. Satu baris berarti satu responden memberi satu penilaian terhadap satu FAQ. Format CSV dipakai untuk pengolahan data, sedangkan format HTML dipakai untuk membaca data lengkap di browser.
 
 Setelah data gabungan tersedia, ringkasan penelitian dapat dibuat dengan command:
 
@@ -439,10 +442,11 @@ Untuk versi HTML, alurnya sama, tetapi output yang dibuat adalah `research/summa
 File HTML dapat dibuka di browser dengan command:
 
 ```sh
+open research/responses.html
 open research/summary.html
 ```
 
-`research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, rekap per responden, dan FAQ yang paling banyak dinilai.
+`research/responses.html` menampilkan data gabungan lengkap per responden dan voting. `research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, rekap per responden, dan FAQ yang paling banyak dinilai.
 
 ### Proses Export CSV di Kode Worker
 
@@ -520,6 +524,7 @@ Jadi, untuk pembahasan hasil penelitian, data lengkap yang paling kuat digunakan
 
 ```sh
 npm run export:data
+npm run export:data:html
 ```
 
 Sedangkan ringkasan cepat untuk dibaca langsung di terminal atau browser dibuat dengan:

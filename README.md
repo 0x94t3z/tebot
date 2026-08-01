@@ -105,9 +105,10 @@ To export the complete respondent and voting dataset for spreadsheet analysis, u
 
 ```sh
 npm run export:data
+npm run export:data:html
 ```
 
-The complete `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer. The `summary` command is for quick terminal reading, `summary:txt/html` is for saved reports, and `export:data` is for full data processing.
+The complete `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer. Use `export:data` for CSV processing and `export:data:html` for a browser-readable complete table. The `summary` command is for quick terminal reading, while `summary:txt/html` is for saved recap reports.
 
 Exported fields:
 
@@ -167,9 +168,10 @@ npm run summary
 npm run summary:txt
 npm run summary:html
 npm run export:data
+npm run export:data:html
 ```
 
-The npm commands automatically read `.env`. The `summary` command only shows the latest recap in terminal. The `summary:txt/html` commands save summary files into `research/`. The `export:data` command saves the complete joined dataset to `research/responses.csv`.
+The npm commands automatically read `.env`. The `summary` command only shows the latest recap in terminal. The `summary:txt/html` commands save summary files into `research/`. The `export:data` commands save the complete joined dataset to `research/responses.csv` and `research/responses.html`.
 
 ### Why It Can Run for Free
 
@@ -1118,9 +1120,10 @@ Untuk export data keseluruhan responden dan voting ke CSV, gunakan:
 
 ```sh
 npm run export:data
+npm run export:data:html
 ```
 
-Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ. Command `summary` dipakai untuk membaca rekap cepat di terminal, `summary:txt/html` dipakai untuk laporan tersimpan, sedangkan `export:data` dipakai untuk pengolahan data lengkap.
+Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ. Gunakan `export:data` untuk CSV dan `export:data:html` untuk tabel lengkap yang bisa dibuka di browser. Command `summary` dipakai untuk membaca rekap cepat di terminal, sedangkan `summary:txt/html` dipakai untuk laporan rekap tersimpan.
 
 Field export:
 
@@ -1180,9 +1183,10 @@ npm run summary
 npm run summary:txt
 npm run summary:html
 npm run export:data
+npm run export:data:html
 ```
 
-Command npm tersebut otomatis membaca `.env`. Command `summary` hanya menampilkan ringkasan terbaru di terminal. Command `summary:txt/html` menyimpan ringkasan ke folder `research/`. Command `export:data` menyimpan data gabungan lengkap ke `research/responses.csv`.
+Command npm tersebut otomatis membaca `.env`. Command `summary` hanya menampilkan ringkasan terbaru di terminal. Command `summary:txt/html` menyimpan ringkasan ke folder `research/`. Command `export:data` menyimpan data gabungan lengkap ke `research/responses.csv`, sedangkan `export:data:html` menyimpan data lengkap ke `research/responses.html`.
 
 ### Kenapa Bisa Berjalan Gratis
 
