@@ -106,7 +106,7 @@ research/summary.txt
 research/summary.html
 ```
 
-The separate `research` export is useful for respondent profile data, while the separate `satisfaction` export is useful for FAQ-level recap. The joined `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer. The `summary` export reads `research/responses.csv` and creates a compact recap of respondents, satisfaction percentages, category totals, and FAQ-level highlights.
+The separate `research` export is useful for respondent profile data, while the separate `satisfaction` export is useful for FAQ-level recap. The joined `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer. The `summary` export fetches the latest `/responses.csv`, saves it to `research/responses.csv`, then creates a compact recap of respondents, per-respondent voting activity, satisfaction percentages, category totals, and FAQ-level highlights.
 
 Exported fields:
 
@@ -1126,7 +1126,7 @@ research/summary.txt
 research/summary.html
 ```
 
-Export `research` yang terpisah berguna untuk data profil responden, sedangkan export `satisfaction` yang terpisah berguna untuk rekap per FAQ. Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ. Export `summary` membaca `research/responses.csv` dan membuat rekap ringkas berisi jumlah responden, persentase kepuasan, rekap kategori, dan sorotan FAQ.
+Export `research` yang terpisah berguna untuk data profil responden, sedangkan export `satisfaction` yang terpisah berguna untuk rekap per FAQ. Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ. Export `summary` mengambil data terbaru dari `/responses.csv`, menyimpannya ke `research/responses.csv`, lalu membuat rekap ringkas berisi jumlah responden, aktivitas voting per responden, persentase kepuasan, rekap kategori, dan sorotan FAQ.
 
 Field export:
 

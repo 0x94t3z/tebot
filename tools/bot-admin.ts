@@ -22,7 +22,7 @@ async function main() {
       await exportData();
       return;
     case "summary":
-      generateSummary();
+      await generateSummary();
       return;
     default:
       printHelp();
@@ -119,6 +119,19 @@ async function exportData() {
   }
 
   const outputPath = getOutputPath();
+  const text = await fetchAdminExport(dataset, format);
+
+  if (outputPath) {
+    mkdirSync(dirname(outputPath), { recursive: true });
+    writeFileSync(outputPath, text);
+    console.log(`Saved to ${outputPath}`);
+    return;
+  }
+
+  process.stdout.write(text);
+}
+
+async function fetchAdminExport(dataset: string, format: string) {
   const response = await fetch(`${getWorkerUrl()}/${dataset}.${format}`, {
     headers: {
       Authorization: `Bearer ${requireEnv("ADMIN_EXPORT_TOKEN")}`
@@ -130,14 +143,7 @@ async function exportData() {
     throw new Error(`Export failed: ${response.status} ${text}`);
   }
 
-  if (outputPath) {
-    mkdirSync(dirname(outputPath), { recursive: true });
-    writeFileSync(outputPath, text);
-    console.log(`Saved to ${outputPath}`);
-    return;
-  }
-
-  process.stdout.write(text);
+  return text;
 }
 
 function getOutputPath() {
@@ -180,15 +186,26 @@ function findLastArgWithPrefix(prefix: string) {
   return undefined;
 }
 
-function generateSummary() {
+function hasFlag(...names: string[]) {
+  return args.some((arg) => names.includes(arg));
+}
+
+async function generateSummary() {
   const format = args[0] ?? "txt";
   if (!["txt", "html"].includes(format)) {
     throw new Error("Summary format must be 'txt' or 'html'.");
   }
 
   const inputPath = getInputPath() ?? "research/responses.csv";
+  if (!hasFlag("--offline")) {
+    const latestResponses = await fetchAdminExport("responses", "csv");
+    mkdirSync(dirname(inputPath), { recursive: true });
+    writeFileSync(inputPath, latestResponses);
+    console.log(`Updated latest responses: ${inputPath}`);
+  }
+
   if (!existsSync(inputPath)) {
-    throw new Error(`${inputPath} not found. Run npm run export:responses first.`);
+    throw new Error(`${inputPath} not found. Run npm run export:responses first, or run without --offline to fetch the latest data.`);
   }
 
   const outputPath = getOutputPath() ?? (format === "html" ? "research/summary.html" : "research/summary.txt");
@@ -296,6 +313,7 @@ function buildResponseSummary(records: ResponseRecord[]): ResponseSummary {
   const faqIds = new Set(records.map((record) => record.faqId).filter(Boolean));
   const categories = groupRecords(records, (record) => record.category || "-");
   const faqs = groupRecords(records, (record) => `${record.faqId}||${record.category}||${record.question}`);
+  const respondentRecords = groupRecords(records, (record) => record.telegramId || "-");
   const satisfied = records.filter((record) => record.choice === "satisfied").length;
   const dissatisfied = records.filter((record) => record.choice === "dissatisfied").length;
   const votedTimes = records
@@ -315,6 +333,9 @@ function buildResponseSummary(records: ResponseRecord[]): ResponseSummary {
     categories: [...categories.entries()]
       .map(([category, groupedRecords]) => buildGroupSummary(category, groupedRecords))
       .sort(sortSummaryRows),
+    respondents: [...respondentRecords.entries()]
+      .map(([telegramId, groupedRecords]) => buildRespondentSummary(telegramId, groupedRecords))
+      .sort(sortRespondentRows),
     topSatisfiedFaqs: buildFaqSummaries(faqs, "satisfied").slice(0, 5),
     topDissatisfiedFaqs: buildFaqSummaries(faqs, "dissatisfied").slice(0, 5)
   };
@@ -354,6 +375,42 @@ function buildGroupSummary(label: string, records: ResponseRecord[]): SummaryRow
   };
 }
 
+function buildRespondentSummary(telegramId: string, records: ResponseRecord[]): RespondentSummaryRow {
+  const firstRecord = records[0];
+  const satisfied = records.filter((record) => record.choice === "satisfied").length;
+  const dissatisfied = records.filter((record) => record.choice === "dissatisfied").length;
+  const faqIds = new Set(records.map((record) => record.faqId).filter(Boolean));
+  const votedTimes = records
+    .map((record) => record.votedAt)
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
+
+  return {
+    telegramId,
+    username: formatUsername(firstRecord?.username ?? ""),
+    name: formatFullName(firstRecord),
+    total: records.length,
+    satisfied,
+    dissatisfied,
+    satisfiedPercent: percentage(satisfied, records.length),
+    faqCount: faqIds.size,
+    lastVotedAt: votedTimes.at(-1) ?? "-"
+  };
+}
+
+function formatUsername(username: string) {
+  if (!username) {
+    return "-";
+  }
+
+  return username.startsWith("@") ? username : `@${username}`;
+}
+
+function formatFullName(record?: ResponseRecord) {
+  const name = [record?.firstName, record?.lastName].filter(Boolean).join(" ").trim();
+  return name || "-";
+}
+
 function buildFaqSummaries(groupedFaqs: Map<string, ResponseRecord[]>, choice: SatisfactionChoiceLabel) {
   return [...groupedFaqs.entries()]
     .map(([key, records]) => {
@@ -384,6 +441,10 @@ function sortSummaryRows(a: SummaryRow, b: SummaryRow) {
   return b.total - a.total || a.label.localeCompare(b.label);
 }
 
+function sortRespondentRows(a: RespondentSummaryRow, b: RespondentSummaryRow) {
+  return b.total - a.total || a.name.localeCompare(b.name) || a.telegramId.localeCompare(b.telegramId);
+}
+
 function percentage(value: number, total: number) {
   return total <= 0 ? 0 : Math.round((value / total) * 100);
 }
@@ -407,6 +468,19 @@ function buildSummaryText(summary: ResponseSummary) {
       String(row.satisfied),
       String(row.dissatisfied),
       `${row.satisfiedPercent}%`
+    ])),
+    "",
+    "Rekap Per Responden",
+    buildSummaryTable(["Telegram ID", "Username", "Nama", "Total", "Memuaskan", "Tidak Memuaskan", "Memuaskan (%)", "FAQ Dinilai", "Terakhir Vote"], summary.respondents.map((row) => [
+      row.telegramId,
+      row.username,
+      row.name,
+      String(row.total),
+      String(row.satisfied),
+      String(row.dissatisfied),
+      `${row.satisfiedPercent}%`,
+      String(row.faqCount),
+      formatSummaryTime(row.lastVotedAt)
     ])),
     "",
     "FAQ Dengan Memuaskan Terbanyak",
@@ -486,6 +560,18 @@ function buildSummaryHtml(summary: ResponseSummary) {
       String(row.satisfied),
       String(row.dissatisfied),
       `${row.satisfiedPercent}%`
+    ]))}
+    <h2>Rekap Per Responden</h2>
+    ${buildHtmlTable(["Telegram ID", "Username", "Nama", "Total", "Memuaskan", "Tidak Memuaskan", "Memuaskan (%)", "FAQ Dinilai", "Terakhir Vote"], summary.respondents.map((row) => [
+      row.telegramId,
+      row.username,
+      row.name,
+      String(row.total),
+      String(row.satisfied),
+      String(row.dissatisfied),
+      `${row.satisfiedPercent}%`,
+      String(row.faqCount),
+      formatSummaryTime(row.lastVotedAt)
     ]))}
     <h2>FAQ Dengan Memuaskan Terbanyak</h2>
     ${buildHtmlTable(["FAQ ID", "Kategori", "Pertanyaan", "Memuaskan", "Total"], summary.topSatisfiedFaqs.map((row) => [
@@ -573,6 +659,7 @@ function printHelp() {
     "  npm run export:responses",
     "  npm run export:responses:txt",
     "  npm run export:summary",
+    "  npm run export:summary:txt",
     "  npm run export:summary:html",
     "  npm run export:satisfaction",
     "  npm run export:satisfaction:txt",
@@ -581,6 +668,7 @@ function printHelp() {
     "  WORKER_URL=https://your-worker.workers.dev npm run webhook:set",
     "  npm run export:responses -- --output research/responses.csv",
     "  npm run export:summary -- --input research/responses.csv --output research/summary.txt",
+    "  npm run export:summary -- --offline",
     "  npm run export:satisfaction:html -- --output satisfaction.html"
   ].join("\n"));
 }
@@ -621,6 +709,18 @@ interface FaqSummaryRow {
   dissatisfiedPercent: number;
 }
 
+interface RespondentSummaryRow {
+  telegramId: string;
+  username: string;
+  name: string;
+  total: number;
+  satisfied: number;
+  dissatisfied: number;
+  satisfiedPercent: number;
+  faqCount: number;
+  lastVotedAt: string;
+}
+
 interface ResponseSummary {
   totalRespondents: number;
   totalVotes: number;
@@ -631,6 +731,7 @@ interface ResponseSummary {
   startedAt: string;
   endedAt: string;
   categories: SummaryRow[];
+  respondents: RespondentSummaryRow[];
   topSatisfiedFaqs: FaqSummaryRow[];
   topDissatisfiedFaqs: FaqSummaryRow[];
 }

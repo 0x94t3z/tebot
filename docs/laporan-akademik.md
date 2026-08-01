@@ -217,14 +217,14 @@ npm run export:summary
 npm run export:summary:html
 ```
 
-Command tersebut membaca `research/responses.csv` dan menghasilkan:
+Command tersebut mengambil data terbaru dari endpoint `/responses.csv`, menyimpannya ke `research/responses.csv`, lalu menghasilkan:
 
 ```text
 research/summary.txt
 research/summary.html
 ```
 
-Ringkasan ini berisi jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, serta FAQ yang paling banyak mendapat penilaian memuaskan atau tidak memuaskan. Data mentah penelitian tetap menggunakan `responses.csv`, sedangkan file ringkasan dipakai untuk membantu penyusunan tabel dan analisis pada Bab IV.
+Ringkasan ini berisi jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, rekap per responden, serta FAQ yang paling banyak mendapat penilaian memuaskan atau tidak memuaskan. Data mentah penelitian tetap menggunakan `responses.csv`, sedangkan file ringkasan dipakai untuk membantu penyusunan tabel dan analisis pada Bab IV.
 
 Secara teknis, command `npm run export:responses` melakukan request API ke Worker dengan bentuk:
 

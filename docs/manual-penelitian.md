@@ -356,7 +356,13 @@ npm run export:summary:txt
 npm run export:summary:html
 ```
 
-Command tersebut tidak mengambil data baru dari Worker. Command ini membaca file lokal `research/responses.csv`, lalu membuat rekap jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, serta FAQ yang paling banyak mendapat penilaian. Dengan demikian, `responses.csv` tetap menjadi data mentah utama, sedangkan `summary.txt` dan `summary.html` menjadi hasil olahan awal untuk membantu pembahasan Bab IV.
+Command tersebut otomatis mengambil data terbaru dari Worker melalui endpoint `/responses.csv`, menyimpannya ke `research/responses.csv`, lalu membuat rekap jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, rekap per responden, serta FAQ yang paling banyak mendapat penilaian. Dengan demikian, `responses.csv` tetap menjadi data mentah utama, sedangkan `summary.txt` dan `summary.html` menjadi hasil olahan awal untuk membantu pembahasan Bab IV.
+
+Jika hanya ingin membuat ringkasan dari file lokal tanpa mengambil data terbaru dari Worker, gunakan opsi:
+
+```sh
+npm run export:summary -- --offline
+```
 
 ### Command Export dan Request API Asli
 
@@ -427,17 +433,17 @@ Format yang tersedia:
 | `/satisfaction.txt` | Rekap kepuasan per FAQ dalam tabel teks |
 | `/satisfaction.html` | Rekap kepuasan per FAQ dalam HTML |
 
-Endpoint di atas dipakai untuk mengambil data dari Worker. Berbeda dari endpoint tersebut, command `npm run export:summary` dan `npm run export:summary:html` bekerja secara lokal. Alurnya adalah:
+Endpoint di atas dipakai untuk mengambil data dari Worker. Command `npm run export:summary`, `npm run export:summary:txt`, dan `npm run export:summary:html` juga mengambil data terbaru terlebih dahulu agar ringkasan tidak bergantung pada file lokal lama. Alurnya adalah:
 
 ```text
-npm run export:responses
-  -> menghasilkan research/responses.csv
-  -> npm run export:summary
+npm run export:summary
+  -> tools/bot-admin.ts request GET /responses.csv
+  -> sistem menyimpan data terbaru ke research/responses.csv
   -> tools/bot-admin.ts membaca research/responses.csv
   -> sistem membuat research/summary.txt
 ```
 
-Untuk versi HTML, alurnya sama, tetapi output yang dibuat adalah `research/summary.html`. File ringkasan ini dapat dipakai sebagai bahan awal tabel rekap, sedangkan angka final tetap dapat diperiksa kembali dari `research/responses.csv`.
+Untuk versi HTML, alurnya sama, tetapi output yang dibuat adalah `research/summary.html`. File ringkasan ini dapat dipakai sebagai bahan awal tabel rekap, sedangkan angka final tetap dapat diperiksa kembali dari `research/responses.csv`. Jika peneliti ingin memakai file lokal tanpa mengambil data terbaru, opsi `--offline` dapat digunakan.
 
 File HTML dapat dibuka di browser dengan command:
 
@@ -446,7 +452,7 @@ open research/responses.html
 open research/summary.html
 ```
 
-`research/responses.html` menampilkan data gabungan per baris responden dan voting. `research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, dan FAQ yang paling banyak dinilai.
+`research/responses.html` menampilkan data gabungan per baris responden dan voting. `research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, rekap per responden, dan FAQ yang paling banyak dinilai.
 
 ### Proses Export CSV di Kode Worker
 
@@ -518,7 +524,7 @@ started_at, last_seen_at, faq_id, category, question, answer, choice, voted_at
 | `research` | Profil responden Telegram | Melihat siapa saja yang mencoba chatbot |
 | `responses` | Profil responden + FAQ + pilihan kepuasan | Analisis utama penelitian |
 | `satisfaction` | Rekap jumlah dan persentase vote per FAQ | Melihat FAQ mana yang dinilai memuaskan/tidak memuaskan |
-| `summary` | Ringkasan dari `responses.csv` | Melihat jumlah responden, persentase kepuasan, rekap kategori, dan FAQ yang perlu dievaluasi |
+| `summary` | Ringkasan dari `responses.csv` | Melihat jumlah responden, aktivitas voting per responden, persentase kepuasan, rekap kategori, dan FAQ yang perlu dievaluasi |
 
 Jadi, untuk pembahasan hasil penelitian, yang paling kuat digunakan adalah:
 
