@@ -253,9 +253,7 @@ Aturan voting pada sistem adalah satu responden hanya memiliki satu vote aktif u
 Walaupun disimpan terpisah, data tersebut harus bisa digabung untuk analisis penelitian. Pada sistem ini, export gabungan tersedia melalui:
 
 ```sh
-npm run export:responses
-npm run export:responses:txt
-npm run export:responses:html
+npm run export:data
 ```
 
 Command tersebut otomatis menyimpan hasil export ke folder:
@@ -268,8 +266,6 @@ File yang dihasilkan:
 
 ```text
 research/responses.csv
-research/responses.txt
-research/responses.html
 research/summary.txt
 research/summary.html
 ```
@@ -302,14 +298,10 @@ Bagian:
   "health": "tsx tools/bot-admin.ts health",
   "webhook:set": "tsx tools/bot-admin.ts set-webhook",
   "webhook:info": "tsx tools/bot-admin.ts webhook-info",
-  "export:research": "tsx tools/bot-admin.ts export research csv",
-  "export:responses": "tsx tools/bot-admin.ts export responses csv --output research/responses.csv",
-  "export:responses:txt": "tsx tools/bot-admin.ts export responses txt --output research/responses.txt",
-  "export:responses:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
-  "export:summary": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
-  "export:summary:txt": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
-  "export:summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
-  "export:satisfaction": "tsx tools/bot-admin.ts export satisfaction csv",
+  "summary": "tsx tools/bot-admin.ts summary txt --stdout",
+  "summary:txt": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
+  "summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
+  "export:data": "tsx tools/bot-admin.ts export responses csv --output research/responses.csv",
   "relevance": "tsx tools/check-relevance.ts",
   "typecheck": "tsc --noEmit",
   "test": "vitest run"
@@ -324,18 +316,10 @@ Fungsi command:
 | `npm run health` | Mengecek apakah Worker aktif melalui endpoint `/health` |
 | `npm run webhook:set` | Mendaftarkan URL webhook Worker ke server Telegram |
 | `npm run webhook:info` | Mengecek URL webhook Telegram yang sedang aktif |
-| `npm run export:research` | Export profil responden dalam format CSV |
-| `npm run export:research:txt` | Export profil responden dalam bentuk tabel teks |
-| `npm run export:research:html` | Export profil responden dalam HTML |
-| `npm run export:responses` | Export gabungan responden, FAQ, pilihan kepuasan, dan waktu vote ke `research/responses.csv` |
-| `npm run export:responses:txt` | Export gabungan ke `research/responses.txt` |
-| `npm run export:responses:html` | Export gabungan ke `research/responses.html` |
-| `npm run export:summary` | Membuat ringkasan TXT dari `research/responses.csv` ke `research/summary.txt` |
-| `npm run export:summary:txt` | Alias untuk membuat ringkasan TXT ke `research/summary.txt` |
-| `npm run export:summary:html` | Membuat ringkasan HTML dari `research/responses.csv` ke `research/summary.html` |
-| `npm run export:satisfaction` | Export rekap kepuasan per FAQ dalam CSV |
-| `npm run export:satisfaction:txt` | Export rekap kepuasan per FAQ dalam tabel teks |
-| `npm run export:satisfaction:html` | Export rekap kepuasan per FAQ dalam HTML |
+| `npm run summary` | Mengambil data terbaru dan menampilkan ringkasan singkat di terminal tanpa menyimpan file ringkasan |
+| `npm run summary:txt` | Mengambil data terbaru dan menyimpan ringkasan TXT ke `research/summary.txt` |
+| `npm run summary:html` | Mengambil data terbaru dan menyimpan ringkasan HTML ke `research/summary.html` |
+| `npm run export:data` | Export data gabungan responden, FAQ, jawaban, pilihan kepuasan, dan waktu vote ke `research/responses.csv` |
 | `npm run relevance -- "pertanyaan"` | Melihat proses normalisasi, token, stop word, regex, dan hasil pattern matching untuk satu input |
 | `npm run typecheck` | Memeriksa kesalahan tipe TypeScript |
 | `npm test` | Menjalankan test otomatis pattern matching dan format balasan Telegram |
@@ -343,7 +327,7 @@ Fungsi command:
 Command export yang paling disarankan untuk analisis penelitian adalah:
 
 ```sh
-npm run export:responses
+npm run export:data
 ```
 
 Alasannya, data ini sudah menggabungkan responden dan penilaian jawaban. Satu baris berarti satu responden memberi satu penilaian terhadap satu FAQ.
@@ -351,17 +335,17 @@ Alasannya, data ini sudah menggabungkan responden dan penilaian jawaban. Satu ba
 Setelah data gabungan tersedia, ringkasan penelitian dapat dibuat dengan command:
 
 ```sh
-npm run export:summary
-npm run export:summary:txt
-npm run export:summary:html
+npm run summary
+npm run summary:txt
+npm run summary:html
 ```
 
-Command tersebut otomatis mengambil data terbaru dari Worker melalui endpoint `/responses.csv`, menyimpannya ke `research/responses.csv`, lalu membuat rekap jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, rekap per responden, serta FAQ yang paling banyak mendapat penilaian. Dengan demikian, `responses.csv` tetap menjadi data mentah utama, sedangkan `summary.txt` dan `summary.html` menjadi hasil olahan awal untuk membantu pembahasan Bab IV.
+Command `summary` otomatis mengambil data terbaru dari Worker melalui endpoint `/responses.csv`, lalu menampilkan rekap jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, rekap per responden, serta FAQ yang paling banyak mendapat penilaian di terminal tanpa menyimpan file ringkasan. Command `summary:txt` dan `summary:html` dipakai jika peneliti membutuhkan file ringkasan tersimpan. Dengan demikian, `responses.csv` tetap menjadi data mentah utama, sedangkan `summary.txt` dan `summary.html` menjadi hasil olahan awal untuk membantu pembahasan Bab IV.
 
 Jika hanya ingin membuat ringkasan dari file lokal tanpa mengambil data terbaru dari Worker, gunakan opsi:
 
 ```sh
-npm run export:summary -- --offline
+npm run summary -- --offline
 ```
 
 ### Command Export dan Request API Asli
@@ -371,7 +355,7 @@ Command npm hanya dibuat agar penggunaan lebih mudah. Di balik command tersebut,
 Contoh command:
 
 ```sh
-npm run export:responses
+npm run export:data
 ```
 
 Secara internal command tersebut menjalankan:
@@ -433,13 +417,20 @@ Format yang tersedia:
 | `/satisfaction.txt` | Rekap kepuasan per FAQ dalam tabel teks |
 | `/satisfaction.html` | Rekap kepuasan per FAQ dalam HTML |
 
-Endpoint di atas dipakai untuk mengambil data dari Worker. Command `npm run export:summary`, `npm run export:summary:txt`, dan `npm run export:summary:html` juga mengambil data terbaru terlebih dahulu agar ringkasan tidak bergantung pada file lokal lama. Alurnya adalah:
+Endpoint di atas dipakai untuk mengambil data dari Worker. Command `npm run summary`, `npm run summary:txt`, dan `npm run summary:html` juga mengambil data terbaru terlebih dahulu agar ringkasan tidak bergantung pada file lokal lama. Alurnya adalah:
 
 ```text
-npm run export:summary
+npm run summary
+  -> tools/bot-admin.ts request GET /responses.csv
+  -> sistem menampilkan ringkasan singkat di terminal
+```
+
+Alur command `summary:txt` adalah:
+
+```text
+npm run summary:txt
   -> tools/bot-admin.ts request GET /responses.csv
   -> sistem menyimpan data terbaru ke research/responses.csv
-  -> tools/bot-admin.ts membaca research/responses.csv
   -> sistem membuat research/summary.txt
 ```
 
@@ -448,11 +439,10 @@ Untuk versi HTML, alurnya sama, tetapi output yang dibuat adalah `research/summa
 File HTML dapat dibuka di browser dengan command:
 
 ```sh
-open research/responses.html
 open research/summary.html
 ```
 
-`research/responses.html` menampilkan data gabungan per baris responden dan voting. `research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, rekap per responden, dan FAQ yang paling banyak dinilai.
+`research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, rekap per responden, dan FAQ yang paling banyak dinilai.
 
 ### Proses Export CSV di Kode Worker
 
@@ -473,7 +463,7 @@ if (url.pathname === "/responses.csv") {
 Alur export gabungan:
 
 ```text
-npm run export:responses
+npm run export:data
   -> tools/bot-admin.ts membaca .env
   -> tools/bot-admin.ts request GET /responses.csv
   -> src/index.ts menerima request
@@ -526,33 +516,28 @@ started_at, last_seen_at, faq_id, category, question, answer, choice, voted_at
 | `satisfaction` | Rekap jumlah dan persentase vote per FAQ | Melihat FAQ mana yang dinilai memuaskan/tidak memuaskan |
 | `summary` | Ringkasan dari `responses.csv` | Melihat jumlah responden, aktivitas voting per responden, persentase kepuasan, rekap kategori, dan FAQ yang perlu dievaluasi |
 
-Jadi, untuk pembahasan hasil penelitian, yang paling kuat digunakan adalah:
+Jadi, untuk pembahasan hasil penelitian, data lengkap yang paling kuat digunakan adalah:
 
 ```sh
-npm run export:responses
+npm run export:data
 ```
 
-Sedangkan:
+Sedangkan ringkasan cepat untuk dibaca langsung di terminal atau browser dibuat dengan:
 
 ```sh
-npm run export:research
+npm run summary
+npm run summary:txt
+npm run summary:html
 ```
 
-dipakai sebagai daftar responden, dan:
+Jika membutuhkan export khusus di luar command utama, seperti profil responden saja atau rekap kepuasan per FAQ saja, gunakan command lanjutan melalui helper admin:
 
 ```sh
-npm run export:satisfaction
+tsx tools/bot-admin.ts export research csv
+tsx tools/bot-admin.ts export satisfaction csv
 ```
 
-dipakai sebagai rekap statistik kepuasan per FAQ.
-
-Command:
-
-```sh
-npm run export:summary
-```
-
-dipakai untuk membuat ringkasan cepat dari data gabungan. Command ini membantu peneliti melihat gambaran umum hasil voting tanpa menghitung manual sejak awal. Namun, ketika menulis laporan, data rinci tetap merujuk ke `research/responses.csv` karena file tersebut menyimpan hubungan lengkap antara responden, pertanyaan, jawaban, dan pilihan kepuasan.
+Command `summary` membantu peneliti melihat gambaran umum hasil voting tanpa menghitung manual sejak awal. Namun, ketika menulis laporan, data rinci tetap merujuk ke `research/responses.csv` karena file tersebut menyimpan hubungan lengkap antara responden, pertanyaan, jawaban, dan pilihan kepuasan.
 
 ### Command Webhook
 

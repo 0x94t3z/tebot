@@ -85,7 +85,7 @@ describe("voting kepuasan", () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
     const researchStore = new MemoryKv();
     let nextMessageId = 100;
-    const fetchSpy = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const fetchSpy = vi.fn(async (input: RequestInfo | URL, _init?: RequestInit) => {
       const url = String(input);
 
       if (url.includes("/sendMessage")) {

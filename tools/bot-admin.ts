@@ -197,22 +197,34 @@ async function generateSummary() {
   }
 
   const inputPath = getInputPath() ?? "research/responses.csv";
-  if (!hasFlag("--offline")) {
-    const latestResponses = await fetchAdminExport("responses", "csv");
+  const stdoutOnly = hasFlag("--stdout");
+  let responseCsv = "";
+
+  if (hasFlag("--offline")) {
+    if (!existsSync(inputPath)) {
+      throw new Error(`${inputPath} not found. Run npm run export:data first, or run without --offline to fetch the latest data.`);
+    }
+    responseCsv = readFileSync(inputPath, "utf8");
+  } else {
+    responseCsv = await fetchAdminExport("responses", "csv");
+  }
+
+  if (!stdoutOnly && !hasFlag("--offline")) {
     mkdirSync(dirname(inputPath), { recursive: true });
-    writeFileSync(inputPath, latestResponses);
+    writeFileSync(inputPath, responseCsv);
     console.log(`Updated latest responses: ${inputPath}`);
   }
 
-  if (!existsSync(inputPath)) {
-    throw new Error(`${inputPath} not found. Run npm run export:responses first, or run without --offline to fetch the latest data.`);
+  const outputPath = getOutputPath() ?? (format === "html" ? "research/summary.html" : "research/summary.txt");
+  const records = parseResponseCsv(responseCsv);
+  const summary = buildResponseSummary(records);
+
+  if (stdoutOnly) {
+    printSummaryPreview(summary);
+    return;
   }
 
-  const outputPath = getOutputPath() ?? (format === "html" ? "research/summary.html" : "research/summary.txt");
-  const records = parseResponseCsv(readFileSync(inputPath, "utf8"));
-  const summary = buildResponseSummary(records);
   const output = format === "html" ? buildSummaryHtml(summary) : buildSummaryText(summary);
-
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, output);
   console.log(`Saved to ${outputPath}`);
@@ -654,22 +666,17 @@ function printHelp() {
     "  npm run health",
     "  npm run webhook:set",
     "  npm run webhook:info",
-    "  npm run export:research",
-    "  npm run export:research:txt",
-    "  npm run export:responses",
-    "  npm run export:responses:txt",
-    "  npm run export:summary",
-    "  npm run export:summary:txt",
-    "  npm run export:summary:html",
-    "  npm run export:satisfaction",
-    "  npm run export:satisfaction:txt",
+    "  npm run summary",
+    "  npm run summary:txt",
+    "  npm run summary:html",
+    "  npm run export:data",
     "",
     "Optional:",
     "  WORKER_URL=https://your-worker.workers.dev npm run webhook:set",
-    "  npm run export:responses -- --output research/responses.csv",
-    "  npm run export:summary -- --input research/responses.csv --output research/summary.txt",
-    "  npm run export:summary -- --offline",
-    "  npm run export:satisfaction:html -- --output satisfaction.html"
+    "  npm run summary -- --offline",
+    "  npm run summary:txt -- --offline",
+    "  tsx tools/bot-admin.ts export satisfaction csv",
+    "  tsx tools/bot-admin.ts export research csv"
   ].join("\n"));
 }
 

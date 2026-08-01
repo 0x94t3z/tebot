@@ -85,28 +85,29 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 
 Each Telegram user has one active vote per FAQ. If the same user changes their choice on the same FAQ ID, the old vote is corrected instead of counted twice.
 
-For research analysis, use the joined response export. It combines respondent identity, FAQ question, FAQ answer, satisfaction choice, and voting time in one row:
+For quick research recap, use:
 
 ```sh
-npm run export:responses
-npm run export:responses:txt
-npm run export:responses:html
-npm run export:summary
-npm run export:summary:txt
-npm run export:summary:html
+npm run summary
+npm run summary:txt
+npm run summary:html
 ```
 
-These commands automatically save the files into the `research/` folder:
+`npm run summary` fetches the latest `/responses.csv` and prints a short recap in the terminal without saving a summary file. Use `summary:txt` or `summary:html` when a saved report is needed:
 
 ```text
 research/responses.csv
-research/responses.txt
-research/responses.html
 research/summary.txt
 research/summary.html
 ```
 
-The separate `research` export is useful for respondent profile data, while the separate `satisfaction` export is useful for FAQ-level recap. The joined `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer. The `summary` export fetches the latest `/responses.csv`, saves it to `research/responses.csv`, then creates a compact recap of respondents, per-respondent voting activity, satisfaction percentages, category totals, and FAQ-level highlights.
+To export the complete respondent and voting dataset for spreadsheet analysis, use:
+
+```sh
+npm run export:data
+```
+
+The complete `responses` export is the clearest table for thesis analysis because one row represents one respondent's assessment of one FAQ answer. The `summary` command is for quick terminal reading, `summary:txt/html` is for saved reports, and `export:data` is for full data processing.
 
 Exported fields:
 
@@ -120,7 +121,7 @@ started_at
 last_seen_at
 ```
 
-Export CSV through the protected endpoint:
+Advanced export can still be done directly through the protected endpoint:
 
 ```sh
 curl "https://samsat-bandung-timur-bot.samsat.workers.dev/research.csv" \
@@ -145,7 +146,7 @@ open research.html
 
 The research export endpoints require `ADMIN_EXPORT_TOKEN`. Do not share this token publicly.
 
-Export FAQ satisfaction recap:
+Export FAQ satisfaction recap manually:
 
 ```sh
 curl "https://samsat-bandung-timur-bot.samsat.workers.dev/satisfaction.csv" \
@@ -159,24 +160,16 @@ Readable versions are also available:
 /satisfaction.html
 ```
 
-Easy npm commands:
+Main npm commands:
 
 ```sh
-npm run export:research
-npm run export:research:txt
-npm run export:research:html
-npm run export:responses
-npm run export:responses:txt
-npm run export:responses:html
-npm run export:summary
-npm run export:summary:txt
-npm run export:summary:html
-npm run export:satisfaction
-npm run export:satisfaction:txt
-npm run export:satisfaction:html
+npm run summary
+npm run summary:txt
+npm run summary:html
+npm run export:data
 ```
 
-The npm commands automatically read `.env`. The `responses` commands save research analysis files into the `research/` folder. The other HTML commands save files as `research.html` and `satisfaction.html`.
+The npm commands automatically read `.env`. The `summary` command only shows the latest recap in terminal. The `summary:txt/html` commands save summary files into `research/`. The `export:data` command saves the complete joined dataset to `research/responses.csv`.
 
 ### Why It Can Run for Free
 
@@ -1105,28 +1098,29 @@ Tidak memuaskan (%) = jumlah vote tidak memuaskan / total vote * 100
 
 Setiap user Telegram memiliki satu vote aktif per FAQ. Jika user yang sama mengganti pilihan pada FAQ ID yang sama, vote lama dikoreksi dan tidak dihitung dobel. Jika tombol yang sama ditekan ulang, jumlah vote tidak bertambah.
 
-Untuk analisis penelitian, gunakan export respon gabungan. Export ini menyatukan identitas responden, pertanyaan FAQ, jawaban, pilihan kepuasan, dan waktu voting dalam satu baris:
+Untuk rekap cepat penelitian, gunakan:
 
 ```sh
-npm run export:responses
-npm run export:responses:txt
-npm run export:responses:html
-npm run export:summary
-npm run export:summary:txt
-npm run export:summary:html
+npm run summary
+npm run summary:txt
+npm run summary:html
 ```
 
-Command tersebut otomatis menyimpan file ke folder `research/`:
+`npm run summary` mengambil data terbaru dari `/responses.csv` dan menampilkan ringkasan singkat di terminal tanpa menyimpan file ringkasan. Gunakan `summary:txt` atau `summary:html` jika membutuhkan laporan yang tersimpan:
 
 ```text
 research/responses.csv
-research/responses.txt
-research/responses.html
 research/summary.txt
 research/summary.html
 ```
 
-Export `research` yang terpisah berguna untuk data profil responden, sedangkan export `satisfaction` yang terpisah berguna untuk rekap per FAQ. Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ. Export `summary` mengambil data terbaru dari `/responses.csv`, menyimpannya ke `research/responses.csv`, lalu membuat rekap ringkas berisi jumlah responden, aktivitas voting per responden, persentase kepuasan, rekap kategori, dan sorotan FAQ.
+Untuk export data keseluruhan responden dan voting ke CSV, gunakan:
+
+```sh
+npm run export:data
+```
+
+Export gabungan `responses` adalah tabel yang paling jelas untuk analisis Tugas Akhir karena satu baris menunjukkan satu penilaian responden terhadap satu jawaban FAQ. Command `summary` dipakai untuk membaca rekap cepat di terminal, `summary:txt/html` dipakai untuk laporan tersimpan, sedangkan `export:data` dipakai untuk pengolahan data lengkap.
 
 Field export:
 
@@ -1179,21 +1173,16 @@ open research.html
 
 Endpoint export data riset membutuhkan `ADMIN_EXPORT_TOKEN`. Jangan membagikan token ini ke publik.
 
-Command npm yang lebih mudah:
+Command npm utama:
 
 ```sh
-npm run export:research
-npm run export:research:txt
-npm run export:research:html
-npm run export:responses
-npm run export:responses:txt
-npm run export:responses:html
-npm run export:satisfaction
-npm run export:satisfaction:txt
-npm run export:satisfaction:html
+npm run summary
+npm run summary:txt
+npm run summary:html
+npm run export:data
 ```
 
-Command npm tersebut otomatis membaca `.env`. Command `responses` akan menyimpan file analisis penelitian ke folder `research/`. Command HTML lain akan menyimpan file sebagai `research.html` dan `satisfaction.html`.
+Command npm tersebut otomatis membaca `.env`. Command `summary` hanya menampilkan ringkasan terbaru di terminal. Command `summary:txt/html` menyimpan ringkasan ke folder `research/`. Command `export:data` menyimpan data gabungan lengkap ke `research/responses.csv`.
 
 ### Kenapa Bisa Berjalan Gratis
 

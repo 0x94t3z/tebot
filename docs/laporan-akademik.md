@@ -201,7 +201,7 @@ Voting kepuasan berbeda dari nilai relevansi internal. Nilai relevansi dipakai u
 Data utama yang digunakan untuk pengolahan hasil kepuasan adalah export gabungan `responses.csv`. Data ini diperoleh melalui command:
 
 ```text
-npm run export:responses
+npm run export:data
 ```
 
 Command tersebut menghasilkan file:
@@ -213,11 +213,12 @@ research/responses.csv
 Setelah data gabungan tersedia, sistem juga menyediakan command ringkasan:
 
 ```text
-npm run export:summary
-npm run export:summary:html
+npm run summary
+npm run summary:txt
+npm run summary:html
 ```
 
-Command tersebut mengambil data terbaru dari endpoint `/responses.csv`, menyimpannya ke `research/responses.csv`, lalu menghasilkan:
+Command `summary` mengambil data terbaru dari endpoint `/responses.csv` dan menampilkan ringkasan di terminal tanpa menyimpan file ringkasan. Jika file ringkasan diperlukan, command `summary:txt` dan `summary:html` menghasilkan:
 
 ```text
 research/summary.txt
@@ -226,7 +227,7 @@ research/summary.html
 
 Ringkasan ini berisi jumlah responden, total penilaian, persentase `Memuaskan` dan `Tidak memuaskan`, rekap per kategori, rekap per responden, serta FAQ yang paling banyak mendapat penilaian memuaskan atau tidak memuaskan. Data mentah penelitian tetap menggunakan `responses.csv`, sedangkan file ringkasan dipakai untuk membantu penyusunan tabel dan analisis pada Bab IV.
 
-Secara teknis, command `npm run export:responses` melakukan request API ke Worker dengan bentuk:
+Secara teknis, command `npm run export:data` melakukan request API ke Worker dengan bentuk:
 
 ```text
 GET /responses.csv
@@ -254,7 +255,7 @@ voted_at
 
 Tahapan pengolahan data kepuasan dilakukan sebagai berikut.
 
-1. Mengekspor data gabungan menggunakan `npm run export:responses`.
+1. Mengekspor data gabungan menggunakan `npm run export:data`.
 2. Membuka file `research/responses.csv` menggunakan aplikasi spreadsheet.
 3. Mengelompokkan data berdasarkan `faq_id`, `question`, `answer`, dan `category`.
 4. Menghitung jumlah pilihan `Memuaskan` dan `Tidak memuaskan`.
