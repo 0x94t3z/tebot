@@ -307,6 +307,7 @@ Bagian:
   "export:responses:txt": "tsx tools/bot-admin.ts export responses txt --output research/responses.txt",
   "export:responses:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
   "export:summary": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
+  "export:summary:txt": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
   "export:summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
   "export:satisfaction": "tsx tools/bot-admin.ts export satisfaction csv",
   "relevance": "tsx tools/check-relevance.ts",
@@ -330,6 +331,7 @@ Fungsi command:
 | `npm run export:responses:txt` | Export gabungan ke `research/responses.txt` |
 | `npm run export:responses:html` | Export gabungan ke `research/responses.html` |
 | `npm run export:summary` | Membuat ringkasan TXT dari `research/responses.csv` ke `research/summary.txt` |
+| `npm run export:summary:txt` | Alias untuk membuat ringkasan TXT ke `research/summary.txt` |
 | `npm run export:summary:html` | Membuat ringkasan HTML dari `research/responses.csv` ke `research/summary.html` |
 | `npm run export:satisfaction` | Export rekap kepuasan per FAQ dalam CSV |
 | `npm run export:satisfaction:txt` | Export rekap kepuasan per FAQ dalam tabel teks |
@@ -350,6 +352,7 @@ Setelah data gabungan tersedia, ringkasan penelitian dapat dibuat dengan command
 
 ```sh
 npm run export:summary
+npm run export:summary:txt
 npm run export:summary:html
 ```
 

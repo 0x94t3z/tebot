@@ -17,6 +17,7 @@
     "export:responses:txt": "tsx tools/bot-admin.ts export responses txt --output research/responses.txt",
     "export:responses:html": "tsx tools/bot-admin.ts export responses html --output research/responses.html",
     "export:summary": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
+    "export:summary:txt": "tsx tools/bot-admin.ts summary txt --input research/responses.csv --output research/summary.txt",
     "export:summary:html": "tsx tools/bot-admin.ts summary html --input research/responses.csv --output research/summary.html",
     "export:satisfaction": "tsx tools/bot-admin.ts export satisfaction csv",
     "export:satisfaction:txt": "tsx tools/bot-admin.ts export satisfaction txt",

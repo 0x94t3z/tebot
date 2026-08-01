@@ -92,6 +92,7 @@ npm run export:responses
 npm run export:responses:txt
 npm run export:responses:html
 npm run export:summary
+npm run export:summary:txt
 npm run export:summary:html
 ```
 
@@ -168,6 +169,7 @@ npm run export:responses
 npm run export:responses:txt
 npm run export:responses:html
 npm run export:summary
+npm run export:summary:txt
 npm run export:summary:html
 npm run export:satisfaction
 npm run export:satisfaction:txt
@@ -1110,6 +1112,7 @@ npm run export:responses
 npm run export:responses:txt
 npm run export:responses:html
 npm run export:summary
+npm run export:summary:txt
 npm run export:summary:html
 ```
 
