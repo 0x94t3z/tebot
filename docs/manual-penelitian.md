@@ -436,6 +436,15 @@ npm run export:responses
 
 Untuk versi HTML, alurnya sama, tetapi output yang dibuat adalah `research/summary.html`. File ringkasan ini dapat dipakai sebagai bahan awal tabel rekap, sedangkan angka final tetap dapat diperiksa kembali dari `research/responses.csv`.
 
+File HTML dapat dibuka di browser dengan command:
+
+```sh
+open research/responses.html
+open research/summary.html
+```
+
+`research/responses.html` menampilkan data gabungan per baris responden dan voting. `research/summary.html` menampilkan rekap ringkas seperti total responden, total penilaian, persentase kepuasan, rekap kategori, dan FAQ yang paling banyak dinilai.
+
 ### Proses Export CSV di Kode Worker
 
 File utama Worker:
