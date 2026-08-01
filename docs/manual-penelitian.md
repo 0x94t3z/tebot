@@ -1,4 +1,4 @@
-# Catatan Penyusunan Tugas Akhir
+# Manual Penelitian
 
 Dokumen ini berisi penjelasan pendukung untuk Tugas Akhir berjudul:
 

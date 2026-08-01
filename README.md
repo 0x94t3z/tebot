@@ -11,7 +11,7 @@ Languages:
 
 Research and thesis notes:
 
-- [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md)
+- [Manual Penelitian](docs/manual-penelitian.md)
 
 ---
 
@@ -592,7 +592,7 @@ src/data/faq-samsat-bandung-timur.json
 
 This is the active 150-row dataset used by the bot. Keep `id` values sequential from `1` to `150` when replacing the dataset.
 
-For detailed maintenance steps when a lecturer or tester finds a new valid question pattern, see [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md#jika-dosen-menguji-pertanyaan-baru). That document explains when to update the dataset, add custom patterns, add supporting regex, and add regression tests.
+For detailed maintenance steps when a lecturer or tester finds a new valid question pattern, see [Manual Penelitian](docs/manual-penelitian.md#jika-dosen-menguji-pertanyaan-baru). That document explains when to update the dataset, add custom patterns, add supporting regex, and add regression tests.
 
 Then run:
 
@@ -621,7 +621,7 @@ npm run relevance -- "Kalau STNK hilang bagaimana?"
 
 This command prints normalization, removed stop words, base tokens, expanded synonym tokens, multi-intent segments, context checks, matched FAQ ID, category, internal relevance value, and matched terms. The relevance value is for debugging/research explanation only; it is not shown to Telegram users.
 
-For thesis-focused explanations about 150 FAQ rows versus 209 test cases, black box testing, random-question limitations, and respondent trials, see [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md).
+For thesis-focused explanations about 150 FAQ rows versus 209 test cases, black box testing, random-question limitations, and respondent trials, see [Manual Penelitian](docs/manual-penelitian.md).
 
 ### Troubleshooting
 
@@ -682,7 +682,7 @@ These files may contain `BOT_TOKEN` and `WEBHOOK_SECRET`.
 
 ### Thesis Notes
 
-For presentation answers, black box testing notes, 150 FAQ rows versus 209 test cases, and maintenance steps when new question patterns appear, see [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md).
+For presentation answers, black box testing notes, 150 FAQ rows versus 209 test cases, and maintenance steps when new question patterns appear, see [Manual Penelitian](docs/manual-penelitian.md).
 
 ---
 
@@ -1554,7 +1554,7 @@ src/data/faq-samsat-bandung-timur.json
 
 File ini adalah dataset aktif 150 data yang dipakai bot. Pastikan field `id` tetap berurutan dari `1` sampai `150` jika dataset diganti.
 
-Untuk langkah detail jika dosen atau penguji menemukan pola pertanyaan valid baru, lihat [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md#jika-dosen-menguji-pertanyaan-baru). Dokumen tersebut menjelaskan kapan harus update dataset, tambah custom pattern, tambah regex pendukung, dan tambah regression test.
+Untuk langkah detail jika dosen atau penguji menemukan pola pertanyaan valid baru, lihat [Manual Penelitian](docs/manual-penelitian.md#jika-dosen-menguji-pertanyaan-baru). Dokumen tersebut menjelaskan kapan harus update dataset, tambah custom pattern, tambah regex pendukung, dan tambah regression test.
 
 Lalu jalankan:
 
@@ -1583,7 +1583,7 @@ npm run relevance -- "Kalau STNK hilang bagaimana?"
 
 Command ini menampilkan normalisasi, stop word yang dibuang, base token, token hasil sinonim, segmentasi multi-intent, pengecekan konteks, ID FAQ yang cocok, kategori, nilai relevansi internal, dan matched terms. Nilai relevansi ini hanya untuk debug dan penjelasan penelitian; nilai relevansi tidak ditampilkan kepada user Telegram.
 
-Untuk penjelasan Tugas Akhir tentang 150 data FAQ vs 209 test case, black box testing, batasan pertanyaan random, dan uji coba responden, lihat [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md).
+Untuk penjelasan Tugas Akhir tentang 150 data FAQ vs 209 test case, black box testing, batasan pertanyaan random, dan uji coba responden, lihat [Manual Penelitian](docs/manual-penelitian.md).
 
 ### Troubleshooting
 
@@ -1644,4 +1644,4 @@ File tersebut dapat berisi `BOT_TOKEN` dan `WEBHOOK_SECRET`.
 
 ### Catatan Tugas Akhir
 
-Penjelasan untuk bimbingan, black box testing, 150 data FAQ vs 209 test case, batasan pertanyaan random, maintenance pattern baru, dan jawaban singkat presentasi tersedia di [Catatan Penyusunan Tugas Akhir](docs/tugas-akhir.md).
+Penjelasan untuk bimbingan, black box testing, 150 data FAQ vs 209 test case, batasan pertanyaan random, maintenance pattern baru, dan jawaban singkat presentasi tersedia di [Manual Penelitian](docs/manual-penelitian.md).
